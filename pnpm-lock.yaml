@@ -29,12 +29,9 @@ importers:
       fonts:
         specifier: ^0.0.2
         version: 0.0.2
-<<<<<<< HEAD
       google:
         specifier: ^2.1.0
         version: 2.1.0
-=======
->>>>>>> 0cc0a44 (ui-fonts-update)
       next:
         specifier: 15.0.0-canary.56
         version: 15.0.0-canary.56(react-dom@19.0.0-rc-f38c22b244-20240704(react@19.0.0-rc-f38c22b244-20240704))(react@19.0.0-rc-f38c22b244-20240704)
