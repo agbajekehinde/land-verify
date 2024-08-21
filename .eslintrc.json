@@ -1,12 +1,15 @@
 {
   "extends": [
     "next",
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended"
+    "next/core-web-vitals"
   ],
-  "plugins": ["@typescript-eslint"],
-  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "import",
+    "jsx-a11y",
+    "react",
+    "react-hooks"
+  ],
   "rules": {
-    // Add your custom rules here
+    // Your custom rules
   }
 }
