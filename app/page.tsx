@@ -25,7 +25,7 @@ export default function Page() {
             <a href="https://nextjs.org/learn/" className="text-blue-500">
               Parent Fintech Company
             </a>
-            , the best FinAPI in the world.
+            , the best AMALA in the world.
           </p>
           <Link
             href="/login"
