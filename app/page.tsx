@@ -23,7 +23,7 @@ export default function Page() {
     >
             <strong>Welcome to LandVerify NG.</strong> This is a product from{' '}
             <a href="https://nextjs.org/learn/" className="text-blue-500">
-              Parent Fintech Company
+              Verifying landed properties in Nigeria
             </a>
             , the best FinAPI in the world.
           </p>
