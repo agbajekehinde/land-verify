@@ -1,4 +1,4 @@
-import AcmeLogo from '@/app/ui/acme-logo';
+import LandVerifyLogo from '@/app/ui/landverify-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import styles from '@/app/ui/home.module.css';
@@ -10,7 +10,7 @@ export default function Page() {
   return (
     <main className="flex min-h-screen flex-col p-6">
       <header className="flex items-center justify-between py-4">
-        <AcmeLogo />
+        <LandVerifyLogo />
         <nav>
           <Link href="/about" className="text-gray-800 hover:text-blue-500 mx-2">About</Link>
           <Link href="/contact" className="text-gray-800 hover:text-blue-500 mx-2">Contact</Link>
