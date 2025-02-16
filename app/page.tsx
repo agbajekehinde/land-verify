@@ -11,11 +11,7 @@ export default function Page() {
     <main className="flex min-h-screen flex-col p-6">
       <header className="flex items-center justify-between py-4">
         <LandVerifyLogo />
-        <nav>
-          <Link href="/about" className="text-gray-800 hover:text-blue-500 mx-2">About</Link>
-          <Link href="/contact" className="text-gray-800 hover:text-blue-500 mx-2">Contact</Link>
-          <Link href="/login" className="text-gray-800 hover:text-blue-500 mx-2">Login</Link>
-        </nav>
+       
       </header>
       <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
