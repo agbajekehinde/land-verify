@@ -1,4 +1,4 @@
-import AcmeLogo from '@/app/ui/landverify-logo';
+import AcmeLogo from '@/app/components/header/header';
 import LoginForm from '@/app/ui/login-form';
  
 export default function LoginPage() {
