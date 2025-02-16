@@ -28,7 +28,7 @@ export default function Hero() {
               <span>Learn More</span>
             </Link>
           </div>
-          <p className="text-xs"><span>Pilot Phase: Currently serving Lagos and Ogun states, expanding soon.</span></p>
+          <p className="text-xs"><span>🚀 Pilot Phase: Currently serving Lagos and Ogun states, expanding soon.</span></p>
         </div>
         <div className="">
           {/* Add Hero Images Here */}
