@@ -15,7 +15,7 @@ export default function LandVerifyLogo() {
       
     >
       <MagnifyingGlassIcon className="h-12 w-12 rotate-[15deg]" />
-      <p className="text-[44px] black">LandVerify</p> 
+      <p className="text-[44px]">LandVerify</p> 
     </div>
   );
 }
