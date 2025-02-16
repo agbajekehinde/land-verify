@@ -11,7 +11,7 @@ export default function Hero() {
       <div className="flex grow flex-col gap-4 md:flex-row items-center justify-top px-6 py-2 md:px-20">
         <div className="flex flex-col justify-center items-start gap-6 rounded-lg bg-white p-6 md:w-1/2">
           <h1 className="text-2xl text-gray-900 md:text-4xl md:leading-bold">
-            <strong>Secure Your Property Investment with Confidence</strong>
+            <strong>Verify Your Property Investment with Confidence</strong>
           </h1>
           <p>Avoid land scams and fraudulent property deals with LandVerify. Our expert-backed verification service ensures you buy only genuine, legally documented land and homes. Get your property verified within 48 hours to 7 days.</p>
           <div className="flex gap-4">
