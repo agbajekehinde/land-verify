@@ -8,6 +8,7 @@ import Image from 'next/image';
 import KeyFeatures from './components/features/keyfeatures';
 import Hero from './components/hero/hero';
 import Steps from './components/steps/steps';
+import FAQs from './components/FAQs/questions';
 
 export default function Page() {
   return (
@@ -16,6 +17,7 @@ export default function Page() {
       <Hero />
       <KeyFeatures />
       <Steps/> 
+      <FAQs />
     </main>
   );
 }
