@@ -63,7 +63,7 @@ const faqData = [
   },
   {
     question: 'How do I get started?',
-    answer: 'Simply click <a href="#">Verify a Property Now</a>, submit your property details, and let our experts handle the rest.',
+    answer: "Simply click on 'Start Verification' button, submit your property details, and let our experts handle the rest.",
   },
 ];
 
