@@ -19,8 +19,8 @@ export default function Page() {
       <Hero />
       <KeyFeatures />
       <Steps/> 
-      <FAQs />
       <Testimonials />
+      <FAQs />
       <Footer />
     </main>
   );

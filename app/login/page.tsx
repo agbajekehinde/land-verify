@@ -1,4 +1,3 @@
-import AcmeLogo from '@/app/components/header/header';
 import LoginForm from '@/app/ui/login-form';
 import Image from 'next/image';
  
