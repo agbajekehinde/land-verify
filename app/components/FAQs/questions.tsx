@@ -43,7 +43,7 @@ const faqData = [
   },
   {
     question: 'How long does the verification process take?',
-    answer: 'The process takes between 48 hours and 7 working days, depending on the complexity of the case.',
+    answer: 'The process takes between 48 hours and 5 working days, depending on the complexity of the case.',
   },
   {
     question: 'What documents do I need for verification?',
