@@ -1,3 +1,6 @@
+"use client";
+import React from 'react';
+
 import { ShieldCheckIcon, UserGroupIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 export default function KeyFeatures() {

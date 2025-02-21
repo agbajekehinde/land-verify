@@ -1,15 +1,12 @@
 {
-  "extends": [
-    "next",
-    "next/core-web-vitals"
-  ],
-  "plugins": [
-    "import",
-    "jsx-a11y",
-    "react",
-    "react-hooks"
-  ],
+  "extends": ["next", "next/core-web-vitals"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
-    // Your custom rules
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
   }
 }
