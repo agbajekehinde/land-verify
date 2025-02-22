@@ -20,7 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(200).json({ message: 'User created successfully', user });
     } catch (error) {
-      res.status(500).json({ message: 'User already exist', error: error.message });
+      const errorMessage = (error instanceof Error) ? error.message : 'Unknown error';
+      res.status(500).json({ message: 'User already exists', error: errorMessage });
     }
   } else {
     res.status(405).json({ message: 'Method not allowed' });
