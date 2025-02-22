@@ -17,7 +17,7 @@ export default function Hero() {
           <p>Avoid land scams and fraudulent property deals with LandVerify. Our expert-backed verification service ensures you buy only genuine, legally documented land and homes. Get your land/property verified within 48 hours to 7 days.</p>
           <div className="flex gap-4">
             <Link
-              href="/create-account"
+              href="/signup"
               className="flex items-center gap-5 self-start rounded-lg bg-[#3a7a01] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#3a7a01] md:text-base"
             >
               <span>Start Verification</span> <ArrowRightIcon className="w-5 md:w-6" />

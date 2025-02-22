@@ -11,7 +11,7 @@ export default function Footer() {
       <h2 className="py-3 text-2xl font-bold text-gray-800 md:text-4xl">Verify your land today</h2>
       <h4 className="mt-2 text-lg text-gray-700">Don’t fall victim to property fraud. Verify before you buy!</h4>
       <Link
-        href="/verify"
+        href="/signup"
         className="mt-4 flex items-center gap-2 rounded-lg bg-green-600 px-8 py-3 text-white hover:bg-green-700"
       >
         <span className="text-bold">Verify a land now</span> <ArrowRightIcon className="" />
