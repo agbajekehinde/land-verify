@@ -89,7 +89,7 @@ export default function SignupForm() {
           </button>
           <Toaster />
           <div>
-            <p className="text-center mt-4">Already have an account? <Link href="/login" className="text-[#479101] hover:underline">Login</Link></p>
+            <p className="text-center mt-4">Already have an account? <Link href="/signin" className="text-[#479101] hover:underline">Login</Link></p>
           </div>
         </form>
       </div>
