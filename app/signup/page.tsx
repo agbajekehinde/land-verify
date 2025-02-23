@@ -5,7 +5,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 
 export default function SignupForm() {
-  const [form, setForm] = useState({ firstName: "", lastName: "", email: "" });
+  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,20 +16,27 @@ export default function SignupForm() {
     e.preventDefault();
     setLoading(true);
 
-    const response = await fetch("/api/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    const data = await response.json();
-    setLoading(false);
-    
-    if (response.ok) {
-      toast.success(data.message);
-      setForm({ firstName: "", lastName: "", email: "" });
-    } else {
-      toast.error(data.message);
+      const data = await response.json();
+      setLoading(false);
+
+      if (response.ok) {
+        toast.success(data.message);
+        setForm({ firstName: "", lastName: "", email: "", password: "" });
+      } else {
+        toast.error(data.message);
+        console.error('Error response:', data);
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error("An unexpected error occurred");
+      console.error('Error submitting form:', error);
     }
   };
 
@@ -68,12 +75,21 @@ export default function SignupForm() {
             onChange={handleChange}
             className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
           />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required={true}
+            value={form.password}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
+          />
           <button type="submit" className="w-full py-2 bg-[#479101] text-white font-semibold rounded-md hover:bg-[#3a7a01] cursor-pointer">
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>
           <Toaster />
           <div>
-            <p className="text-center mt-4">Already have an account? <a href="/login" className="text-[#479101] hover:underline">Login</a></p>
+            <p className="text-center mt-4">Already have an account? <Link href="/login" className="text-[#479101] hover:underline">Login</Link></p>
           </div>
         </form>
       </div>
