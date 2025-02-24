@@ -1,17 +1,22 @@
 "use client";
-import { useSession, signOut } from "next-auth/react";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Dashboard() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  if (!session) {
-    return <p>Please sign in</p>;
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/signin"); // Redirect if not logged in
+    }
+  }, [status, router]);
+
+  if (status === "loading") {
+    return <p>Loading...</p>; // Show loading while checking session
   }
 
-  return (
-    <div>
-      <h1>Welcome, {session.user?.email}</h1>
-      <button onClick={() => signOut()}>Sign Out</button>
-    </div>
-  );
+  return <h1>Welcome to the Dashboard, {session?.user?.name}!</h1>;
 }
