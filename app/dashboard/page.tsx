@@ -4,8 +4,9 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import withSessionProvider from "./withSessionProvider";
 
-export default function Dashboard() {
+function Dashboard() {
   const sessionData = useSession();
   const router = useRouter();
 
@@ -25,3 +26,5 @@ export default function Dashboard() {
 
   return <h1>Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>;
 }
+
+export default withSessionProvider(Dashboard);
