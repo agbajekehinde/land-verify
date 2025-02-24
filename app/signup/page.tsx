@@ -30,13 +30,21 @@ export default function SignupForm() {
         toast.success(data.message);
         setForm({ firstName: "", lastName: "", email: "", password: "" });
       } else {
-        toast.error(data.message);
-        console.error('Error response:', data);
+        if (data.message === "Email already exists") {
+          toast.error("Email already exists. Please use a different email.");
+        } else {
+          toast.error(data.message);
+        }
+        console.error('Error response:', data.message); // Avoid logging the entire response
       }
     } catch (error) {
       setLoading(false);
       toast.error("An unexpected error occurred");
-      console.error('Error submitting form:', error);
+      if (error instanceof Error) {
+        console.error('Error submitting form:', error.message); // Avoid logging the entire error
+      } else {
+        console.error('Error submitting form:', error); // Log the error object if it's not an instance of Error
+      }
     }
   };
 

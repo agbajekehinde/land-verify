@@ -24,7 +24,7 @@ const SignInPage = () => {
       } else {
         toast.error('Invalid email or password');
       }
-    } catch (error) {
+    } catch {
       setLoading(false);
       toast.error('An error occurred. Please try again.');
     }
@@ -60,7 +60,7 @@ const SignInPage = () => {
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
           <div>
-            <p className="text-center mt-4">Don't have an account? <Link href="/signup" className="text-[#479101] hover:underline">Sign Up</Link></p>
+            <p className="text-center mt-4">Don&apos;t have an account? <Link href="/signup" className="text-[#479101] hover:underline">Sign Up</Link></p>
           </div>
         </form>
       </div>

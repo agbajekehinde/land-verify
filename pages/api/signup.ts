@@ -1,7 +1,7 @@
 'use-server';
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -11,7 +11,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { firstName, lastName, email, password } = req.body;
 
     try {
-      const hashedPassword = await bcrypt.hash(password, 10);
+      // Check if the email already exists
+      const existingUser = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (existingUser) {
+        return res.status(400).json({ success: false, message: 'Email already exists' });
+      }
+
+      const hashedPassword = bcrypt.hashSync(password, 10);
+
       const user = await prisma.user.create({
         data: {
           firstName,
@@ -21,11 +31,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
-      res.status(200).json({ message: 'User created successfully', user });
+      res.status(201).json({ success: true, message: 'Account created successfully' });
     } catch (error) {
-      console.error('Error creating user:', error);
-      const errorMessage = (error instanceof Error) ? error.message : 'Unknown error';
-      res.status(500).json({ message: 'An unexpected error occurred', error: errorMessage });
+      res.status(500).json({ success: false, message: 'An error occurred. Please try again.' });
     }
   } else {
     res.status(405).json({ message: 'Method not allowed' });
