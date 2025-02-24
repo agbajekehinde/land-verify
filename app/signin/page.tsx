@@ -16,6 +16,8 @@ export default function SignInPage() {
     e.preventDefault();
     setLoading(true);
 
+    console.log("Sending login request:", { email, password });
+
     const result = await signIn("credentials", {
       email,
       password,
