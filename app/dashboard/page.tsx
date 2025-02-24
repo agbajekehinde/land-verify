@@ -1,22 +1,27 @@
 "use client";
 
+import React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
+  const sessionData = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (sessionData?.status === "unauthenticated") {
       router.push("/signin"); // Redirect if not logged in
     }
-  }, [status, router]);
+  }, [sessionData?.status, router]);
 
-  if (status === "loading") {
+  if (!sessionData) {
     return <p>Loading...</p>; // Show loading while checking session
   }
 
-  return <h1>Welcome to the Dashboard, {session?.user?.name}!</h1>;
+  if (sessionData.status === "loading") {
+    return <p>Loading...</p>; // Show loading while checking session
+  }
+
+  return <h1>Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>;
 }
