@@ -1,32 +1,34 @@
 "use client";
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Link from 'next/link';
 
-const SignInPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
+import Link from "next/link";
+
+export default function SignInPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const response = await axios.post('/api/signin', { email, password });
-      setLoading(false);
-      if (response.data.success) {
-        toast.success('Login successful');
-        router.push('/dashboard'); // Redirect to the user's dashboard
-      } else {
-        toast.error('Invalid email or password');
-      }
-    } catch {
-      setLoading(false);
-      toast.error('An error occurred. Please try again.');
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false, // Prevent NextAuth from automatically redirecting
+    });
+
+    setLoading(false);
+
+    if (result?.error) {
+      toast.error("Invalid email or password");
+    } else {
+      toast.success("Login successful");
+      router.push("/dashboard"); // Redirect after successful login
     }
   };
 
@@ -40,7 +42,6 @@ const SignInPage = () => {
         <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded">
           <input
             type="email"
-            id="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -49,7 +50,6 @@ const SignInPage = () => {
           />
           <input
             type="password"
-            id="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -57,7 +57,7 @@ const SignInPage = () => {
             className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
           />
           <button type="submit" className="w-full py-2 bg-[#479101] text-white font-semibold rounded-md hover:bg-[#3a7a01] cursor-pointer">
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? "Signing In..." : "Sign In"}
           </button>
           <div>
             <p className="text-center mt-4">Don&apos;t have an account? <Link href="/signup" className="text-[#479101] hover:underline">Sign Up</Link></p>
@@ -66,7 +66,4 @@ const SignInPage = () => {
       </div>
     </div>
   );
-};
-
-export default SignInPage;
-
+}
