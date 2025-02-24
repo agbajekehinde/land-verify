@@ -3,33 +3,24 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
-import bcrypt from "bcryptjs";
 
 export default function SignupForm() {
-  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "" });
+  const [form, setForm] = useState<{ firstName: string; lastName: string; email: string; password: string; }>({ firstName: "", lastName: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Hash the password before sending it to the server
-      const hashedPassword = await bcrypt.hash(form.password, 10);
-
       const response = await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          password: hashedPassword, // Send hashed password
-        }),
+        body: JSON.stringify(form),
       });
 
       const data = await response.json();
