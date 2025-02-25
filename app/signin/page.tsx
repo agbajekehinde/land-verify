@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 
 export default function SignInPage() {
@@ -61,6 +61,7 @@ export default function SignInPage() {
           <button type="submit" className="w-full py-2 bg-[#479101] text-white font-semibold rounded-md hover:bg-[#3a7a01] cursor-pointer">
             {loading ? "Signing In..." : "Sign In"}
           </button>
+            <Toaster />
           <div>
             <p className="text-center mt-4">Don&apos;t have an account? <Link href="/signup" className="text-[#479101] hover:underline">Sign Up</Link></p>
           </div>
