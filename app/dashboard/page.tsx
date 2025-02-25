@@ -24,7 +24,7 @@ function Dashboard() {
     return <p>Loading...</p>; // Show loading while checking session
   }
 
-  return <h1>Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>;
+  return <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8"> Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>;
 }
 
 export default withSessionProvider(Dashboard);
