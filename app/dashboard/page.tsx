@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import withSessionProvider from "./withSessionProvider";
+import UserHeader from "./components/header/user-header";
 
 function Dashboard() {
   const sessionData = useSession();
@@ -24,9 +25,16 @@ function Dashboard() {
     return <p>Loading...</p>; // Show loading while checking session
   }
 
-  return ( <div>
-    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8"> 👋🏽 Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>
-    </div>
+  return ( 
+    <main>
+       <div>
+      <UserHeader />
+      </div>
+      <div className="flex items-top justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8"> 👋🏽 Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>
+      </div>
+     
+      </main>
 
   );
 }
