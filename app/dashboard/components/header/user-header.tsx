@@ -2,6 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { signOut } from "next-auth/react";
 
 export default function userHeader() {
   return (
@@ -18,6 +19,9 @@ export default function userHeader() {
         </Link>
       </div>
       <nav className="flex items-center gap-4">
+      <Link href="/" className="bg-red-500 text-white px-4 py-2 rounded-md">
+        Sign Out
+      </Link>
       </nav>
     </header>
   );

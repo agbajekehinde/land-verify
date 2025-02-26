@@ -30,8 +30,7 @@ function Dashboard() {
        <div>
       <UserHeader />
       </div>
-      <div className="flex items-top justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
-      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8"> 👋🏽 Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>
+      <div className="flex items-top justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100"> <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8"> 👋🏽 Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>
       </div>
      
       </main>
