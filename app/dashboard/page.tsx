@@ -1,40 +1,60 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import withSessionProvider from "./withSessionProvider";
 import UserHeader from "./components/header/user-header";
+import Spinner from "./components/Spinner/spinner";
+import Tabs from "./components/tabs/tabs";
+import NewVerification from "./components/newverification/NewVerification";
+import VerificationHistory from "./components/verificationshistory/VerificationHistory";
+import WelcomeSection from "./components/WelcomeSection/WelcomeSection";
+import GetStarted from "./components/getstarted/getstarted";
+import AccountDetails from "./components/accountdetails/AccountDetails";
 
 function Dashboard() {
-  const sessionData = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("verifications");
 
   useEffect(() => {
-    if (sessionData?.status === "unauthenticated") {
-      router.push("/signin"); // Redirect if not logged in
+    if (status === "unauthenticated") {
+      router.push("/signin");
     }
-  }, [sessionData?.status, router]);
+  }, [status, router]);
 
-  if (!sessionData) {
-    return <p>Loading...</p>; // Show loading while checking session
+  if (status === "loading") {
+    return <Spinner />;
   }
 
-  if (sessionData.status === "loading") {
-    return <p>Loading...</p>; // Show loading while checking session
-  }
-
-  return ( 
+  return (
     <main>
-       <div>
       <UserHeader />
-      </div>
-      <div className="flex items-top justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100"> <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8"> 👋🏽 Welcome to the Dashboard, {sessionData.data?.user?.name}!</h1>
-      </div>
-     
-      </main>
+      <div className="flex items-top justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
+        <div className="w-full max-w-3xl">
+          <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          {activeTab === "verifications" ? (
+            <div>
+              <WelcomeSection />
+              <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                <p className="text-gray-600">Start a new verification request</p>
+                <button onClick={() => setIsOpen(true)} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                  Start New Verification
+                </button>
+                {isOpen && <NewVerification isOpen={isOpen} setIsOpen={setIsOpen} />}
 
+              </div>
+              <VerificationHistory userId={session?.user?.id} />
+              <GetStarted />
+            </div>
+          ) : (
+            <AccountDetails />
+          )}
+        </div>
+      </div>
+    </main>
   );
 }
 
