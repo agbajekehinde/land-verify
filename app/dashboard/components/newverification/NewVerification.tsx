@@ -83,6 +83,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
         toast.error(data.message || "Failed to submit verification.");
       }
     } catch (error) {
+      console.error("An error occurred while submitting:", error);
       setLoading(false);
       toast.error("An error occurred while submitting.");
     }
