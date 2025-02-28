@@ -151,7 +151,6 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
               <input
                 type="text"
                 name="postalCode"
-                required
                 value={form.postalCode}
                 onChange={handleChange}
                 inputMode="numeric"
