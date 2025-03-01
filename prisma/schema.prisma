@@ -24,9 +24,9 @@ model VerificationRequest {
   city       String
   state      String
   postalCode String
-  latitude   Float
-  longitude  Float
-  files      String[] // Array of file URLs stored in object storage
+  latitude   Float?
+  longitude  Float?
+  files      String[] // ✅ Array of Cloudinary URLs
   status     Status   @default(PENDING)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

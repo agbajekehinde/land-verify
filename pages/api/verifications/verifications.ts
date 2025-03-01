@@ -1,66 +1,125 @@
-"use-server";
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]"; // Ensure this path is correct
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 import { PrismaClient } from "@prisma/client";
+import cloudinary from "cloudinary";
+import formidable from 'formidable';
+import fs from 'fs';
 
-const globalForPrisma = global as unknown as { prisma?: PrismaClient };
-const prisma = globalForPrisma.prisma ?? new PrismaClient();
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+// Disable the default body parser for file uploads
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
-export async function POST(req: Request) {
+// Initialize Prisma
+const prisma = new PrismaClient();
+
+// Configure Cloudinary
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    // Check authentication
+    const session = await getServerSession(req, res, authOptions);
+    if (!session || !session.user || !session.user.id) {
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    // ✅ Parse FormData
-    const formData = await req.formData();
+    // Parse form data with formidable
+    const form = formidable({ multiples: true });
+    
+    const [fields, files] = await new Promise<[formidable.Fields, formidable.Files]>((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        resolve([fields, files]);
+      });
+    });
 
-    const address = formData.get("address") as string;
-    const city = formData.get("city") as string;
-    const state = formData.get("state") as string;
-    const postalCode = formData.get("postalCode") as string;
-    const latitude = parseFloat(formData.get("latitude") as string);
-    const longitude = parseFloat(formData.get("longitude") as string);
-    const files = formData.getAll("files"); // Gets all uploaded files
-
-    // ✅ Validation
-    if (!address || !city || !state || !postalCode || (latitude) || (longitude)) {
-      return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
+    // Extract field values
+    const address = fields.address?.[0] || '';
+    const city = fields.city?.[0] || '';
+    const state = fields.state?.[0] || '';
+    const postalCode = fields.postalCode?.[0] || '';
+    
+    // Optional fields
+    const latitudeStr = fields.latitude?.[0];
+    const longitudeStr = fields.longitude?.[0];
+    
+    // Validation
+    if (!address || !city || !state || !postalCode) {
+      return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    // 🚀 Handle file uploads (optional)
+    // Create base verification data
+    const verificationData: any = {
+      userId: parseInt(session.user.id as string),
+      address,
+      city,
+      state,
+      postalCode,
+    };
+
+    // Add optional fields if present
+    if (latitudeStr && latitudeStr.trim() !== '') {
+      verificationData.latitude = parseFloat(latitudeStr);
+    }
+    
+    if (longitudeStr && longitudeStr.trim() !== '') {
+      verificationData.longitude = parseFloat(longitudeStr);
+    }
+
+    // Upload files to Cloudinary
     const fileUrls: string[] = [];
-    for (const file of files) {
-      if (file instanceof File) {
-        // You can process file storage here (e.g., upload to S3, Cloudinary)
-        // For now, just store filenames
-        fileUrls.push(file.name);
+    const fileArray = Array.isArray(files.files) ? files.files : [files.files].filter(Boolean);
+    
+    for (const file of fileArray) {
+      if (file && file.filepath) {
+        const uploadResponse = await new Promise<any>((resolve, reject) => {
+          cloudinary.v2.uploader.upload(
+            file.filepath,
+            { folder: 'verifications' },
+            (error, result) => {
+              if (error) reject(error);
+              resolve(result);
+            }
+          );
+        });
+
+        if (uploadResponse && uploadResponse.secure_url) {
+          fileUrls.push(uploadResponse.secure_url);
+          // Clean up temp file
+          fs.unlinkSync(file.filepath);
+        }
       }
     }
 
-    // ✅ Create verification request in Prisma
+    // Add file URLs to verification data
+    verificationData.files = fileUrls;
+
+    // Create verification in database
     const newVerification = await prisma.verificationRequest.create({
-      data: {
-        userId: parseInt(session.user.id), // Ensure correct type
-        address,
-        city,
-        state,
-        postalCode,
-        latitude,
-        longitude,
-        files: fileUrls, // Save filenames instead of raw files
-      },
+      data: verificationData
     });
 
-    return NextResponse.json(
-      { message: "Verification request submitted", verification: newVerification },
-      { status: 200 }
-    );
+    return res.status(200).json({
+      message: 'Verification request submitted',
+      verification: newVerification
+    });
   } catch (error) {
-    console.error("Error submitting verification:", error);
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    console.error('Error submitting verification:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 }
