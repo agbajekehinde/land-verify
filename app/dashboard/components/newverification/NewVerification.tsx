@@ -5,7 +5,7 @@ import { IoMdClose } from "react-icons/io";
 import { FaSpinner } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 interface NewVerificationProps {
   isOpen: boolean;
@@ -227,6 +227,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
             {loading ? <FaSpinner className="animate-spin mr-2" /> : "Submit Verification"}
           </button>
         </form>
+        <Toaster />
       </div>
     </div>
   );

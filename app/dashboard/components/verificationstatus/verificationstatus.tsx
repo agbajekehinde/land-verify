@@ -2,6 +2,8 @@
 import React from "react";
 
 interface StatusCardProps {
+  address: string;
+  date: string;
   status: string;
   lastUpdated: string;
 }
