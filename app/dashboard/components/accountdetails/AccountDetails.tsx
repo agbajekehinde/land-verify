@@ -28,7 +28,7 @@ const AccountDetails: React.FC = () => {
         <div>
           <p className="text-gray-700"><strong>Name:</strong> {user.name}</p>
           <p className="text-gray-700"><strong>Email:</strong> {user.email}</p>
-          <p className="text-gray-500 text-sm mt-2">User ID: {user.id}</p>
+          <p className="text-gray-700"><strong>User ID:</strong> {user.id}</p>
         </div>
       ) : (
         <p className="text-gray-500">No user details available.</p>

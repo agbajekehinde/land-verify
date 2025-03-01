@@ -1,6 +1,7 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
-import StatusCard from "../verificationstatus/verificationstatus";
+import { useSession } from "next-auth/react"; // ✅ Get user session
 
 interface VerificationRequest {
   id: string;
@@ -12,11 +13,10 @@ interface VerificationRequest {
   createdAt: string;
 }
 
-interface VerificationHistoryProps {
-  userId: string | undefined;
-}
+const VerificationHistory: React.FC = () => {
+  const { data: session } = useSession(); // ✅ Extract session data
+  const userId = session?.user?.id; // Get user ID
 
-const VerificationHistory: React.FC<VerificationHistoryProps> = ({ userId }) => {
   const [verifications, setVerifications] = useState<VerificationRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +25,7 @@ const VerificationHistory: React.FC<VerificationHistoryProps> = ({ userId }) => 
 
     const fetchVerifications = async () => {
       try {
-        const response = await fetch(`/api/verifications/verifications?userId=${userId}`);
+        const response = await fetch(`/api/users/${userId}/verificationHistory`);
         if (!response.ok) throw new Error("Failed to fetch verifications");
         const data = await response.json();
         setVerifications(data);
@@ -37,7 +37,6 @@ const VerificationHistory: React.FC<VerificationHistoryProps> = ({ userId }) => 
     };
 
     fetchVerifications();
-  
   }, [userId]);
 
   if (loading) {
@@ -50,17 +49,30 @@ const VerificationHistory: React.FC<VerificationHistoryProps> = ({ userId }) => 
       {verifications.length === 0 ? (
         <p className="text-gray-500">No verification requests made yet.</p>
       ) : (
-        <div className="space-y-4">
-          {verifications.map((verification) => (
-            <StatusCard 
-              key={verification.id}
-              lastUpdated="N/A"
-              status={verification.status}
-              address={`${verification.address}, ${verification.city}, ${verification.state} ${verification.postalCode}`}
-              date={new Date(verification.createdAt).toLocaleDateString()}
-            />
-          ))}
-        </div>
+        <table className="w-full border-collapse border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border p-2">Address</th>
+              <th className="border p-2">City</th>
+              <th className="border p-2">State</th>
+              <th className="border p-2">Postal Code</th>
+              <th className="border p-2">Status</th>
+              <th className="border p-2">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {verifications.map((verification) => (
+              <tr key={verification.id} className="text-center border-b">
+                <td className="border p-2">{verification.address}</td>
+                <td className="border p-2">{verification.city}</td>
+                <td className="border p-2">{verification.state}</td>
+                <td className="border p-2">{verification.postalCode}</td>
+                <td className="border p-2">{verification.status}</td>
+                <td className="border p-2">{new Date(verification.createdAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
