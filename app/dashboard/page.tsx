@@ -14,7 +14,7 @@ import GetStarted from "./components/getstarted/getstarted";
 import AccountDetails from "./components/accountdetails/AccountDetails";
 
 function Dashboard() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("verifications");
@@ -46,7 +46,7 @@ function Dashboard() {
                 {isOpen && <NewVerification isOpen={isOpen} setIsOpen={setIsOpen} />}
 
               </div>
-              <VerificationHistory userId={session?.user?.id} />
+              <VerificationHistory/>
               <GetStarted />
             </div>
           ) : (
