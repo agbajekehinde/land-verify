@@ -26,7 +26,7 @@ interface VerificationFormState {
 
 export default function NewVerification({ isOpen, setIsOpen }: NewVerificationProps) {
   const { data: session } = useSession();
-  const { verifications, setVerifications } = useVerification();
+  const { setVerifications } = useVerification();
   
   const [form, setForm] = useState<VerificationFormState>({
     address: "",
@@ -84,7 +84,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
       
       if (response.ok) {
         // Show success toast immediately
-        const toastId = toast.success("Verification submitted successfully!");
+        toast.success("Verification submitted successfully!");
         
         // Add the new verification to the state
         if (data.verification) {
