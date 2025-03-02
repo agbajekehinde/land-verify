@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
 import { FaSpinner } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { FaFileAlt, FaFilePdf, FaFileImage, FaUpload } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 import { useVerification } from "../verificationcontext/VerificationContext";
 
@@ -13,7 +14,6 @@ interface NewVerificationProps {
   setIsOpen: (open: boolean) => void;
 }
 
-// Define form state type for better type safety
 interface VerificationFormState {
   address: string;
   city: string;
@@ -21,12 +21,14 @@ interface VerificationFormState {
   postalCode: string;
   latitude: string;
   longitude: string;
+  landsize: string;
   files: File[];
 }
 
 export default function NewVerification({ isOpen, setIsOpen }: NewVerificationProps) {
   const { data: session } = useSession();
   const { setVerifications } = useVerification();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [form, setForm] = useState<VerificationFormState>({
     address: "",
@@ -35,6 +37,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     postalCode: "",
     latitude: "",
     longitude: "",
+    landsize: "",
     files: [],
   });
 
@@ -42,14 +45,58 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
 
   const closeModal = () => setIsOpen(false);
 
+  // Format coordinates to decimal format
+  const formatCoordinate = (value: string): string => {
+    const numericValue = value.replace(/[^\d.]/g, '');
+    if (!numericValue) return '';
+    if (numericValue.includes('.')) {
+      return numericValue;
+    }
+    if (numericValue.length >= 2) {
+      return numericValue.slice(0, 2) + '.' + numericValue.slice(2);
+    }
+    return numericValue;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === 'latitude' || name === 'longitude') {
+      const formattedValue = formatCoordinate(value);
+      setForm({ ...form, [name]: formattedValue });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setForm({ ...form, files: Array.from(e.target.files) });
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFiles = [...e.target.files];
+      setForm(prevForm => ({
+        ...prevForm,
+        files: [...prevForm.files, ...selectedFiles]
+      }));
     }
+  };
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.click();
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setForm(prevForm => ({
+      ...prevForm,
+      files: prevForm.files.filter((_, i) => i !== index)
+    }));
+  };
+
+  const getFileIcon = (fileName: string) => {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    if (extension === 'pdf') return <FaFilePdf className="text-red-500" />;
+    if (['jpg', 'jpeg', 'png', 'gif'].includes(extension || '')) return <FaFileImage className="text-blue-500" />;
+    return <FaFileAlt className="text-gray-500" />;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -69,11 +116,17 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
       formData.append("city", form.city);
       formData.append("state", form.state);
       formData.append("postalCode", form.postalCode);
+      formData.append("landsize", form.landsize);
 
-      if (form.latitude.trim() !== "") formData.append("latitude", form.latitude);
-      if (form.longitude.trim() !== "") formData.append("longitude", form.longitude);
+      if (form.latitude.trim() !== "") 
+        formData.append("latitude", form.latitude);
+      if (form.longitude.trim() !== "") 
+        formData.append("longitude", form.longitude);
 
-      form.files.forEach((file) => formData.append("files", file));
+      // Append each file individually
+      form.files.forEach((file) => {
+        formData.append("files", file);
+      });
 
       const response = await fetch("/api/verifications/verifications", {
         method: "POST",
@@ -83,16 +136,12 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
       const data = await response.json();
       
       if (response.ok) {
-        // Show success toast immediately
         toast.success("Verification submitted successfully!");
         
-        // Add the new verification to the state
         if (data.verification) {
-          // Add the new verification to the top of the list
           setVerifications(prev => [data.verification, ...prev]);
         } else {
           try {
-            // If the API doesn't return the verification object, fetch the updated list
             const userId = session.user.id;
             const historyResponse = await fetch(`/api/users/${userId}/verificationHistory`);
             if (historyResponse.ok) {
@@ -101,11 +150,9 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
             }
           } catch (fetchError) {
             console.error("Error fetching updated verification history:", fetchError);
-            // Don't show an error toast here, as we already showed a success toast
           }
         }
         
-        // Reset form
         setForm({
           address: "",
           city: "",
@@ -113,13 +160,13 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
           postalCode: "",
           latitude: "",
           longitude: "",
+          landsize: "",
           files: [],
         });
         
-        // Make sure the toast is visible before closing modal
         setTimeout(() => {
           closeModal();
-        }, 600); // Short delay to ensure toast is visible
+        }, 600);
       } else {
         toast.error(data.message || "Failed to submit verification.");
       }
@@ -193,9 +240,8 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
               </div>
             </div>
-          </div>
 
-          <div>
+            <div>
             <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code</label>
             <input
               id="postalCode"
@@ -209,6 +255,31 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
             />
           </div>
 
+          <div className="relative">
+              <label htmlFor="landsize" className="block text-sm font-medium text-gray-700">Select land size</label>
+              <div className="relative">
+                <select
+                  id="landsize"
+                  name="landsize"
+                  required
+                  value={form.landsize}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
+                >
+                  <option value="" className="text-gray-400">Select land size</option>
+                  <option value="Zero"> Zero to 1 plot</option>
+                  <option value="1 to 3">2 plot to 5 plots </option>
+                  <option value="5 to 10">5 plot to 10 plots </option>
+                  <option value="others">Others </option>
+                </select>
+                <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+              </div>
+            </div>
+
+
+          </div>
+
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">Latitude</label>
@@ -218,6 +289,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 name="latitude"
                 value={form.latitude}
                 onChange={handleChange}
+                placeholder="e.g., 22.44000"
                 className="w-full p-2 border rounded focus:border-gray-500"
               />
             </div>
@@ -230,21 +302,70 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 name="longitude"
                 value={form.longitude}
                 onChange={handleChange}
+                placeholder="e.g., 13.50000"
                 className="w-full p-2 border rounded focus:border-gray-500"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="files" className="block text-sm font-medium text-gray-700">Upload Files</label>
-            <input
-              id="files"
-              type="file"
-              name="files"
-              multiple
-              onChange={handleFileChange}
-              className="w-full p-2 border rounded focus:border-gray-500"
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Files</label>
+            <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
+              <div className="mb-2 text-sm text-gray-500">
+                Please upload any relevant documents, such as:
+              </div>
+              <ul className="mb-3 text-xs text-gray-600 pl-5 list-disc">
+                <li>Survey Report</li>
+                <li>Property Deed</li>
+                <li>Land Receipt</li>
+              </ul>
+              
+              <div className="flex flex-col items-center justify-center">
+                <input
+                  ref={fileInputRef}
+                  id="files"
+                  type="file"
+                  name="files"
+                  multiple
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                />
+                <button
+                  type="button"
+                  onClick={triggerFileInput}
+                  className="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none flex items-center"
+                >
+                  <FaUpload className="mr-2" /> Choose Files
+                </button>
+                <p className="text-xs text-gray-500 mt-2">
+                  {form.files.length === 0 ? "No files selected" : `${form.files.length} file(s) selected`}
+                </p>
+              </div>
+              
+              {form.files.length > 0 && (
+                <div className="mt-3">
+                  <p className="text-sm font-medium text-gray-700 mb-1">Selected files:</p>
+                  <ul className="space-y-1 max-h-32 overflow-y-auto pl-2">
+                    {form.files.map((file, index) => (
+                      <li key={index} className="flex items-center justify-between text-sm bg-white p-1 rounded">
+                        <span className="flex items-center">
+                          <span className="mr-2">{getFileIcon(file.name)}</span>
+                          <span className="truncate max-w-xs">{file.name}</span>
+                        </span>
+                        <button 
+                          type="button" 
+                          onClick={() => removeFile(index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <IoMdClose />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
 
           <button

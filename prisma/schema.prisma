@@ -24,6 +24,7 @@ model VerificationRequest {
   city       String
   state      String
   postalCode String
+  landsize   String   @default("Unknown") // ✅ Default value added
   latitude   Float?
   longitude  Float?
   files      String[] // ✅ Array of Cloudinary URLs

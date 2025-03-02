@@ -53,18 +53,25 @@ export default async function handler(
       });
     });
     
+    // Helper function to extract field values whether they are strings or arrays
+    const getFieldValue = (field: unknown): string => {
+      if (Array.isArray(field)) return field[0] as string;
+      return (field as string) || '';
+    };
+
     // Extract field values
-    const address = fields.address?.[0] || '';
-    const city = fields.city?.[0] || '';
-    const state = fields.state?.[0] || '';
-    const postalCode = fields.postalCode?.[0] || '';
+    const address = getFieldValue(fields.address);
+    const city = getFieldValue(fields.city);
+    const state = getFieldValue(fields.state);
+    const postalCode = getFieldValue(fields.postalCode);
+    const landsize = getFieldValue(fields.landsize);
     
-    // Optional fields that appear to be required in your schema
-    const latitudeStr = fields.latitude?.[0] || '0'; // Default to 0 if not provided
-    const longitudeStr = fields.longitude?.[0] || '0'; // Default to 0 if not provided
+    // Optional fields
+    const latitudeStr = getFieldValue(fields.latitude) || '0'; // Default to 0 if not provided
+    const longitudeStr = getFieldValue(fields.longitude) || '0'; // Default to 0 if not provided
     
     // Validation
-    if (!address || !city || !state || !postalCode) {
+    if (!address || !city || !state || !landsize || !postalCode) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
     
@@ -76,12 +83,13 @@ export default async function handler(
     const verificationData: Prisma.VerificationRequestCreateInput = {
       user: {
         connect: {
-          id: parseInt(session.user.id as string)
+          id: parseInt(session.user.id as string, 10)
         }
       },
       address,
       city,
       state,
+      landsize,
       postalCode,
       latitude,
       longitude,
@@ -112,7 +120,7 @@ export default async function handler(
       }
     }
     
-    // Add file URLs to verification data - based on the error, we should directly assign the string array
+    // Add file URLs to verification data if any files were uploaded
     if (fileUrls.length > 0) {
       verificationData.files = fileUrls;
     }
