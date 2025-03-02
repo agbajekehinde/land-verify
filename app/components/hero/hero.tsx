@@ -14,7 +14,7 @@ export default function Hero() {
           <h1 className="text-2xl text-gray-900 md:text-4xl md:leading-bold">
             <strong>Verify Your Land/Property Investment with Confidence</strong>
           </h1>
-          <p>Avoid land scams and fraudulent property deals with LandVerify. Our expert-backed verification service ensures you buy only genuine, legally documented land and homes. Get your land/property verified within 48 hours to 7 days.</p>
+          <p>Avoid land scams and fraudulent property deals with LandVerify. <br/> Our expert-backed verification service ensures you buy only genuine, legally documented land and homes. Get your land/property verified within 48 hours to 7 days.</p>
           <div className="flex gap-4">
             <Link
               href="/signup"
@@ -29,7 +29,7 @@ export default function Hero() {
               <span>Learn More</span>
             </Link>
           </div>
-          <p className="text-xs"><span>🚀 Pilot Phase: Currently serving Lagos and Ogun states, expanding soon.</span></p>
+          <p className="text-xs"><span>🚀 Pilot Phase: Currently available in Lagos and Ogun states, expanding soon.</span></p>
         </div>
         <div className="">
           {/* Add Hero Images Here */}

@@ -39,7 +39,7 @@ const FAQs: React.FC = () => {
 const faqData = [
   {
     question: 'What is LandVerify?',
-    answer: 'LandVerify is a digital platform that helps prospective property buyers verify the authenticity of land or landed property using a team of certified town planners and legal professionals.',
+    answer: 'LandVerify is a land verification/authentication tech platform that helps prospective property buyers verify the authenticity of land or landed property using a team of certified town planners and legal professionals.',
   },
   {
     question: 'How long does the verification process take?',
