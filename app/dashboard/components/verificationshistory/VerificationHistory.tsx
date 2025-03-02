@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useVerification } from "../verificationcontext/VerificationContext";
 
 interface VerificationRequest {
   id: string;
@@ -17,8 +18,8 @@ interface VerificationRequest {
 const VerificationHistory: React.FC = () => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
-
-  const [verifications, setVerifications] = useState<VerificationRequest[]>([]);
+  const { verifications, setVerifications } = useVerification();
+  
   const [loading, setLoading] = useState(true);
   const [selectedVerification, setSelectedVerification] = useState<VerificationRequest | null>(null);
 
@@ -27,6 +28,7 @@ const VerificationHistory: React.FC = () => {
 
     const fetchVerifications = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`/api/users/${userId}/verificationHistory`);
         if (!response.ok) throw new Error("Failed to fetch verifications");
         const data = await response.json();
@@ -39,7 +41,7 @@ const VerificationHistory: React.FC = () => {
     };
 
     fetchVerifications();
-  }, [userId]);
+  }, [userId, setVerifications]);
 
   if (loading) {
     return <div className="text-center p-4">Loading verification history...</div>;
@@ -73,7 +75,6 @@ const VerificationHistory: React.FC = () => {
       {selectedVerification && (
         <div className="fixed inset-0 flex items-center justify-center bg-transparent backdrop-blur-md z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-            {/* Close Icon as a Button */}
             <button
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer p-2 rounded-full hover:bg-gray-200 transition"
               onClick={() => setSelectedVerification(null)}

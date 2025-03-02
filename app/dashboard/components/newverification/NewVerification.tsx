@@ -6,6 +6,7 @@ import { FaSpinner } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import toast, { Toaster } from "react-hot-toast";
+import { useVerification } from "../verificationcontext/VerificationContext";
 
 interface NewVerificationProps {
   isOpen: boolean;
@@ -25,6 +26,8 @@ interface VerificationFormState {
 
 export default function NewVerification({ isOpen, setIsOpen }: NewVerificationProps) {
   const { data: session } = useSession();
+  const { verifications, setVerifications } = useVerification();
+  
   const [form, setForm] = useState<VerificationFormState>({
     address: "",
     city: "",
@@ -78,10 +81,31 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
       });
 
       const data = await response.json();
-      setLoading(false);
-
+      
       if (response.ok) {
-        toast.success("Verification submitted successfully!");
+        // Show success toast immediately
+        const toastId = toast.success("Verification submitted successfully!");
+        
+        // Add the new verification to the state
+        if (data.verification) {
+          // Add the new verification to the top of the list
+          setVerifications(prev => [data.verification, ...prev]);
+        } else {
+          try {
+            // If the API doesn't return the verification object, fetch the updated list
+            const userId = session.user.id;
+            const historyResponse = await fetch(`/api/users/${userId}/verificationHistory`);
+            if (historyResponse.ok) {
+              const historyData = await historyResponse.json();
+              setVerifications(historyData);
+            }
+          } catch (fetchError) {
+            console.error("Error fetching updated verification history:", fetchError);
+            // Don't show an error toast here, as we already showed a success toast
+          }
+        }
+        
+        // Reset form
         setForm({
           address: "",
           city: "",
@@ -91,14 +115,19 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
           longitude: "",
           files: [],
         });
-        closeModal();
+        
+        // Make sure the toast is visible before closing modal
+        setTimeout(() => {
+          closeModal();
+        }, 600); // Short delay to ensure toast is visible
       } else {
         toast.error(data.message || "Failed to submit verification.");
       }
     } catch (error) {
       console.error("An error occurred while submitting:", error);
-      setLoading(false);
       toast.error("An error occurred while submitting.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -166,7 +195,6 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
             </div>
           </div>
 
-          {/* Fixed grid layout for location fields */}
           <div>
             <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code</label>
             <input
@@ -227,7 +255,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
             {loading ? <FaSpinner className="animate-spin mr-2" /> : "Submit Verification"}
           </button>
         </form>
-        <Toaster />
+        <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
       </div>
     </div>
   );

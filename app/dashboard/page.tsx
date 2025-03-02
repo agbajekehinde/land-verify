@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -12,6 +11,7 @@ import VerificationHistory from "./components/verificationshistory/VerificationH
 import WelcomeSection from "./components/WelcomeSection/WelcomeSection";
 import GetStarted from "./components/getstarted/getstarted";
 import AccountDetails from "./components/accountdetails/AccountDetails";
+import { VerificationProvider } from "./components/verificationcontext/VerificationContext";
 
 function Dashboard() {
   const { status } = useSession();
@@ -36,19 +36,20 @@ function Dashboard() {
         <div className="w-full max-w-3xl">
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
           {activeTab === "verifications" ? (
-            <div>
-              <WelcomeSection />
-              <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
-                <p className="text-gray-600">Start a new verification request</p>
-                <button onClick={() => setIsOpen(true)} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                  Start New Verification
-                </button>
-                {isOpen && <NewVerification isOpen={isOpen} setIsOpen={setIsOpen} />}
-
+            <VerificationProvider>
+              <div>
+                <WelcomeSection />
+                <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                  <p className="text-gray-600">Start a new verification request</p>
+                  <button onClick={() => setIsOpen(true)} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Start New Verification
+                  </button>
+                  {isOpen && <NewVerification isOpen={isOpen} setIsOpen={setIsOpen} />}
+                </div>
+                <VerificationHistory/>
+                <GetStarted />
               </div>
-              <VerificationHistory/>
-              <GetStarted />
-            </div>
+            </VerificationProvider>
           ) : (
             <AccountDetails />
           )}
