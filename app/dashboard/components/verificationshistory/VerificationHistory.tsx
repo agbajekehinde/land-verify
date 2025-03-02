@@ -71,8 +71,16 @@ const VerificationHistory: React.FC = () => {
       )}
 
       {selectedVerification && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="fixed inset-0 flex items-center justify-center bg-transparent backdrop-blur-md z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            {/* Close Icon as a Button */}
+            <button
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer p-2 rounded-full hover:bg-gray-200 transition"
+              onClick={() => setSelectedVerification(null)}
+            >
+              ✖️
+            </button>
+
             <h3 className="text-lg font-bold">Verification Details</h3>
             <p className="mt-2"><strong>Address:</strong> {selectedVerification.address}</p>
             <p><strong>City:</strong> {selectedVerification.city}</p>
@@ -80,6 +88,7 @@ const VerificationHistory: React.FC = () => {
             <p><strong>Postal Code:</strong> {selectedVerification.postalCode}</p>
             <p><strong>Status:</strong> {selectedVerification.status}</p>
             <p><strong>Date:</strong> {new Date(selectedVerification.createdAt).toLocaleDateString()}</p>
+            
             {selectedVerification.files && selectedVerification.files.length > 0 && (
               <div className="mt-4">
                 <h4 className="font-semibold">Uploaded Files:</h4>
@@ -92,12 +101,6 @@ const VerificationHistory: React.FC = () => {
                 </div>
               </div>
             )}
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-              onClick={() => setSelectedVerification(null)}
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
