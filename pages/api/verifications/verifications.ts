@@ -71,7 +71,7 @@ export default async function handler(
     const longitudeStr = getFieldValue(fields.longitude) || '0'; // Default to 0 if not provided
     
     // Validation
-    if (!address || !city || !state || !landsize || !postalCode) {
+    if (!address || !city || !state || !landsize) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
     
