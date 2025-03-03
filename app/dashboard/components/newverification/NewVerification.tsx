@@ -52,8 +52,8 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     if (numericValue.includes('.')) {
       return numericValue;
     }
-    if (numericValue.length >= 2) {
-      return numericValue.slice(0, 2) + '.' + numericValue.slice(2);
+    if (numericValue.length >= 4) {
+      return numericValue.slice(0, 4) + '.' + numericValue.slice(4);
     }
     return numericValue;
   };
@@ -288,7 +288,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 name="latitude"
                 value={form.latitude}
                 onChange={handleChange}
-                placeholder="e.g., 22.44000"
+                placeholder="e.g., 2244.032"
                 className="w-full p-2 border rounded focus:border-gray-500"
               />
             </div>
