@@ -21,7 +21,7 @@ export default function SignInPage() {
     
     console.log("Sending login request:", { trimmedEmail, trimmedPassword });
 
-    const result = await signIn("credentials", {
+    const result = await signIn("admin", {
       email: trimmedEmail,
       password: trimmedPassword,
       redirect: false, // Prevent NextAuth from automatically redirecting

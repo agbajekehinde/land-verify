@@ -20,10 +20,12 @@ const prisma = new PrismaClient();
 export const authOptions: AuthOptions = {
   session: { strategy: "jwt" as SessionStrategy },
   providers: [
+    // Admin Credentials Provider
     CredentialsProvider({
-      name: "Credentials",
+      id: "admin",
+      name: "Admin Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "your@email.com" },
+        email: { label: "Email", type: "text", placeholder: "admin@example.com" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -36,7 +38,7 @@ export const authOptions: AuthOptions = {
         const inputEmail = credentials.email.trim();
         const inputPassword = credentials.password.trim();
 
-        // Trim environment variables
+        // Retrieve and trim admin credentials from environment variables
         const adminEmail = process.env.ADMIN_EMAIL?.trim();
         const adminPassword = process.env.ADMIN_PASSWORD?.trim();
 
@@ -47,7 +49,7 @@ export const authOptions: AuthOptions = {
           adminPassword,
         });
 
-        // Check if the credentials match admin credentials from .env.local
+        // Only allow if credentials match the admin credentials
         if (inputEmail === adminEmail && inputPassword === adminPassword) {
           console.log("✅ Admin authenticated");
           return {
@@ -58,7 +60,28 @@ export const authOptions: AuthOptions = {
           };
         }
 
-        // Otherwise, handle public user authentication via Prisma
+        console.log("❌ Admin credentials do not match");
+        throw new Error("Invalid credentials");
+      },
+    }),
+    // Public Credentials Provider
+    CredentialsProvider({
+      id: "public",
+      name: "Public Credentials",
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "your@email.com" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          console.log("❌ Missing credentials");
+          throw new Error("Missing email or password");
+        }
+
+        const inputEmail = credentials.email.trim();
+        const inputPassword = credentials.password.trim();
+
+        // Lookup user in your database using Prisma
         const user = await prisma.user.findUnique({
           where: { email: inputEmail },
         });
