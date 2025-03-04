@@ -128,7 +128,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
         formData.append("files", file);
       });
 
-      const response = await fetch("/api/verifications/verifications", {
+      const response = await fetch("/api/newverification/new-verification", {
         method: "POST",
         body: formData,
       });

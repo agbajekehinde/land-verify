@@ -1,4 +1,4 @@
-import NextAuth, { AuthOptions, SessionStrategy } from "next-auth"; // Import SessionStrategy
+import NextAuth, { AuthOptions, SessionStrategy } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
@@ -10,14 +10,15 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
+      role?: string;
     } & DefaultSession["user"];
   }
 }
 
 const prisma = new PrismaClient();
 
-export const authOptions: AuthOptions = {  // Explicitly type authOptions
-  session: { strategy: "jwt" as SessionStrategy }, // Fix type error
+export const authOptions: AuthOptions = {
+  session: { strategy: "jwt" as SessionStrategy },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -31,37 +32,72 @@ export const authOptions: AuthOptions = {  // Explicitly type authOptions
           throw new Error("Missing email or password");
         }
 
+        // Trim input credentials
+        const inputEmail = credentials.email.trim();
+        const inputPassword = credentials.password.trim();
+
+        // Trim environment variables
+        const adminEmail = process.env.ADMIN_EMAIL?.trim();
+        const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+
+        console.log("Admin Check:", {
+          inputEmail,
+          adminEmail,
+          inputPassword,
+          adminPassword,
+        });
+
+        // Check if the credentials match admin credentials from .env.local
+        if (inputEmail === adminEmail && inputPassword === adminPassword) {
+          console.log("✅ Admin authenticated");
+          return {
+            id: "admin",
+            name: "Admin",
+            email: inputEmail,
+            role: "admin",
+          };
+        }
+
+        // Otherwise, handle public user authentication via Prisma
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: inputEmail },
         });
 
         if (!user) {
-          console.log("❌ User not found:", credentials.email);
+          console.log("❌ User not found:", inputEmail);
           throw new Error("Invalid credentials");
         }
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        console.log("🔹 Password valid?", isValid); // Add this log to debug
-        
+        const isValid = await bcrypt.compare(inputPassword, user.password);
+        console.log("🔹 Password valid?", isValid);
+
         if (!isValid) {
-          console.log("❌ Password mismatch for user:", credentials.email);
+          console.log("❌ Password mismatch for user:", inputEmail);
           throw new Error("Invalid credentials");
         }
+
         console.log("✅ User authenticated:", user.email);
-        return { id: user.id.toString(), name: `${user.firstName} ${user.lastName}`, email: user.email };
+        return {
+          id: user.id.toString(),
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          role: "user",
+        };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: { id: string } }) {
+    async jwt({ token, user }: { token: JWT; user?: { id: string; role?: string } }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
       return session;
     },
