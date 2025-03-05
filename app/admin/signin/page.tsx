@@ -18,22 +18,47 @@ export default function SignInPage() {
     // Trim the inputs to remove accidental whitespace
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
-    
-    console.log("Sending login request:", { trimmedEmail, trimmedPassword });
 
-    const result = await signIn("admin", {
-      email: trimmedEmail,
-      password: trimmedPassword,
-      redirect: false, // Prevent NextAuth from automatically redirecting
+    console.log("🔐 Attempting Admin Login", { 
+      email: trimmedEmail, 
+      passwordLength: trimmedPassword.length 
     });
 
-    setLoading(false);
+    try {
+      const result = await signIn("admin", {
+        email: trimmedEmail,
+        password: trimmedPassword,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      toast.error("Invalid email or password");
-    } else {
-      toast.success("Login successful");
-      router.push("/admin/dashboard"); // Redirect after successful login
+      console.log("🌐 Sign-in Result:", result);
+
+      setLoading(false);
+
+      if (result?.error) {
+        console.error("❌ Login Error:", result.error);
+        toast.error(`Login failed: ${result.error}`);
+        return;
+      }
+
+      if (result?.ok) {
+        console.log("✅ Login Successful");
+        toast.success("Login successful");
+        
+        // Delay to ensure toast is visible
+        setTimeout(() => {
+          router.push("/admin/dashboard");
+        }, 1000);
+        return;
+      }
+
+      // If result is undefined or unexpected
+      console.warn("❓ Unexpected sign-in result");
+      toast.error("An unexpected error occurred");
+    } catch (error) {
+      console.error("🚨 Unexpected Error during login:", error);
+      toast.error("An unexpected error occurred");
+      setLoading(false);
     }
   };
 
