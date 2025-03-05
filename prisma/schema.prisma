@@ -18,9 +18,22 @@ model User {
   role      String  @default("user")
 }
 
+model Partner {
+  id             Int                 @id @default(autoincrement())
+  firstName      String
+  lastName       String
+  email          String              @unique
+  password       String
+  phone          String?
+  createdAt      DateTime            @default(now())
+  verificationReports VerificationReport[]
+  verificationRequests VerificationRequest[]
+}
+
 model VerificationRequest {
   id         String   @id @default(uuid())
   userId     Int      // ✅ Match the `id` type in User
+  partnerId  Int? 
   address    String
   city       String
   state      String
@@ -33,6 +46,21 @@ model VerificationRequest {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  partner    Partner? @relation(fields: [partnerId], references: [id])
+  report     VerificationReport?
+}
+
+model VerificationReport {
+  id                 String              @id @default(uuid())
+  verificationRequestId String            @unique
+  partnerId          Int
+  reportFiles        String[]            // Cloudinary URLs for report documents
+  findings           Json?               // Flexible JSON to store verification details
+  status             ReportStatus        @default(DRAFT)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  verificationRequest VerificationRequest @relation(fields: [verificationRequestId], references: [id], onDelete: Cascade)
+  partner            Partner             @relation(fields: [partnerId], references: [id])
 }
 
 enum Status {
@@ -40,4 +68,19 @@ enum Status {
   IN_PROGRESS
   COMPLETED
 }
+
+enum UserRole {
+  USER
+  ADMIN
+  PARTNER
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  REVIEWED
+  APPROVED
+  REJECTED
+}
+
 
