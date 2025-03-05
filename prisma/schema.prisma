@@ -15,6 +15,7 @@ model User {
   password       String
   createdAt      DateTime                 @default(now())
   verifications  VerificationRequest[]    // One-to-Many Relationship
+  role      String  @default("user")
 }
 
 model VerificationRequest {

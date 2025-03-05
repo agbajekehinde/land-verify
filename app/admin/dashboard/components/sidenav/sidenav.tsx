@@ -10,12 +10,12 @@ export default function SideNav() {
   const navLinks = [
     { name: "Overview", href: "/admin/dashboard" },
     { name: "Verification Requests", href: "/admin/dashboard/verification-requests" },
-    { name: "Customers", href: "/admin/customers" },
+    { name: "Customers", href: "/admin/dashboard/customers" },
     { name: "Partners", href: "/admin/partners" },
   ];
 
   return (
-    <aside className="h-full w-64 bg-white text-gray-800 flex flex-col border-r border-gray-200">
+    <aside className="fixed left-0 top-0 h-full w-64 bg-white text-gray-800 flex flex-col border-r border-gray-200">
       {/* Logo at the top */}
       <div className="p-4 flex items-center justify-center">
         <Link href="/admin/dashboard">
