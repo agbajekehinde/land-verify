@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import withSessionProvider from "./withSessionProvider";
+import withSessionProvider from "../withSessionProvider";
 import UserHeader from "./components/header/user-header";
 import Spinner from "./components/Spinner/spinner";
 import Tabs from "./components/tabs/tabs";

@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import withSessionProvider from '@/app/dashboard/withSessionProvider';
+import withSessionProvider from '@/app/withSessionProvider';
 import Spinner from '@/app/dashboard/components/Spinner/spinner';
 
 function AdminDashboard() {
