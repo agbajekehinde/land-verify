@@ -1,5 +1,3 @@
-
-
 import NextAuth, { AuthOptions, SessionStrategy } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
@@ -35,22 +33,18 @@ export const authOptions: AuthOptions = {
           console.log("❌ Missing credentials");
           throw new Error("Missing email or password");
         }
-
         // Trim input credentials
         const inputEmail = credentials.email.trim();
         const inputPassword = credentials.password.trim();
-
         // Retrieve and trim admin credentials from environment variables
         const adminEmail = process.env.ADMIN_EMAIL?.trim();
         const adminPassword = process.env.ADMIN_PASSWORD?.trim();
-
         console.log("Admin Check:", {
           inputEmail,
           adminEmail,
           inputPassword,
           adminPassword,
         });
-
         // Only allow if credentials match the admin credentials
         if (inputEmail === adminEmail && inputPassword === adminPassword) {
           console.log("✅ Admin authenticated");
@@ -61,12 +55,57 @@ export const authOptions: AuthOptions = {
             role: "admin",
           };
         }
-
         console.log("❌ Admin credentials do not match");
         throw new Error("Invalid credentials");
       },
     }),
-    // Public Credentials Provider
+
+    // Partner Credentials Provider
+    CredentialsProvider({
+      id: "partner",
+      name: "Partner Credentials",
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "partner@example.com" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          console.log("❌ Missing credentials");
+          throw new Error("Missing email or password");
+        }
+        
+        const inputEmail = credentials.email.trim();
+        const inputPassword = credentials.password.trim();
+        
+        // Lookup partner in database using Prisma
+        const partner = await prisma.partner.findUnique({
+          where: { email: inputEmail },
+        });
+        
+        if (!partner) {
+          console.log("❌ Partner not found:", inputEmail);
+          throw new Error("Invalid credentials");
+        }
+        
+        const isValid = await bcrypt.compare(inputPassword, partner.password);
+        console.log("🔹 Password valid for partner?", isValid);
+        
+        if (!isValid) {
+          console.log("❌ Password mismatch for partner:", inputEmail);
+          throw new Error("Invalid credentials");
+        }
+        
+        console.log("✅ Partner authenticated:", partner.email);
+        return {
+          id: partner.id.toString(),
+          name: `${partner.firstName} ${partner.lastName}`,
+          email: partner.email,
+          role: "partner",
+        };
+      },
+    }),
+
+    // Public Credentials Provider (Regular Users)
     CredentialsProvider({
       id: "public",
       name: "Public Credentials",
@@ -79,28 +118,22 @@ export const authOptions: AuthOptions = {
           console.log("❌ Missing credentials");
           throw new Error("Missing email or password");
         }
-
         const inputEmail = credentials.email.trim();
         const inputPassword = credentials.password.trim();
-
-        // Lookup user in your database using Prisma
+        // Lookup user in database using Prisma
         const user = await prisma.user.findUnique({
           where: { email: inputEmail },
         });
-
         if (!user) {
           console.log("❌ User not found:", inputEmail);
           throw new Error("Invalid credentials");
         }
-
         const isValid = await bcrypt.compare(inputPassword, user.password);
         console.log("🔹 Password valid?", isValid);
-
         if (!isValid) {
           console.log("❌ Password mismatch for user:", inputEmail);
           throw new Error("Invalid credentials");
         }
-
         console.log("✅ User authenticated:", user.email);
         return {
           id: user.id.toString(),

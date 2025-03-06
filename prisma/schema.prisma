@@ -20,6 +20,7 @@ model User {
 
 model Partner {
   id             Int                 @id @default(autoincrement())
+  title          String
   firstName      String
   lastName       String
   email          String              @unique
