@@ -11,7 +11,7 @@ export default function SideNav() {
     { name: "Overview", href: "/admin/dashboard" },
     { name: "Verification Requests", href: "/admin/dashboard/verification-requests" },
     { name: "Customers", href: "/admin/dashboard/customers" },
-    { name: "Partners", href: "/admin/partners" },
+    { name: "Partners", href: "/admin/dashboard/partners" },
   ];
 
   return (

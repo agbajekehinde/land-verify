@@ -12,7 +12,6 @@ import AccountDetails from "@/app/dashboard/components/accountdetails/AccountDet
 function Dashboard() {
   const { status } = useSession();
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("verifications");
 
   useEffect(() => {
