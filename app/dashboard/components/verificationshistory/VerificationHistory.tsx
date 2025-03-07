@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useVerification } from "../verificationcontext/VerificationContext";
@@ -43,6 +42,29 @@ const VerificationHistory: React.FC = () => {
     fetchVerifications();
   }, [userId, setVerifications]);
 
+  // Helper function to format status for display
+  const formatStatus = (status: string) => {
+    // Convert from database format (e.g., IN_PROGRESS) to display format (e.g., In Progress)
+    const words = status.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    );
+    return words.join(' ');
+  };
+
+  // Helper function to get status color
+  const getStatusColor = (status: string) => {
+    switch(status) {
+      case 'PENDING':
+        return 'text-yellow-600 bg-yellow-100 px-2 py-1 rounded';
+      case 'IN_PROGRESS':
+        return 'text-blue-600 bg-blue-100 px-2 py-1 rounded';
+      case 'COMPLETED':
+        return 'text-green-600 bg-green-100 px-2 py-1 rounded';
+      default:
+        return 'text-gray-600';
+    }
+  };
+
   if (loading) {
     return <div className="text-center p-4">Loading verification history...</div>;
   }
@@ -58,11 +80,13 @@ const VerificationHistory: React.FC = () => {
             <div key={verification.id} className="p-4 border rounded-lg shadow-sm bg-gray-50 relative flex items-start justify-between">
               <div>
                 <p className="font-medium">{verification.address}, {verification.city}, {verification.state} {verification.postalCode}</p>
-                <p className="text-sm text-gray-600">Status: {verification.status}</p>
-                <p className="text-sm text-gray-500">Date: {new Date(verification.createdAt).toLocaleDateString()}</p>
+                <p className="text-sm mt-1">
+                  Status: <span className={getStatusColor(verification.status)}>{formatStatus(verification.status)}</span>
+                </p>
+                <p className="text-sm text-gray-500 mt-1">Date: {new Date(verification.createdAt).toLocaleDateString()}</p>
               </div>
               <button
-                className="border border-gray-400 text-gray-600 px-3 py-1 rounded self-center"
+                className="border border-gray-400 text-gray-600 px-3 py-1 rounded self-center hover:bg-gray-200 transition"
                 onClick={() => setSelectedVerification(verification)}
               >
                 View
@@ -73,7 +97,7 @@ const VerificationHistory: React.FC = () => {
       )}
 
       {selectedVerification && (
-        <div className="fixed inset-0 flex items-center justify-center bg-transparent backdrop-blur-md z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
             <button
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer p-2 rounded-full hover:bg-gray-200 transition"
@@ -87,7 +111,7 @@ const VerificationHistory: React.FC = () => {
             <p><strong>City:</strong> {selectedVerification.city}</p>
             <p><strong>State:</strong> {selectedVerification.state}</p>
             <p><strong>Postal Code:</strong> {selectedVerification.postalCode}</p>
-            <p><strong>Status:</strong> {selectedVerification.status}</p>
+            <p><strong>Status:</strong> <span className={getStatusColor(selectedVerification.status)}>{formatStatus(selectedVerification.status)}</span></p>
             <p><strong>Date:</strong> {new Date(selectedVerification.createdAt).toLocaleDateString()}</p>
             
             {selectedVerification.files && selectedVerification.files.length > 0 && (
