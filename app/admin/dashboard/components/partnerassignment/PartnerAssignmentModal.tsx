@@ -93,9 +93,9 @@ const PartnerAssignmentModal: React.FC<PartnerAssignmentModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gray bg-opacity-10 backdrop-blur-md flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-        <h3 className="text-xl font-bold mb-4">Assign to Partner</h3>
+        <h1 className="text-3xl font-bold mb-4">Assign to Partner</h1>
         
         {verificationDetails && (
           <div className="mb-4 p-3 bg-gray-50 rounded-md">
@@ -138,7 +138,7 @@ const PartnerAssignmentModal: React.FC<PartnerAssignmentModalProps> = ({
           </button>
           <button
             onClick={handleAssignment}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-300"
             disabled={!selectedPartnerId || submitting}
           >
             {submitting ? "Assigning..." : "Assign to Partner"}
