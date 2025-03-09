@@ -10,9 +10,9 @@ export default function SideNav() {
   const navLinks = [
     { name: "Overview", href: "/admin/dashboard" },
     { name: "Verification Requests", href: "/admin/dashboard/verification-requests" },
+    { name: "Verification Reports", href: "/admin/dashboard/verificationreports" },
     { name: "Customers", href: "/admin/dashboard/customers" },
     { name: "Partners", href: "/admin/dashboard/partners" },
-    { name: "Verification Reports", href: "/admin/dashboard/verificationreports" },
   ];
 
   return (
