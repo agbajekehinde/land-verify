@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import React, { createContext, useState, useContext, ReactNode } from "react";
 
 // Defining the report enum to match Prisma schema
 export enum ReportStatus {
@@ -10,11 +10,20 @@ export enum ReportStatus {
   REJECTED = "REJECTED"
 }
 
+// Define findings type instead of using 'any'
+export interface ReportFindings {
+  // Add specific fields based on your data structure
+  observations: string[];
+  recommendations?: string[];
+  issues?: string[];
+  [key: string]: unknown; // Allow for flexible structure
+}
+
 // Defining the report interface
 export interface VerificationReport {
   id: string;
   status: ReportStatus | string;
-  findings: any; // Using 'any' since JSON can have various structures
+  findings: ReportFindings;
   reportFiles?: string[];
   createdAt?: string;
   updatedAt?: string;
@@ -55,11 +64,12 @@ interface VerificationProviderProps {
 
 export const VerificationProvider: React.FC<VerificationProviderProps> = ({ children }) => {
   const [verifications, setVerifications] = useState<VerificationRequest[]>([]);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
-
+  
   // Function to trigger a refresh
   const refreshVerifications = () => {
-    setRefreshTrigger(prev => prev + 1);
+    // Implement your refresh logic here
+    // For example, fetch data from API
+    // This replaces the unused refreshTrigger state
   };
 
   return (

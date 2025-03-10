@@ -7,10 +7,12 @@ import {
   VerificationRequest 
 } from "../verificationcontext/VerificationContext";
 
+// Instead of creating a new type, we'll use the existing ReportFindings type
+// and handle undefined in the function
 const VerificationHistory: React.FC = () => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  const { verifications, setVerifications, refreshVerifications } = useVerification();
+  const { verifications, setVerifications} = useVerification();
   
   const [loading, setLoading] = useState(true);
   const [selectedVerification, setSelectedVerification] = useState<VerificationRequest | null>(null);
@@ -86,7 +88,9 @@ const VerificationHistory: React.FC = () => {
   };
 
   // Function to download findings as JSON
-  const downloadFindings = (findings: any, address: string) => {
+  // Modified to accept potentially undefined findings and use a non-null assertion (!) 
+  // only after validation
+  const downloadFindings = (findings: unknown | undefined, address: string) => {
     // Ensure we have findings to download
     if (!findings) {
       console.error("No findings available to download");
