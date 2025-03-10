@@ -49,8 +49,8 @@ export default async function ReportDetailsPage({ params }: { params: { id: stri
         </Link>
         <h1 className="text-2xl font-bold flex-grow">Verification Report Details</h1>
         <Link 
-          href={`/admin/dashboard/verification-reports/${params.id}/edit`}
-          className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          href={`/admin/verification-reports/${params.id}/edit`}
+          className="flex items-center bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
         >
           <Edit className="h-4 w-4 mr-2" />
           Edit Report

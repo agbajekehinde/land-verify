@@ -173,7 +173,7 @@ export default function EditFindingsForm({ report }: { report: Report }) {
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Header */}
       <div className="flex items-center">
-        <Link href={`/admin/verification-reports/${report.id}`} className="flex items-center text-blue-600 hover:text-blue-800">
+        <Link href={`/admin/dashboard/verificationreports`} className="flex items-center text-blue-600 hover:text-blue-800">
           <ArrowLeft className="h-4 w-4 mr-1" />
           Back to Report
         </Link>
@@ -233,7 +233,7 @@ export default function EditFindingsForm({ report }: { report: Report }) {
       {/* Form Actions */}
       <div className="flex justify-end space-x-3 pt-4">
         <Link
-          href={`/admin/verification-reports/${report.id}`}
+          href={`/admin/dashboard/verificationreports`}
           className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           Cancel
@@ -241,7 +241,7 @@ export default function EditFindingsForm({ report }: { report: Report }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
         >
           {isSubmitting ? 'Saving...' : 'Save Findings'}
         </button>
