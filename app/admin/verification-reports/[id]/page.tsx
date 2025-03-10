@@ -19,9 +19,12 @@ type ReportWithRelations = VerificationReport & {
 };
 
 export default async function ReportDetailsPage({ params }: { params: { id: string } }) {
+  // Await params to extract id
+  const { id } = await params;
+
   // Fetch the verification report with all related data (remove files: true from include)
   const report = await prisma.verificationReport.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       partner: true,
       verificationRequest: {
@@ -49,7 +52,7 @@ export default async function ReportDetailsPage({ params }: { params: { id: stri
         </Link>
         <h1 className="text-2xl font-bold flex-grow">Verification Report Details</h1>
         <Link 
-          href={`/admin/verification-reports/${params.id}/edit`}
+          href={`/admin/verification-reports/${id}/edit`}
           className="flex items-center bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
         >
           <Edit className="h-4 w-4 mr-2" />

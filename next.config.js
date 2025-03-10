@@ -3,10 +3,10 @@
  */
 const nextConfig = {
   typescript: {
-    ignoreBuildErrors: true, // 🚨 Disables type checking at build time
+    ignoreBuildErrors: true, 
   },
   eslint: {
-    ignoreDuringBuilds: true, // 🚨 Disables ESLint at build time
+    ignoreDuringBuilds: false,
   },
 };
    

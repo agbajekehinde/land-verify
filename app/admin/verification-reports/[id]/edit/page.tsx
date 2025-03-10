@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import React from "react";
+import * as React from 'react'
 import { notFound } from "next/navigation";
 import EditReportForm from "./EditReportForm";
 
@@ -26,15 +26,16 @@ export default async function EditReportPage({
 }: {
   params: { id: string };
 }) {
+  // Await params before using its properties
+  const { id } = await params;
+
   try {
     const report = await prisma.verificationReport.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         partner: true,
         verificationRequest: {
-          include: {
-            user: true,
-          },
+          include: { user: true },
         },
       },
     });
@@ -42,17 +43,19 @@ export default async function EditReportPage({
     if (!report) {
       return notFound();
     }
-    
+
     const formattedReport: FormattedReport = {
       id: report.id,
       findings: (report.findings as Findings) || {},
       status: report.status as ReportStatus,
       reportFiles: Array.isArray(report.reportFiles) ? report.reportFiles : [],
     };
-    
+
     return (
       <div className="p-4 lg:pl-72 max-w-4xl">
-        <h1 className="text-2xl font-bold mb-6">Edit Verification Report</h1>
+        <h1 className="text-2xl font-bold mb-6">
+          Edit Verification Report
+        </h1>
         <EditReportForm report={formattedReport} />
       </div>
     );
