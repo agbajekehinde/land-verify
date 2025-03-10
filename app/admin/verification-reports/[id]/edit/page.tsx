@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import EditReportForm from "./EditReportForm";
 
 interface Findings {
- [key: string]: string | number | boolean | object;
+  [key: string]: string | number | boolean | object;
 }
 
 type ReportStatus = "DRAFT" | "SUBMITTED" | "REVIEWED" | "APPROVED" | "REJECTED";
@@ -21,16 +21,14 @@ const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 const prisma = globalForPrisma.prisma ?? new PrismaClient();
 if (!globalForPrisma.prisma) globalForPrisma.prisma = prisma;
 
-type Props = {
-  params: { id: string }
-  searchParams?: { [key: string]: string | string[] | undefined }
-}
-
-export default async function EditReportPage({ params }: Props) {
-  const { id } = params;
+export default async function EditReportPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   try {
     const report = await prisma.verificationReport.findUnique({
-      where: { id },
+      where: { id: params.id },
       include: {
         partner: true,
         verificationRequest: {
@@ -40,7 +38,7 @@ export default async function EditReportPage({ params }: Props) {
         },
       },
     });
-    
+
     if (!report) {
       return notFound();
     }
@@ -55,9 +53,6 @@ export default async function EditReportPage({ params }: Props) {
     return (
       <div className="p-4 lg:pl-72 max-w-4xl">
         <h1 className="text-2xl font-bold mb-6">Edit Verification Report</h1>
-
-        {/* @ts-expect-error Server Component passing props to Client Component */}
-        
         <EditReportForm report={formattedReport} />
       </div>
     );

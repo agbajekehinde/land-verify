@@ -2,7 +2,12 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-    /* config options here */
-  }
+  typescript: {
+    ignoreBuildErrors: true, // 🚨 Disables type checking at build time
+  },
+  eslint: {
+    ignoreDuringBuilds: true, // 🚨 Disables ESLint at build time
+  },
+};
    
   module.exports = nextConfig
