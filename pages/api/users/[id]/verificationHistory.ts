@@ -20,10 +20,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const userId = parseInt(session.user.id as string, 10);
 
-    // ✅ Fetch verifications for the logged-in user
+    // ✅ Fetch verifications for the logged-in user INCLUDING the report data
     const verifications = await prisma.verificationRequest.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
+      include: {
+        // Include the report relationship
+        report: {
+          select: {
+            id: true,
+            status: true,
+            findings: true,
+            reportFiles: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }
+      }
     });
 
     return res.status(200).json(verifications);
