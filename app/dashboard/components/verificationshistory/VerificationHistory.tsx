@@ -4,11 +4,11 @@ import { useSession } from "next-auth/react";
 import { 
   useVerification, 
   ReportStatus, 
-  VerificationRequest 
+  VerificationRequest,
+  ReportFindings
 } from "../verificationcontext/VerificationContext";
+import { generateVerificationPDF } from "@/app/utils/pdfGenerator";
 
-// Instead of creating a new type, we'll use the existing ReportFindings type
-// and handle undefined in the function
 const VerificationHistory: React.FC = () => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
@@ -87,31 +87,40 @@ const VerificationHistory: React.FC = () => {
     );
   };
 
-  // Function to download findings as JSON
-  // Modified to accept potentially undefined findings and use a non-null assertion (!) 
-  // only after validation
-  const downloadFindings = (findings: unknown | undefined, address: string) => {
+  // Updated function to download findings as PDF
+  const downloadFindings = (findings: unknown | undefined, verification: VerificationRequest) => {
     // Ensure we have findings to download
     if (!findings) {
       console.error("No findings available to download");
       return;
     }
     
-    const fileName = `findings_${address.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
-    const jsonStr = JSON.stringify(findings, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const href = URL.createObjectURL(blob);
-    
-    // Create a temporary link element
-    const link = document.createElement('a');
-    link.href = href;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    
-    // Clean up
-    document.body.removeChild(link);
-    URL.revokeObjectURL(href);
+    try {
+      // Type assertion here since we've already checked it exists
+      const reportFindings = findings as ReportFindings;
+      
+      // Generate the PDF
+      const doc = generateVerificationPDF(
+        reportFindings, 
+        verification.address,
+        {
+          city: verification.city,
+          state: verification.state,
+          postalCode: verification.postalCode,
+          createdAt: verification.createdAt
+        }
+      );
+      
+      // Generate a filename
+      const fileName = `verification_report_${verification.address.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
+      
+      // Save the PDF
+      doc.save(fileName);
+      
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("There was an error generating the PDF. Please try again later.");
+    }
   };
 
   if (loading) {
@@ -153,12 +162,12 @@ const VerificationHistory: React.FC = () => {
                 {shouldShowDownload(verification) && (
                   <button
                     className="border border-green-500 bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition flex items-center justify-center"
-                    onClick={() => downloadFindings(verification.report?.findings, verification.address)}
+                    onClick={() => downloadFindings(verification.report?.findings, verification)}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    Download
+                    Download PDF
                   </button>
                 )}
               </div>
@@ -199,12 +208,12 @@ const VerificationHistory: React.FC = () => {
                 {shouldShowDownload(selectedVerification) && (
                   <button
                     className="mt-2 border border-green-500 bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition w-full flex items-center justify-center"
-                    onClick={() => downloadFindings(selectedVerification.report?.findings, selectedVerification.address)}
+                    onClick={() => downloadFindings(selectedVerification.report?.findings, selectedVerification)}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    Download Findings
+                    Download PDF Report
                   </button>
                 )}
               </div>
