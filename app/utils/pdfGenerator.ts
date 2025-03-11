@@ -27,7 +27,7 @@ export const generateVerificationPDF = (
   // Note: You'll need to replace this with your actual logo path
   // This example assumes you have a logo.png in the public folder
   try {
-    const imgData = '/public/LandVerify-logo.png'; // Path to your LandVerify logo
+    const imgData = '/LandVerify-logo.png'; // Path to your LandVerify logo
     doc.addImage(imgData, 'PNG', 15, 10, 50, 20);
   } catch (error) {
     console.error('Error adding logo to PDF:', error);
