@@ -8,7 +8,7 @@ export default function PartnerHeader() {
     <header className="sticky top-0 flex items-center justify-between p-4 bg-white shadow-sm z-50">
       {/* Logo Section */}
       <Link href="/dashboard">
-        <Image src="/LandVerify-logo.png" alt="LandVerify Logo" width={160} height={80} />
+        <Image src="/Landverify-partner.png" alt="LandVerify Partner Logo" width={160} height={80} />
       </Link>
 
       {/* Navigation */}
