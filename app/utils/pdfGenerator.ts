@@ -23,21 +23,17 @@ export const generateVerificationPDF = (
   // Create a new PDF document
   const doc = new jsPDF() as PDFDocumentWithAutoTable;
   
-  // Add logo
-  // Note: You'll need to replace this with your actual logo path
-  // This example assumes you have a logo.png in the public folder
   try {
-    const imgData = '/LandVerify-logo.png'; // Path to your LandVerify logo
+    const imgData = '/LandVerify-logo.png'; 
     doc.addImage(imgData, 'PNG', 15, 10, 50, 20);
   } catch (error) {
     console.error('Error adding logo to PDF:', error);
-    // Continue without the logo if there's an error
   }
   
   // Add title
   doc.setFontSize(20);
   doc.setTextColor(44, 62, 80);
-  doc.text('Property Verification Report', 105, 40, { align: 'center' });
+  doc.text('Land Verification Report', 105, 40, { align: 'center' });
   
   // Add verification details
   doc.setFontSize(12);
@@ -59,7 +55,7 @@ export const generateVerificationPDF = (
   doc.setDrawColor(39, 174, 96);
   doc.roundedRect(140, 55, 50, 10, 2, 2, 'FD');
   doc.setTextColor(255, 255, 255);
-  doc.text('APPROVED', 165, 62, { align: 'center' });
+  doc.text('COMPLETED', 165, 62, { align: 'center' });
   
   // Add divider
   doc.setDrawColor(189, 195, 199);
