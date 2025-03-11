@@ -3,6 +3,13 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ReportFindings } from '../dashboard/components/verificationcontext/VerificationContext';
 
+// Define a custom interface to extend jsPDF with the autoTable properties
+interface PDFDocumentWithAutoTable extends jsPDF {
+  lastAutoTable: {
+    finalY: number;
+  };
+}
+
 export const generateVerificationPDF = (
   findings: ReportFindings, 
   address: string,
@@ -14,7 +21,7 @@ export const generateVerificationPDF = (
   }
 ) => {
   // Create a new PDF document
-  const doc = new jsPDF();
+  const doc = new jsPDF() as PDFDocumentWithAutoTable;
   
   // Add logo
   // Note: You'll need to replace this with your actual logo path
@@ -94,7 +101,7 @@ export const generateVerificationPDF = (
       },
     });
     
-    yPos = (doc as any).lastAutoTable.finalY + 15;
+    yPos = doc.lastAutoTable.finalY + 15;
   }
   
   // Recommendations section
@@ -132,7 +139,7 @@ export const generateVerificationPDF = (
       },
     });
     
-    yPos = (doc as any).lastAutoTable.finalY + 15;
+    yPos = doc.lastAutoTable.finalY + 15;
   }
   
   // Issues section
@@ -170,7 +177,7 @@ export const generateVerificationPDF = (
       },
     });
     
-    yPos = (doc as any).lastAutoTable.finalY + 15;
+    yPos = doc.lastAutoTable.finalY + 15;
   }
   
   // Add any additional fields that might be in the findings
@@ -225,7 +232,7 @@ export const generateVerificationPDF = (
       },
     });
     
-    yPos = (doc as any).lastAutoTable.finalY + 15;
+    yPos = doc.lastAutoTable.finalY + 15;
   }
   
   // Add footer with disclaimer
