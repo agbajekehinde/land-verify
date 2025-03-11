@@ -214,7 +214,7 @@ export const generateVerificationPDF = (
     
     autoTable(doc, {
       startY: yPos,
-      head: [['Field', 'Value']],
+      head: [['', '']],
       body: tableRows,
       theme: 'striped',
       headStyles: {
@@ -232,13 +232,19 @@ export const generateVerificationPDF = (
   }
   
   // Add footer with disclaimer
+  
+  const generatedDate = new Date(verificationDetails.createdAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.setFontSize(8);
-    doc.setTextColor(127, 140, 141);
+    doc.setFontSize(8).setTextColor(127, 140, 141);
     doc.text(
-      'Disclaimer: This verification report is based on information available at the time of inspection and does not constitute a legal guarantee.',
+      `Disclaimer: This verification report is based on information available as of ${generatedDate} and does not constitute a legal guarantee.`,
       105, 
       285, 
       { align: 'center' }
