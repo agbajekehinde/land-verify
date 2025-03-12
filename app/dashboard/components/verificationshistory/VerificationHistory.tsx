@@ -192,6 +192,9 @@ const VerificationHistory: React.FC = () => {
             <p><strong>City:</strong> {selectedVerification.city}</p>
             <p><strong>State:</strong> {selectedVerification.state}</p>
             <p><strong>Postal Code:</strong> {selectedVerification.postalCode}</p>
+            <p><strong>Land Size:</strong> {selectedVerification.landsize}</p>
+            <p><strong>Latitude:</strong> {selectedVerification.latitude}</p>
+            <p><strong>Longitude:</strong> {selectedVerification.longitude}</p>
             <p><strong>Status:</strong> <span className={getStatusColor(selectedVerification.status)}>{formatStatus(selectedVerification.status)}</span></p>
             <p><strong>Date:</strong> {new Date(selectedVerification.createdAt).toLocaleDateString()}</p>
             

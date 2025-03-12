@@ -36,6 +36,9 @@ export interface VerificationRequest {
   city: string;
   state: string;
   postalCode: string;
+  landsize: string;
+  latitude?: number;
+  longitude?: number;
   status: string;
   createdAt: string;
   files?: string[];

@@ -29,6 +29,19 @@ interface CloudinaryUploadResponse {
   [key: string]: unknown;
 }
 
+// Function to check if file type is allowed
+const isAllowedFileType = (file: formidable.File): boolean => {
+  const allowedTypes = [
+    'image/jpeg', 
+    'image/png', 
+    'application/pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+    'application/msword' // .doc
+  ];
+  
+  return allowedTypes.includes(file.mimetype || '');
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -97,25 +110,47 @@ export default async function handler(
     
     // Upload files to Cloudinary
     const fileUrls: string[] = [];
-    const fileArray = Array.isArray(files.files) ? files.files : [files.files].filter(Boolean);
+    const fileArray = Array.isArray(files.files) ? files.files : files.files ? [files.files] : [];
     
     for (const file of fileArray) {
       if (file && file.filepath) {
-        const uploadResponse = await new Promise<CloudinaryUploadResponse>((resolve, reject) => {
-          cloudinary.v2.uploader.upload(
-            file.filepath,
-            { folder: 'verifications' },
-            (error, result) => {
-              if (error) reject(error);
-              resolve(result as CloudinaryUploadResponse);
-            }
-          );
-        });
+        // Check if file type is allowed
+        if (!isAllowedFileType(file)) {
+          console.warn(`Skipping upload of unsupported file type: ${file.mimetype}`);
+          continue;
+        }
         
-        if (uploadResponse && uploadResponse.secure_url) {
-          fileUrls.push(uploadResponse.secure_url);
-          // Clean up temp file
-          fs.unlinkSync(file.filepath);
+        try {
+          // Determine resource_type based on file mimetype
+          const resourceType = file.mimetype?.startsWith('image/') 
+            ? 'image' 
+            : 'raw'; // Use 'raw' for documents like PDF and DOCX
+          
+          const uploadResponse = await new Promise<CloudinaryUploadResponse>((resolve, reject) => {
+            cloudinary.v2.uploader.upload(
+              file.filepath,
+              { 
+                folder: 'verifications',
+                resource_type: resourceType
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result as CloudinaryUploadResponse);
+              }
+            );
+          });
+          
+          if (uploadResponse && uploadResponse.secure_url) {
+            fileUrls.push(uploadResponse.secure_url);
+          }
+        } catch (uploadError) {
+          console.error(`Error uploading file ${file.originalFilename}:`, uploadError);
+          // Continue with other files instead of failing completely
+        } finally {
+          // Clean up temp file regardless of success/failure
+          if (fs.existsSync(file.filepath)) {
+            fs.unlinkSync(file.filepath);
+          }
         }
       }
     }
@@ -137,6 +172,6 @@ export default async function handler(
     
   } catch (error) {
     console.error('Error submitting verification:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error', error: error instanceof Error ? error.message : String(error) });
   }
 }

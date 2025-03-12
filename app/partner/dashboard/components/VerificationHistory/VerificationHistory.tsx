@@ -11,6 +11,9 @@ interface VerificationRequest {
   postalCode: string;
   status: string;
   createdAt: string;
+  latitude?: number;
+  longitude?: number;
+  landsize?: string; // Added landsize property
   files?: string[];
   userId: number;
 }
@@ -286,8 +289,39 @@ const VerificationHistory: React.FC = () => {
             <p><strong>City:</strong> {selectedVerification.city}</p>
             <p><strong>State:</strong> {selectedVerification.state}</p>
             <p><strong>Postal Code:</strong> {selectedVerification.postalCode}</p>
+            
+            {/* Display landsize if available */}
+            {selectedVerification.landsize && (
+              <p><strong>Land Size:</strong> {selectedVerification.landsize}</p>
+            )}
+            
             <p><strong>Status:</strong> <span className={getStatusColor(selectedVerification.status)}>{formatStatus(selectedVerification.status)}</span></p>
             <p><strong>Date:</strong> {new Date(selectedVerification.createdAt).toLocaleDateString()}</p>
+            
+            {/* Display latitude and longitude if available */}
+            {selectedVerification.latitude !== undefined && selectedVerification.longitude !== undefined && (
+              <div className="mt-2">
+                <p><strong>Latitude:</strong> {selectedVerification.latitude}</p>
+                <p><strong>Longitude:</strong> {selectedVerification.longitude}</p>
+              </div>
+            )}
+            
+            {/* Map view if coordinates are available */}
+            {selectedVerification.latitude !== undefined && selectedVerification.longitude !== undefined && (
+              <div className="mt-4">
+                <h4 className="font-semibold">Location Map:</h4>
+                <div className="mt-2 bg-gray-100 h-48 rounded flex items-center justify-center">
+                  <a 
+                    href={`https://www.google.com/maps?q=${selectedVerification.latitude},${selectedVerification.longitude}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    View on Google Maps
+                  </a>
+                </div>
+              </div>
+            )}
             
             {selectedVerification.files && selectedVerification.files.length > 0 && (
               <div className="mt-4">
@@ -336,6 +370,11 @@ const VerificationHistory: React.FC = () => {
               <strong>Land: </strong> 
               {selectedVerification.address}, {selectedVerification.city}, {selectedVerification.state} {selectedVerification.postalCode}
             </p>
+            
+            {/* Display land size in the report modal as well */}
+            {selectedVerification.landsize && (
+              <p className="mb-4"><strong>Land Size: </strong> {selectedVerification.landsize}</p>
+            )}
 
             {error && (
               <div className="mb-4 p-2 bg-red-100 text-red-700 rounded border border-red-300">

@@ -247,6 +247,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
               id="postalCode"
               type="text"
               name="postalCode"
+              placeholder="e.g., 10241"
               value={form.postalCode}
               onChange={handleChange}
               inputMode="numeric"
@@ -301,7 +302,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 name="longitude"
                 value={form.longitude}
                 onChange={handleChange}
-                placeholder="e.g., 13.50000"
+                placeholder="e.g., 1305.000"
                 className="w-full p-2 border rounded focus:border-gray-500"
               />
             </div>
