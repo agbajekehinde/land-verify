@@ -307,12 +307,12 @@ const VerificationHistory: React.FC = () => {
             )}
             
             {/* Map view if coordinates are available */}
-            {selectedVerification.latitude !== undefined && selectedVerification.longitude !== undefined && (
+            {selectedVerification.address !== undefined && selectedVerification.city !== undefined && selectedVerification.state !== undefined && (
               <div className="mt-4">
                 <h4 className="font-semibold">Location Map:</h4>
                 <div className="mt-2 bg-gray-100 h-48 rounded flex items-center justify-center">
                   <a 
-                    href={`https://www.google.com/maps?q=${selectedVerification.latitude},${selectedVerification.longitude}`} 
+                    href={`https://www.google.com/maps?q=${selectedVerification.address},${selectedVerification.city},${selectedVerification.state}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 underline"

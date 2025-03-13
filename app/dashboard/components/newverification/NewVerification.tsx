@@ -52,8 +52,8 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     if (numericValue.includes('.')) {
       return numericValue;
     }
-    if (numericValue.length >= 4) {
-      return numericValue.slice(0, 4) + '.' + numericValue.slice(4);
+    if (numericValue.length >= 6) {
+      return numericValue.slice(0, 6) + '.' + numericValue.slice(6);
     }
     return numericValue;
   };
@@ -247,7 +247,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
               id="postalCode"
               type="text"
               name="postalCode"
-              placeholder="e.g., 10241"
+              placeholder="e.g., 102410"
               value={form.postalCode}
               onChange={handleChange}
               inputMode="numeric"
@@ -289,7 +289,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 name="latitude"
                 value={form.latitude}
                 onChange={handleChange}
-                placeholder="e.g., 2244.032"
+                placeholder="e.g., 224403.212"
                 className="w-full p-2 border rounded focus:border-gray-500"
               />
             </div>
@@ -302,7 +302,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 name="longitude"
                 value={form.longitude}
                 onChange={handleChange}
-                placeholder="e.g., 1305.000"
+                placeholder="e.g., 130500.059"
                 className="w-full p-2 border rounded focus:border-gray-500"
               />
             </div>
