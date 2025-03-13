@@ -306,7 +306,7 @@ const VerificationHistory: React.FC = () => {
               </div>
             )}
             
-            {/* Map view if coordinates are available */}
+            {/* Map view if address are available */}
             {selectedVerification.address !== undefined && selectedVerification.city !== undefined && selectedVerification.state !== undefined && (
               <div className="mt-4">
                 <h4 className="font-semibold">Location Map:</h4>
