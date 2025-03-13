@@ -1,4 +1,3 @@
-// utils/pdfGenerator.ts
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ReportFindings } from '../dashboard/components/verificationcontext/VerificationContext';
@@ -24,7 +23,7 @@ export const generateVerificationPDF = (
   const doc = new jsPDF() as PDFDocumentWithAutoTable;
   
   try {
-    const imgData = '/LandVerify-logo.png'; 
+    const imgData = '/LandVerify-logo.png' ; 
     doc.addImage(imgData, 'PNG', 15, 10, 50, 20);
   } catch (error) {
     console.error('Error adding logo to PDF:', error);
@@ -45,7 +44,7 @@ export const generateVerificationPDF = (
     day: 'numeric'
   });
   
-  doc.text(`Property Address: ${address}`, 20, 55);
+  doc.text(`Address: ${address}`, 20, 55);
   doc.text(`${verificationDetails.city}, ${verificationDetails.state} ${verificationDetails.postalCode}`, 20, 62);
   doc.text(`Verification Date: ${formattedDate}`, 20, 69);
   doc.text(`Report ID: ${Math.random().toString(36).substring(2, 10).toUpperCase()}`, 20, 76);
@@ -214,14 +213,8 @@ export const generateVerificationPDF = (
     
     autoTable(doc, {
       startY: yPos,
-      head: [['', '']],
       body: tableRows,
       theme: 'striped',
-      headStyles: {
-        fillColor: [155, 89, 182],
-        textColor: 255,
-        fontStyle: 'bold'
-      },
       styles: {
         cellPadding: 5,
         fontSize: 10
@@ -242,13 +235,28 @@ export const generateVerificationPDF = (
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.setFontSize(8).setTextColor(127, 140, 141);
+    doc.setFontSize(8).setTextColor(100, 100, 100);
+
+    const disclaimer = 
+      `Disclaimer: This verification report is based on information available as of ${generatedDate} and is provided for informational purposes only. `+
+      `LandVerify does not warrant or guarantee the accuracy, completeness, or reliability of the information contained herein. `+
+      `This report does not constitute legal, financial, or professional advice, nor does it serve as a substitute for independent due diligence.\n\n`+
+      `LandVerify expressly disclaims liability for errors, omissions, or misrepresentations in the data provided. `+
+      `By using this report, the recipient acknowledges that LandVerify shall not be held responsible for any damages arising from reliance on this information.`;
+    
+   
     doc.text(
-      `Disclaimer: This verification report is based on information available as of ${generatedDate} and does not constitute a legal guarantee.`,
-      105, 
-      285, 
-      { align: 'center' }
+      disclaimer,
+      20, 
+      265, 
+      {
+        align: 'left',
+        maxWidth: 170 
+      }
     );
+    
+    // Add page number with more space from disclaimer
+    doc.setFontSize(9).setTextColor(80, 80, 80);
     doc.text(`Page ${i} of ${pageCount}`, 105, 290, { align: 'center' });
   }
   
