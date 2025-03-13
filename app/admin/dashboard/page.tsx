@@ -34,10 +34,9 @@ function AdminDashboard() {
 
   // Actual dashboard content
   return (
-    <main>
-      <h1>Admin Dashboard</h1>
-      {/* Your existing dashboard content */}
-    </main>
+        <div className="p-4 lg:pl-72">
+        <h1 className="text-2xl font-bold mb-6">Overview</h1>
+        </div>
   );
 }
 
