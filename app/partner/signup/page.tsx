@@ -45,10 +45,7 @@ export default function SignupForm() {
       <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
         <Link href="/">
           <img
-            src="/LandVerify-partner.png"
-            alt="LandVerify Partner Logo"
-            className="mb-6 sm:mb-8 lg:mb-4 w-32 h-12 sm:w-40 sm:h-14 lg:w-48 lg:h-16 mx-auto"
-          />
+            src="/LandVerify-partner.png" alt="LandVerify Partner Logo" className="mb-0 sm:mb-4 lg:mb-4 w-32 h-8 w-16 sm:h-14 lg:w-56 lg:h-13 mx-auto"/>
         </Link>
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">
           Sign up as a Partner
