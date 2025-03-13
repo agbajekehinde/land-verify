@@ -235,7 +235,7 @@ export const generateVerificationPDF = (
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.setFontSize(8).setTextColor(100, 100, 100);
+    doc.setFontSize(8).setTextColor(180, 180, 180);
 
     const disclaimer = 
       `Disclaimer: This verification report is based on information available as of ${generatedDate} and is provided for informational purposes only. `+
