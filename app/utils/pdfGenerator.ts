@@ -30,11 +30,13 @@ export const generateVerificationPDF = (
   }
   
   // Add title
+  doc.setFont('helvetica', 'bold');
   doc.setFontSize(20);
   doc.setTextColor(44, 62, 80);
   doc.text('Land Verification Report', 105, 40, { align: 'center' });
   
   // Add verification details
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(12);
   doc.setTextColor(52, 73, 94);
   

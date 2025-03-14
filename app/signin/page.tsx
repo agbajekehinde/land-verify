@@ -40,7 +40,7 @@ export default function SignInPage() {
         <Link href="/">
           <img src="/LandVerify-logo.png" alt="LandVerify Logo" className="mb-6 sm:mb-8 lg:mb-4 w-32 h-12 sm:w-40 sm:h-14 lg:w-48 lg:h-16 mx-auto"/>
         </Link>
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">Sign In</h1>
+        <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">Sign In</h1>
         <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded">
           <input
             type="email"
@@ -48,7 +48,7 @@ export default function SignInPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
+            className="max-w-xl mx-auto block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
           />
           <input
             type="password"

@@ -144,9 +144,6 @@ const VerificationHistory: React.FC = () => {
                 <p className="text-sm text-gray-500 mt-1">Date: {new Date(verification.createdAt).toLocaleDateString()}</p>
                 {verification.report && (
                   <p className="text-sm mt-1">
-                    Report Status: <span className={getReportStatusColor(verification.report.status)}>
-                      {formatStatus(verification.report.status)}
-                    </span>
                   </p>
                 )}
               </div>
