@@ -97,12 +97,15 @@ export default function SignupForm() {
           </button>
           <Toaster />
           <div>
-            <p className="text-center mt-4">
+            <p className="text-center mt-0">
               Already have an account?{" "}
-              <Link href="/signin" className="text-[#479101] hover:underline">
+              <Link href="/signin" className="text-[#479101] underline hover:underline">
                 Login
               </Link>
             </p>
+            <p className="text-center text-sm text-gray-400 mt-4">
+            By signing up, you agree to the <Link href="/terms" className="underline">LandVerify Terms and Conditions</Link>.
+          </p>
           </div>
         </form>
       </div>

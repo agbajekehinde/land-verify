@@ -129,11 +129,14 @@ export default function SignupForm() {
           <div>
             <p className="text-center mt-4">
               Already have an account?{" "}
-              <Link href="/partner/signin" className="text-[#479101] hover:underline">
+              <Link href="/partner/signin" className="text-[#479101] underline hover:underline">
                 Login
               </Link>
             </p>
           </div>
+          <p className="text-center text-sm text-gray-400 mt-4">
+            By signing up, you agree to the <Link href="/terms" className="underline">LandVerify Terms and Conditions</Link>.
+          </p>
         </form>
       </div>
     </div>

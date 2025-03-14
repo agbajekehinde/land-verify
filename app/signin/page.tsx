@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast, { Toaster } from "react-hot-toast";
@@ -21,7 +20,7 @@ export default function SignInPage() {
     const result = await signIn("public", {
       email,
       password,
-      redirect: false, // Prevent NextAuth from automatically redirecting
+      redirect: false,
     });
 
     setLoading(false);
@@ -30,7 +29,7 @@ export default function SignInPage() {
       toast.error("Invalid email or password");
     } else {
       toast.success("Login successful");
-      router.push("/dashboard"); // Redirect after successful login
+      router.push("/dashboard");
     }
   };
 
@@ -61,10 +60,13 @@ export default function SignInPage() {
           <button type="submit" className="w-full py-2 bg-[#479101] text-white font-semibold rounded-md hover:bg-[#3a7a01] cursor-pointer">
             {loading ? "Signing In..." : "Sign In"}
           </button>
-            <Toaster />
+          <Toaster />
           <div>
-            <p className="text-center mt-4">Don&apos;t have an account? <Link href="/signup" className="text-[#479101] hover:underline">Sign Up</Link></p>
+            <p className="text-center mt-0">Don&apos;t have an account? <Link href="/signup" className="text-[#479101] underline hover:underline">Sign Up</Link></p>
           </div>
+          <p className="text-center text-sm text-gray-400 mt-4">
+            By signing in, you agree to the <Link href="/terms" className="underline">LandVerify Terms and Conditions</Link>.
+          </p>
         </form>
       </div>
     </div>
