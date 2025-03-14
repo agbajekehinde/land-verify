@@ -2,7 +2,6 @@ import React from 'react';
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';
-import WhatsAppButton from './components/Whatsappbutton/Whatsappbutton';
 
 export const metadata: Metadata = {
   title: 'LandVerify',
