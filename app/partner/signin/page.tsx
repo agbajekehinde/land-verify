@@ -64,7 +64,7 @@ export default function PartnerSignInPage() {
             <p className="text-center mt-4">Don&apos;t have an account? <Link href="/partner/signup" className="text-[#479101] underline hover:underline">Sign Up as Partner</Link></p>
           </div>
           <p className="text-center text-sm text-gray-400 mt-4">
-            By signing in, you agree to the <Link href="/terms" className="underline">LandVerify Terms and Conditions</Link>.
+            By signing in, you agree to the <Link href="/terms-and-conditions" className="underline">LandVerify Terms and Conditions</Link>.
           </p>
         </form>
       </div>

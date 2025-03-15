@@ -104,7 +104,7 @@ export default function SignupForm() {
               </Link>
             </p>
             <p className="text-center text-sm text-gray-400 mt-4">
-            By signing up, you agree to the <Link href="/terms" className="underline">LandVerify Terms and Conditions</Link>.
+            By signing up, you agree to the <Link href="/terms-and-conditions" className="underline">LandVerify Terms and Conditions</Link>.
           </p>
           </div>
         </form>
