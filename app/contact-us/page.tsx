@@ -13,8 +13,8 @@ const Contact: React.FC = () => {
         <div className="space-y-6">
           <Section title="Email">
             <ul className="list-disc pl-6">
-              <li>General Inquiries: <a href="mailto:hello@landverify.com" className="text-blue-600 underline">hello@landverify.com</a></li>
-              <li>Support: <a href="mailto:support@landverify.com" className="text-blue-600 underline">support@landverify.com</a></li>
+              <li>General Inquiries: <a href="mailto:hello@landverify.com" className="text-gray-600 underline">hello@landverify.com</a></li>
+              <li>Support: <a href="mailto:support@landverify.com" className="text-gray-600 underline">support@landverify.com</a></li>
             </ul>
           </Section>
 
@@ -25,10 +25,10 @@ const Contact: React.FC = () => {
 
           <Section title="Follow Us">
             <div className="flex space-x-4 mt-2">
-              <a href="#" className="text-blue-600 hover:underline">Facebook</a>
-              <a href="#" className="text-blue-400 hover:underline">Twitter/X</a>
-              <a href="#" className="text-purple-600 hover:underline">Instagram</a>
-              <a href="#" className="text-blue-700 hover:underline">LinkedIn</a>
+              <a href="#" className="text-gray-700 hover:underline">Facebook</a>
+              <a href="#" className="text-gray-700 hover:underline">Twitter/X</a>
+              <a href="#" className="text-gray-700 hover:underline">Instagram</a>
+              <a href="#" className="text-gray-700 hover:underline">LinkedIn</a>
             </div>
           </Section>
         </div>
