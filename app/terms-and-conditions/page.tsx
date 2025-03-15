@@ -72,10 +72,8 @@ const TermsAndConditions: React.FC = () => {
           </Section>
 
           <Section title="15. Contact Information">
-            <p>For questions, contact us at:</p>
-            <ul className="list-disc pl-6">
-              <li>Email: <a href="mailto:contact@landverify.com" className="text-blue-600 underline">contact@landverify.com</a></li>
-            </ul>
+            <p>For questions, contact us at: <a href="mailto:contact@landverify.com" className="text-green-600 underline">contact@landverify.com</a> </p>
+           
           </Section>
         </div>
       </div>
