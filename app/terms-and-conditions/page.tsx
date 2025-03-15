@@ -79,6 +79,7 @@ const TermsAndConditions: React.FC = () => {
           </Section>
         </div>
       </div>
+      <div className="py-12"></div>
       <Footer />
     </div>
   );
