@@ -15,20 +15,23 @@ export default function Hero() {
             <strong>Verify Your Land/Property Investment with Confidence</strong>
           </h1>
           <p>Avoid land scams and fraudulent property deals with LandVerify. <br/> Our expert-backed verification service ensures you buy only genuine, legally documented land and homes. Get your land/property verified within 48 hours to 7 days.</p>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
               href="/signup"
-              className="flex items-center gap-5 self-start rounded-lg bg-[#3a7a01] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#3a7a01] md:text-base"
+              className="flex w-full md:w-auto items-center justify-center gap-5 rounded-lg bg-[#3a7a01] px-6 py-4 md:py-3 text-sm font-medium text-white transition-colors hover:bg-[#3a7a01] md:text-base"
             >
               <span>Start Verification</span> <ArrowRightIcon className="w-5 md:w-6" />
             </Link>
             <Link
               href="/learn-more"
-              className="flex items-center gap-5 self-start rounded-lg border border-[#479101] px-6 py-3 text-sm font-medium text-[#479101] transition-colors hover:bg-[#e6f4e1] md:text-base"
+              className="flex w-full md:w-auto items-center justify-center gap-5 rounded-lg border border-[#479101] px-6 py-4 md:py-3 text-sm font-medium text-[#479101] transition-colors hover:bg-[#e6f4e1] md:text-base"
             >
               <span>Learn More</span>
             </Link>
           </div>
+
+
+
           <p className="text-xs"><span>🚀 Pilot Phase: Currently available in Lagos and Ogun states, expanding soon.</span></p>
         </div>
         <div className="">
