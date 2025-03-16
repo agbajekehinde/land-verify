@@ -19,8 +19,8 @@ const Contact: React.FC = () => {
           </Section>
 
           <Section title="Phone">
-            <p>Customer Support: <span className="font-medium">+234 XXX XXX XXXX</span></p>
-            <p>WhatsApp: <span className="font-medium">+234 XXX XXX XXXX</span></p>
+            <p>Customer Support: <span className="font-medium">+234 902 962 8530</span></p>
+            <p>WhatsApp: <span className="font-medium">+234 902 962 8530</span></p>
           </Section>
 
           <Section title="Follow Us">
