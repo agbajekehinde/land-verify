@@ -24,7 +24,7 @@ export const generateVerificationPDF = (
   
   try {
     const imgData = '/LandVerify-logo.png' ; 
-    doc.addImage(imgData, 'PNG', 15, 10, 50, 20);
+    doc.addImage(imgData, 'PNG', 15, 10, 36, 12);
   } catch (error) {
     console.error('Error adding logo to PDF:', error);
   }
@@ -51,12 +51,19 @@ export const generateVerificationPDF = (
   doc.text(`Verification Date: ${formattedDate}`, 20, 69);
   doc.text(`Report ID: ${Math.random().toString(36).substring(2, 10).toUpperCase()}`, 20, 76);
   
-  // Add verification status - always "Approved" since we only generate PDFs for approved reports
-  doc.setFillColor(39, 174, 96);
-  doc.setDrawColor(39, 174, 96);
-  doc.roundedRect(140, 55, 50, 10, 2, 2, 'FD');
-  doc.setTextColor(255, 255, 255);
-  doc.text('COMPLETED', 165, 62, { align: 'center' });
+// Add verification status - always "COMPLETED" since we only generate PDFs for approved reports
+doc.setFillColor(39, 174, 96);
+doc.setDrawColor(39, 174, 96);
+
+// Increase width for full container coverage
+doc.roundedRect(140, 55, 42, 10, 2, 2, 'FD');
+
+doc.setFont('helvetica', 'bold'); // Set bold font
+doc.setTextColor(255, 255, 255);
+
+// Center text properly in the expanded container
+doc.text('COMPLETED', 160, 61.5, { align: 'center' });
+
   
   // Add divider
   doc.setDrawColor(189, 195, 199);
