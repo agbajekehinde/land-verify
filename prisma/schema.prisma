@@ -43,6 +43,9 @@ model VerificationRequest {
   latitude   Float?
   longitude  Float?
   files      String[] // ✅ Array of Cloudinary URLs
+  paymentType    String   @default("regular") 
+  paymentStatus  String   @default("pending") 
+  paymentAmount  Float    @default(0)        
   status     Status   @default(PENDING)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

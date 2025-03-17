@@ -73,7 +73,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
   });
 
   const [loading, setLoading] = useState(false);
-  const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || ""; // Use environment variable in production
+  const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || ""; 
 
   const closeModal = () => {
     setIsOpen(false);
@@ -158,7 +158,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     setSelectedPaymentPlan(plan);
   };
 
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = (): void => {
     setPaymentComplete(true);
     toast.success("Payment successful!");
   };
@@ -183,10 +183,9 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
       formData.append("state", form.state);
       formData.append("postalCode", form.postalCode);
       formData.append("landsize", form.landsize);
-      
-      // Add payment info
-      formData.append("paymentType", selectedPaymentPlan?.type || "regular");
+      formData.append("paymentStatus", "success"); 
       formData.append("paymentAmount", selectedPaymentPlan?.amount.toString() || "0");
+      formData.append("paymentType", selectedPaymentPlan?.type || "regular");
 
       if (form.latitude.trim() !== "") 
         formData.append("latitude", form.latitude);
@@ -480,8 +479,8 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                         <h3 className="font-medium text-lg">{plan.label}</h3>
                         <p className="text-sm text-gray-500">
                           {plan.type === "regular" 
-                            ? "Standard processing time" 
-                            : "Expedited processing"}
+                            ? "Standard processing time: 5-7 working days" 
+                            : "Expedited processing: 48 hours"}
                         </p>
                       </div>
                       <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
@@ -558,7 +557,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 <div className="w-full max-w-xs">
                   {(name && email) ? (
                     <PaystackButton
-                      text="Pay with Paystack"
+                      text="Make Payment"
                       className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center"
                       email={email}
                       amount={selectedPaymentPlan.amount}

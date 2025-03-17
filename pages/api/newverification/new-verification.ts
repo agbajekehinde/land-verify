@@ -65,6 +65,10 @@ export default async function handler(
         resolve([fields, files]);
       });
     });
+
+    // Log parsed fields and files
+    console.log('Parsed fields:', fields);
+    console.log('Parsed files:', files);
     
     // Helper function to extract field values whether they are strings or arrays
     const getFieldValue = (field: unknown): string => {
@@ -78,6 +82,9 @@ export default async function handler(
     const state = getFieldValue(fields.state);
     const postalCode = getFieldValue(fields.postalCode);
     const landsize = getFieldValue(fields.landsize);
+    const paymentType = getFieldValue(fields.paymentType) || 'regular'; 
+    const paymentStatus = getFieldValue(fields.paymentStatus) || 'success'; 
+    const paymentAmount = getFieldValue(fields.paymentAmount) || '0';
     
     // Optional fields
     const latitudeStr = getFieldValue(fields.latitude) || '0'; // Default to 0 if not provided
@@ -93,7 +100,7 @@ export default async function handler(
     const longitude = parseFloat(longitudeStr);
     
     // Create verification data with all required fields
-    const verificationData: Prisma.VerificationRequestCreateInput = {
+    const verificationData: Prisma.VerificationRequestCreateInput & { paymentType?: string, paymentAmount?: number, paymentStatus?: string } = {
       user: {
         connect: {
           id: parseInt(session.user.id as string, 10)
@@ -106,6 +113,9 @@ export default async function handler(
       postalCode,
       latitude,
       longitude,
+      paymentType, 
+      paymentStatus,       
+      paymentAmount: parseFloat(paymentAmount),
     };
     
     // Upload files to Cloudinary
@@ -114,6 +124,9 @@ export default async function handler(
     
     for (const file of fileArray) {
       if (file && file.filepath) {
+        // Log file details before upload
+        console.log('Uploading file:', file);
+
         // Check if file type is allowed
         if (!isAllowedFileType(file)) {
           console.warn(`Skipping upload of unsupported file type: ${file.mimetype}`);
