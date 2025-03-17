@@ -16,6 +16,7 @@ const VerificationHistory: React.FC = () => {
   
   const [loading, setLoading] = useState(true);
   const [selectedVerification, setSelectedVerification] = useState<VerificationRequest | null>(null);
+  const [generatingPDF, setGeneratingPDF] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -88,7 +89,7 @@ const VerificationHistory: React.FC = () => {
   };
 
   // Updated function to download findings as PDF
-  const downloadFindings = (findings: unknown | undefined, verification: VerificationRequest) => {
+  const downloadFindings = async (findings: unknown | undefined, verification: VerificationRequest) => {
     // Ensure we have findings to download
     if (!findings) {
       console.error("No findings available to download");
@@ -96,11 +97,15 @@ const VerificationHistory: React.FC = () => {
     }
     
     try {
+      setGeneratingPDF(true);
       // Type assertion here since we've already checked it exists
       const reportFindings = findings as ReportFindings;
       
+      // Get report files from the verification report if available
+      const reportFiles = verification.report?.reportFiles || [];
+      
       // Generate the PDF
-      const doc = generateVerificationPDF(
+      const doc = await generateVerificationPDF(
         reportFindings, 
         verification.address,
         {
@@ -108,7 +113,8 @@ const VerificationHistory: React.FC = () => {
           state: verification.state,
           postalCode: verification.postalCode,
           createdAt: verification.createdAt
-        }
+        },
+        reportFiles // Pass report files to PDF generator
       );
       
       // Generate a filename
@@ -120,6 +126,8 @@ const VerificationHistory: React.FC = () => {
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert("There was an error generating the PDF. Please try again later.");
+    } finally {
+      setGeneratingPDF(false);
     }
   };
 
@@ -158,13 +166,26 @@ const VerificationHistory: React.FC = () => {
                 {/* Download button - only show when report is approved */}
                 {shouldShowDownload(verification) && (
                   <button
-                    className="border border-green-500 bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition flex items-center justify-center"
+                    className={`border border-green-500 bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition flex items-center justify-center ${generatingPDF ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={() => downloadFindings(verification.report?.findings, verification)}
+                    disabled={generatingPDF}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Download PDF
+                    {generatingPDF ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-green-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download PDF
+                      </>
+                    )}
                   </button>
                 )}
               </div>
@@ -196,24 +217,48 @@ const VerificationHistory: React.FC = () => {
             <p><strong>Date:</strong> {new Date(selectedVerification.createdAt).toLocaleDateString()}</p>
             
             {selectedVerification.report && (
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <h4 className="font-semibold">Report Status:</h4>
-                <p className="mt-1">
-                  <span className={getReportStatusColor(selectedVerification.report.status)}>
-                    {formatStatus(selectedVerification.report.status)}
-                  </span>
-                </p>
+              <div className="mt-4 pt-4 border-t border-gray-200">            
+                {/* Display report files if available */}
+                {selectedVerification.report.reportFiles && selectedVerification.report.reportFiles.length > 0 && (
+                  <div className="mt-2">
+                    <h4 className="font-semibold">Verification Images:</h4>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      {selectedVerification.report.reportFiles.map((file: string, index: number) => (
+                        <a key={index} href={file} target="_blank" rel="noopener noreferrer" className="block">
+                          <img 
+                            src={file} 
+                            alt={`Verification image ${index + 1}`}
+                            className="w-full h-24 object-cover rounded border border-gray-200 hover:border-blue-400 transition" 
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 
                 {/* Download button in modal - only shown when report is approved */}
                 {shouldShowDownload(selectedVerification) && (
                   <button
-                    className="mt-2 border border-green-500 bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition w-full flex items-center justify-center"
+                    className={`mt-4 border border-green-500 bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition w-full flex items-center justify-center ${generatingPDF ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={() => downloadFindings(selectedVerification.report?.findings, selectedVerification)}
+                    disabled={generatingPDF}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Download PDF Report
+                    {generatingPDF ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-green-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Generating PDF...
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download PDF Report
+                      </>
+                    )}
                   </button>
                 )}
               </div>
@@ -222,11 +267,24 @@ const VerificationHistory: React.FC = () => {
             {/* Display uploaded files if available */}
             {selectedVerification.files && selectedVerification.files.length > 0 && (
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <h4 className="font-semibold">Uploaded Files:</h4>
-                <div className="mt-2 space-y-2">
+                <h4 className="font-semibold">Customer Uploaded Files:</h4>
+                <div className="mt-2 grid grid-cols-2 gap-2">
                   {selectedVerification.files.map((file: string, index: number) => (
-                    <a key={index} href={file} target="_blank" rel="noopener noreferrer" className="block text-blue-600 underline">
-                      View File {index + 1}
+                    <a key={index} href={file} target="_blank" rel="noopener noreferrer" className="block">
+                      <img 
+                        src={file} 
+                        alt={`User file ${index + 1}`}
+                        className="w-full h-24 object-cover rounded border border-gray-200 hover:border-blue-400 transition" 
+                        onError={(e) => {
+                          // If image fails to load, show a file icon instead
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null;
+                          target.src = "/document-icon.svg"; // Fallback image
+                          target.classList.add("p-2");
+                          target.classList.remove("object-cover");
+                          target.classList.add("object-contain");
+                        }}
+                      />
                     </a>
                   ))}
                 </div>

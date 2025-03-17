@@ -9,7 +9,29 @@ interface PDFDocumentWithAutoTable extends jsPDF {
   };
 }
 
-export const generateVerificationPDF = (
+// Helper function to convert a remote image to a data URL
+const imageToDataURL = async (src: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('Could not get canvas context'));
+        return;
+      }
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL('image/jpeg'));
+    };
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    img.src = src;
+  });
+};
+
+export const generateVerificationPDF = async (
   findings: ReportFindings, 
   address: string,
   verificationDetails: {
@@ -17,7 +39,8 @@ export const generateVerificationPDF = (
     state: string;
     postalCode: string;
     createdAt: string;
-  }
+  },
+  reportFiles?: string[] // Add reportFiles parameter
 ) => {
   // Create a new PDF document
   const doc = new jsPDF() as PDFDocumentWithAutoTable;
@@ -51,19 +74,18 @@ export const generateVerificationPDF = (
   doc.text(`Verification Date: ${formattedDate}`, 20, 69);
   doc.text(`Report ID: ${Math.random().toString(36).substring(2, 10).toUpperCase()}`, 20, 76);
   
-// Add verification status - always "COMPLETED" since we only generate PDFs for approved reports
-doc.setFillColor(39, 174, 96);
-doc.setDrawColor(39, 174, 96);
+  // Add verification status - always "COMPLETED" since we only generate PDFs for approved reports
+  doc.setFillColor(39, 174, 96);
+  doc.setDrawColor(39, 174, 96);
 
-// Increase width for full container coverage
-doc.roundedRect(140, 55, 42, 10, 2, 2, 'FD');
+  // Increase width for full container coverage
+  doc.roundedRect(140, 55, 42, 10, 2, 2, 'FD');
 
-doc.setFont('helvetica', 'bold'); // Set bold font
-doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold'); // Set bold font
+  doc.setTextColor(255, 255, 255);
 
-// Center text properly in the expanded container
-doc.text('COMPLETED', 160, 61.5, { align: 'center' });
-
+  // Center text properly in the expanded container
+  doc.text('COMPLETED', 160, 61.5, { align: 'center' });
   
   // Add divider
   doc.setDrawColor(189, 195, 199);
@@ -184,7 +206,7 @@ doc.text('COMPLETED', 160, 61.5, { align: 'center' });
     yPos = doc.lastAutoTable.finalY + 15;
   }
   
-  // Add any additional fields that might be in the findings
+  // Add any additional fields that might be in the findings - MOVED UP
   const additionalFields = Object.entries(findings)
     .filter(([key]) => !['observations', 'recommendations', 'issues'].includes(key));
   
@@ -233,8 +255,61 @@ doc.text('COMPLETED', 160, 61.5, { align: 'center' });
     yPos = doc.lastAutoTable.finalY + 15;
   }
   
-  // Add footer with disclaimer
+  // Add the report files section - MOVED DOWN
+  if (reportFiles && reportFiles.length > 0) {
+    // Check if we need to add a new page
+    if (yPos > 240) {
+      doc.addPage();
+      yPos = 20;
+    }
+    
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Verification Images', 20, yPos);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+    
+    yPos += 10;
+    
+    // Process each image
+    for (let i = 0; i < reportFiles.length; i++) {
+      // Check if there's enough space for image + footer
+      // Added a larger margin (45mm) to ensure footer space
+      if (yPos > 190) {
+        doc.addPage();
+        yPos = 20;
+      }
+      
+      try {
+        // Convert image to data URL
+        const imageDataUrl = await imageToDataURL(reportFiles[i]);
+        
+        // Add image title
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Image ${i + 1}`, 20, yPos);
+        
+        // Add image
+        // Set a fixed width and calculate height based on aspect ratio
+        const imgWidth = 160; // width in mm
+        const imgHeight = 90; // height in mm - standard aspect ratio
+        
+        doc.addImage(imageDataUrl, 'JPEG', 20, yPos + 5, imgWidth, imgHeight);
+        
+        // Update yPos for next item
+        yPos += imgHeight + 20;
+      } catch (error) {
+        console.error(`Error processing image ${i + 1}:`, error);
+        
+        // Add a placeholder for failed images
+        doc.setFontSize(10);
+        doc.text(`[Image ${i + 1} - Could not be displayed]`, 20, yPos + 5);
+        yPos += 15;
+      }
+    }
+  }
   
+  // Add footer with disclaimer
   const generatedDate = new Date(verificationDetails.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -253,7 +328,6 @@ doc.text('COMPLETED', 160, 61.5, { align: 'center' });
       `LandVerify expressly disclaims liability for errors, omissions, or misrepresentations in the data provided. `+
       `By using this report, the recipient acknowledges that LandVerify shall not be held responsible for any damages arising from reliance on this information.`;
     
-   
     doc.text(
       disclaimer,
       20, 
