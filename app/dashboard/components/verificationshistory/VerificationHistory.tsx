@@ -60,25 +60,7 @@ const VerificationHistory: React.FC = () => {
         return 'text-gray-600';
     }
   };
-
-  // Helper function to get report status color
-  const getReportStatusColor = (status: string) => {
-    switch(status) {
-      case ReportStatus.DRAFT:
-        return 'text-gray-600 bg-gray-100 px-2 py-1 rounded';
-      case ReportStatus.SUBMITTED:
-        return 'text-blue-600 bg-blue-100 px-2 py-1 rounded';
-      case ReportStatus.REVIEWED:
-        return 'text-purple-600 bg-purple-100 px-2 py-1 rounded';
-      case ReportStatus.APPROVED:
-        return 'text-green-600 bg-green-100 px-2 py-1 rounded';
-      case ReportStatus.REJECTED:
-        return 'text-red-600 bg-red-100 px-2 py-1 rounded';
-      default:
-        return 'text-gray-600';
-    }
-  };
-
+  
   // Function to check if a download button should be shown
   const shouldShowDownload = (verification: VerificationRequest) => {
     return (
