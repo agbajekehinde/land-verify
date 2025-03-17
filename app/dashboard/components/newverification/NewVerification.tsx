@@ -2,12 +2,19 @@
 
 import React, { useState, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaCheck } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { FaFileAlt, FaFilePdf, FaFileImage, FaUpload } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 import { useVerification } from "../verificationcontext/VerificationContext";
+import dynamic from "next/dynamic";
+
+// Import PaystackButton dynamically
+const PaystackButton = dynamic(
+  () => import('react-paystack').then(mod => mod.PaystackButton),
+  { ssr: false }
+);
 
 interface NewVerificationProps {
   isOpen: boolean;
@@ -25,10 +32,34 @@ interface VerificationFormState {
   files: File[];
 }
 
+// Payment plan options
+interface PaymentPlan {
+  type: "regular" | "priority";
+  amount: number; // Amount in kobo
+  label: string;
+}
+
+const PAYMENT_PLANS: PaymentPlan[] = [
+  { type: "regular", amount: 5000000, label: "Regular Service (₦50,000)" },
+  { type: "priority", amount: 7500000, label: "Priority Service (₦75,000)" }
+];
+
 export default function NewVerification({ isOpen, setIsOpen }: NewVerificationProps) {
   const { data: session } = useSession();
   const { setVerifications } = useVerification();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Modal step state (1 for first page, 2 for payment page)
+  const [step, setStep] = useState<number>(1);
+  
+  // Payment state
+  const [selectedPaymentPlan, setSelectedPaymentPlan] = useState<PaymentPlan | null>(null);
+  const [paymentComplete, setPaymentComplete] = useState<boolean>(false);
+  
+  // User details for payment
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   
   const [form, setForm] = useState<VerificationFormState>({
     address: "",
@@ -42,8 +73,15 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
   });
 
   const [loading, setLoading] = useState(false);
+  const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || ""; // Use environment variable in production
 
-  const closeModal = () => setIsOpen(false);
+  const closeModal = () => {
+    setIsOpen(false);
+    // Reset states when closing
+    setStep(1);
+    setSelectedPaymentPlan(null);
+    setPaymentComplete(false);
+  };
 
   // Format coordinates to decimal format
   const formatCoordinate = (value: string): string => {
@@ -99,9 +137,37 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     return <FaFileAlt className="text-gray-500" />;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleNextStep = () => {
+    // Validate first step form
+    if (!form.address || !form.city || !form.state || !form.landsize) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    // Prefill user details if available from session
+    if (session?.user) {
+      if (session.user.email) setEmail(session.user.email);
+      if (session.user.name) setName(session.user.name);
+    }
+    
+    // Move to payment step
+    setStep(2);
+  };
 
+  const handleSelectPaymentPlan = (plan: PaymentPlan) => {
+    setSelectedPaymentPlan(plan);
+  };
+
+  const handlePaymentSuccess = () => {
+    setPaymentComplete(true);
+    toast.success("Payment successful!");
+  };
+
+  const handlePaymentClose = () => {
+    toast.error("Payment window closed");
+  };
+
+  const handleFinish = async () => {
     if (!session?.user?.id) {
       toast.error("User session not found. Please log in.");
       return;
@@ -117,6 +183,10 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
       formData.append("state", form.state);
       formData.append("postalCode", form.postalCode);
       formData.append("landsize", form.landsize);
+      
+      // Add payment info
+      formData.append("paymentType", selectedPaymentPlan?.type || "regular");
+      formData.append("paymentAmount", selectedPaymentPlan?.amount.toString() || "0");
 
       if (form.latitude.trim() !== "") 
         formData.append("latitude", form.latitude);
@@ -153,6 +223,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
           }
         }
         
+        // Reset form
         setForm({
           address: "",
           city: "",
@@ -184,7 +255,9 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     <div className="fixed inset-0 flex items-center justify-center bg-transparent backdrop-blur-md z-50">
       <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">New Verification Request</h2>
+          <h2 className="text-xl font-bold">
+            {step === 1 ? "New Verification Request" : "Payment Options"}
+          </h2>
           <button 
             onClick={closeModal} 
             className="text-gray-600 hover:text-red-500"
@@ -194,188 +267,354 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-            <input
-              id="address"
-              type="text"
-              name="address"
-              required
-              value={form.address}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:border-gray-500"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+        {step === 1 && (
+          <form className="space-y-4">
             <div>
-              <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
               <input
-                id="city"
+                id="address"
                 type="text"
-                name="city"
+                name="address"
                 required
-                value={form.city}
+                value={form.address}
                 onChange={handleChange}
                 className="w-full p-2 border rounded focus:border-gray-500"
               />
             </div>
 
-            <div className="relative">
-              <label htmlFor="state" className="block text-sm font-medium text-gray-700">State</label>
-              <div className="relative">
-                <select
-                  id="state"
-                  name="state"
-                  required
-                  value={form.state}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
-                >
-                  <option value="" className="text-gray-400">Select a state</option>
-                  <option value="Lagos">Lagos</option>
-                  <option value="Ogun">Ogun</option>
-                </select>
-                <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
-              </div>
-            </div>
-
-            <div>
-            <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code</label>
-            <input
-              id="postalCode"
-              type="text"
-              name="postalCode"
-              placeholder="e.g., 102410"
-              value={form.postalCode}
-              onChange={handleChange}
-              inputMode="numeric"
-              className="w-full p-2 border rounded focus:border-gray-500"
-            />
-          </div>
-
-          <div className="relative">
-              <label htmlFor="landsize" className="block text-sm font-medium text-gray-700">Select land size</label>
-              <div className="relative">
-                <select
-                  id="landsize"
-                  name="landsize"
-                  required
-                  value={form.landsize}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
-                >
-                  <option value="" className="text-gray-400">Select land size</option>
-                  <option value="Zero"> Zero to 1 plot</option>
-                  <option value="1 to 3">2 plot to 5 plots </option>
-                  <option value="5 to 10">5 plot to 10 plots </option>
-                  <option value="others">Others </option>
-                </select>
-                <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
-              </div>
-            </div>
-
-
-          </div>
-
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">Latitude</label>
-              <input
-                id="latitude"
-                type="text"
-                name="latitude"
-                value={form.latitude}
-                onChange={handleChange}
-                placeholder="e.g., 224403.212"
-                className="w-full p-2 border rounded focus:border-gray-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">Longitude</label>
-              <input
-                id="longitude"
-                type="text"
-                name="longitude"
-                value={form.longitude}
-                onChange={handleChange}
-                placeholder="e.g., 130500.059"
-                className="w-full p-2 border rounded focus:border-gray-500"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Files</label>
-            <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
-              <div className="mb-2 text-sm text-gray-500">
-                Please upload any relevant documents, such as:
-              </div>
-              <ul className="mb-3 text-xs text-gray-600 pl-5 list-disc">
-                <li>Survey Report</li>
-                <li>Property Deed</li>
-                <li>Land Receipt</li>
-              </ul>
-              
-              <div className="flex flex-col items-center justify-center">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
                 <input
-                  ref={fileInputRef}
-                  id="files"
-                  type="file"
-                  name="files"
-                  multiple
-                  onChange={handleFileChange}
-                  className="hidden"
-                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  id="city"
+                  type="text"
+                  name="city"
+                  required
+                  value={form.city}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded focus:border-gray-500"
                 />
+              </div>
+
+              <div className="relative">
+                <label htmlFor="state" className="block text-sm font-medium text-gray-700">State</label>
+                <div className="relative">
+                  <select
+                    id="state"
+                    name="state"
+                    required
+                    value={form.state}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
+                  >
+                    <option value="" className="text-gray-400">Select a state</option>
+                    <option value="Lagos">Lagos</option>
+                    <option value="Ogun">Ogun</option>
+                  </select>
+                  <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code</label>
+                <input
+                  id="postalCode"
+                  type="text"
+                  name="postalCode"
+                  placeholder="e.g., 102410"
+                  value={form.postalCode}
+                  onChange={handleChange}
+                  inputMode="numeric"
+                  className="w-full p-2 border rounded focus:border-gray-500"
+                />
+              </div>
+
+              <div className="relative">
+                <label htmlFor="landsize" className="block text-sm font-medium text-gray-700">Select land size</label>
+                <div className="relative">
+                  <select
+                    id="landsize"
+                    name="landsize"
+                    required
+                    value={form.landsize}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
+                  >
+                    <option value="" className="text-gray-400">Select land size</option>
+                    <option value="Zero"> Zero to 1 plot</option>
+                    <option value="1 to 3">2 plot to 5 plots </option>
+                    <option value="5 to 10">5 plot to 10 plots </option>
+                    <option value="others">Others </option>
+                  </select>
+                  <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">Latitude</label>
+                <input
+                  id="latitude"
+                  type="text"
+                  name="latitude"
+                  value={form.latitude}
+                  onChange={handleChange}
+                  placeholder="e.g., 224403.212"
+                  className="w-full p-2 border rounded focus:border-gray-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">Longitude</label>
+                <input
+                  id="longitude"
+                  type="text"
+                  name="longitude"
+                  value={form.longitude}
+                  onChange={handleChange}
+                  placeholder="e.g., 130500.059"
+                  className="w-full p-2 border rounded focus:border-gray-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Upload Files</label>
+              <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
+                <div className="mb-2 text-sm text-gray-500">
+                  Please upload any relevant documents, such as:
+                </div>
+                <ul className="mb-3 text-xs text-gray-600 pl-5 list-disc">
+                  <li>Survey Report</li>
+                  <li>Property Deed</li>
+                  <li>Land Receipt</li>
+                </ul>
+                
+                <div className="flex flex-col items-center justify-center">
+                  <input
+                    ref={fileInputRef}
+                    id="files"
+                    type="file"
+                    name="files"
+                    multiple
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  />
+                  <button
+                    type="button"
+                    onClick={triggerFileInput}
+                    className="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none flex items-center"
+                  >
+                    <FaUpload className="mr-2" /> Choose Files
+                  </button>
+                  <p className="text-xs text-gray-500 mt-2">
+                 {form.files.length === 0 ? "No files selected" : `${form.files.length} file(s) selected`}
+                  </p>
+                </div>
+                
+                {form.files.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-gray-700 mb-1">Selected files:</p>
+                    <ul className="space-y-1 max-h-32 overflow-y-auto pl-2">
+                      {form.files.map((file, index) => (
+                        <li key={index} className="flex items-center justify-between text-sm bg-white p-1 rounded">
+                          <span className="flex items-center">
+                            <span className="mr-2">{getFileIcon(file.name)}</span>
+                            <span className="truncate max-w-xs">{file.name}</span>
+                          </span>
+                          <button 
+                            type="button" 
+                            onClick={() => removeFile(index)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <IoMdClose />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                type="button"
+                onClick={closeModal}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleNextStep}
+                className="px-4 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 flex items-center justify-center"
+              >
+                Next
+              </button>
+            </div>
+          </form>
+        )}
+
+        {step === 2 && (
+          <div className="space-y-6">
+            {/* Payment plan selection */}
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600">Please select a service option:</p>
+              
+              <div className="grid grid-cols-1 gap-4">
+                {PAYMENT_PLANS.map((plan) => (
+                  <div 
+                    key={plan.type}
+                    onClick={() => handleSelectPaymentPlan(plan)}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      selectedPaymentPlan?.type === plan.type 
+                        ? "border-green-500 bg-green-50" 
+                        : "border-gray-200 hover:border-gray-400"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-medium text-lg">{plan.label}</h3>
+                        <p className="text-sm text-gray-500">
+                          {plan.type === "regular" 
+                            ? "Standard processing time" 
+                            : "Expedited processing"}
+                        </p>
+                      </div>
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                        selectedPaymentPlan?.type === plan.type 
+                          ? "border-green-500 bg-green-500" 
+                          : "border-gray-300"
+                      }`}>
+                        {selectedPaymentPlan?.type === plan.type && (
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* User details for payment */}
+            {selectedPaymentPlan && !paymentComplete && (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600">Please provide your payment details:</p>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Payment button */}
+            <div className="flex justify-between items-center">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Back
+              </button>
+              
+              {selectedPaymentPlan && !paymentComplete ? (
+                <div className="w-full max-w-xs">
+                  {(name && email) ? (
+                    <PaystackButton
+                      text="Pay with Paystack"
+                      className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center"
+                      email={email}
+                      amount={selectedPaymentPlan.amount}
+                      publicKey={publicKey}
+                      metadata={{
+                        custom_fields: [
+                          {
+                            display_name: "Name",
+                            variable_name: "name",
+                            value: name,
+                          },
+                          {
+                            display_name: "Phone",
+                            variable_name: "phone",
+                            value: phone,
+                          },
+                        ],
+                      }}
+                      onSuccess={handlePaymentSuccess}
+                      onClose={handlePaymentClose}
+                    />
+                  ) : (
+                    <button 
+                      disabled 
+                      className="w-full py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
+                    >
+                      Fill required fields
+                    </button>
+                  )}
+                </div>
+              ) : paymentComplete ? (
                 <button
                   type="button"
-                  onClick={triggerFileInput}
-                  className="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none flex items-center"
+                  onClick={handleFinish}
+                  disabled={loading}
+                  className="px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 flex items-center justify-center"
                 >
-                  <FaUpload className="mr-2" /> Choose Files
+                  {loading ? (
+                    <FaSpinner className="animate-spin mr-2" />
+                  ) : (
+                    <>
+                      <FaCheck className="mr-2" /> Finish
+                    </>
+                  )}
                 </button>
-                <p className="text-xs text-gray-500 mt-2">
-                  {form.files.length === 0 ? "No files selected" : `${form.files.length} file(s) selected`}
-                </p>
-              </div>
-              
-              {form.files.length > 0 && (
-                <div className="mt-3">
-                  <p className="text-sm font-medium text-gray-700 mb-1">Selected files:</p>
-                  <ul className="space-y-1 max-h-32 overflow-y-auto pl-2">
-                    {form.files.map((file, index) => (
-                      <li key={index} className="flex items-center justify-between text-sm bg-white p-1 rounded">
-                        <span className="flex items-center">
-                          <span className="mr-2">{getFileIcon(file.name)}</span>
-                          <span className="truncate max-w-xs">{file.name}</span>
-                        </span>
-                        <button 
-                          type="button" 
-                          onClick={() => removeFile(index)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <IoMdClose />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              ) : (
+                <button 
+                  disabled 
+                  className="px-6 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
+                >
+                  Select payment option
+                </button>
               )}
             </div>
           </div>
-
-          <button
-            type="submit"
-            className="w-full py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 flex items-center justify-center"
-            disabled={loading}
-          >
-            {loading ? <FaSpinner className="animate-spin mr-2" /> : "Submit Verification"}
-          </button>
-        </form>
+        )}
         <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
       </div>
     </div>
