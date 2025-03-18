@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { FaSpinner } from "react-icons/fa"; // Removed unused FaCheck import
 import { useSession } from "next-auth/react";
@@ -32,14 +32,14 @@ interface VerificationFormState {
   files: File[];
 }
 
-// Payment plan options
+// Base payment plan options
 interface PaymentPlan {
   type: "regular" | "priority";
   amount: number; // Amount in kobo
   label: string;
 }
 
-const PAYMENT_PLANS: PaymentPlan[] = [
+const BASE_PAYMENT_PLANS: PaymentPlan[] = [
   { type: "regular", amount: 5000000, label: "Regular Service (₦50,000)" },
   { type: "priority", amount: 7500000, label: "Priority Service (₦75,000)" }
 ];
@@ -61,6 +61,9 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   
+  // Payment plans with adjusted pricing based on land size
+  const [paymentPlans, setPaymentPlans] = useState<PaymentPlan[]>(BASE_PAYMENT_PLANS);
+  
   const [form, setForm] = useState<VerificationFormState>({
     address: "",
     city: "",
@@ -74,6 +77,44 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
 
   const [loading, setLoading] = useState(false);
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || ""; 
+
+  // Effect to update payment plans when landsize changes
+  useEffect(() => {
+    if (!form.landsize) {
+      setPaymentPlans(BASE_PAYMENT_PLANS);
+      setSelectedPaymentPlan(null);
+      return;
+    }
+    
+    // Calculate multiplier based on land size selection
+    let multiplier = 1;
+    switch (form.landsize) {
+      case "Zero": // Zero to 1 plot
+        multiplier = 1;
+        break;
+      case "1 to 3": // 2 plot to 5 plots
+        multiplier = 2;
+        break;
+      case "5 to 10": // 5 plot to 10 plots
+        multiplier = 3;
+        break;
+      case "others": // Others
+        multiplier = 4;
+        break;
+      default:
+        multiplier = 1;
+    }
+    
+    // Create new adjusted payment plans
+    const adjustedPlans = BASE_PAYMENT_PLANS.map(plan => ({
+      ...plan,
+      amount: plan.amount * multiplier,
+      label: `${plan.type === "regular" ? "Regular" : "Priority"} Service (₦${(plan.amount * multiplier / 100000).toFixed(0)},000)`
+    }));
+    
+    setPaymentPlans(adjustedPlans);
+    setSelectedPaymentPlan(null);
+  }, [form.landsize]);
 
   const closeModal = () => {
     setIsOpen(false);
@@ -343,10 +384,10 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                     className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
                   >
                     <option value="" className="text-gray-400">Select land size</option>
-                    <option value="Zero"> Zero to 1 plot</option>
-                    <option value="1 to 3">2 plot to 5 plots </option>
-                    <option value="5 to 10">5 plot to 10 plots </option>
-                    <option value="others">Others </option>
+                    <option value="Zero">Zero to 1 plot</option>
+                    <option value="1 to 3">2 plot to 5 plots</option>
+                    <option value="5 to 10">5 plot to 10 plots</option>
+                    <option value="others">Others</option>
                   </select>
                   <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
                 </div>
@@ -467,7 +508,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
               <p className="text-sm text-gray-600">Please select a service option:</p>
               
               <div className="grid grid-cols-1 gap-4">
-                {PAYMENT_PLANS.map((plan) => (
+                {paymentPlans.map((plan) => (
                   <div 
                     key={plan.type}
                     onClick={() => handleSelectPaymentPlan(plan)}
