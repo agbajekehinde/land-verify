@@ -158,16 +158,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     setSelectedPaymentPlan(plan);
   };
 
-  const handlePaymentSuccess = (): void => {
-    setPaymentComplete(true);
-    toast.success("Payment successful!");
-  };
-
-  const handlePaymentClose = () => {
-    toast.error("Payment window closed");
-  };
-
-  const handleFinish = async () => {
+  const submitVerification = async () => {
     if (!session?.user?.id) {
       toast.error("User session not found. Please log in.");
       return;
@@ -246,6 +237,18 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaymentSuccess = (response: any): void => {
+    toast.success("Payment successful!");
+    setPaymentComplete(true);
+    
+    // Auto-submit the verification after successful payment
+    submitVerification();
+  };
+
+  const handlePaymentClose = () => {
+    toast.error("Payment window closed");
   };
 
   if (!isOpen) return null;
@@ -499,7 +502,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
             </div>
 
             {/* User details for payment */}
-            {selectedPaymentPlan && !paymentComplete && (
+            {selectedPaymentPlan && !paymentComplete && !loading && (
               <div className="space-y-4">
                 <p className="text-sm text-gray-600">Please provide your payment details:</p>
                 
@@ -543,21 +546,30 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
               </div>
             )}
 
-            {/* Payment button */}
+            {/* Loading state during submission */}
+            {loading && (
+              <div className="flex flex-col items-center justify-center py-4">
+                <FaSpinner className="animate-spin text-green-600 text-2xl mb-2" />
+                <p className="text-gray-600">Processing your verification request...</p>
+              </div>
+            )}
+
+            {/* Payment and navigation buttons */}
             <div className="flex justify-between items-center">
               <button
                 type="button"
                 onClick={() => setStep(1)}
                 className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+                disabled={loading}
               >
                 Back
               </button>
               
-              {selectedPaymentPlan && !paymentComplete ? (
+              {selectedPaymentPlan && !paymentComplete && !loading ? (
                 <div className="w-full max-w-xs">
                   {(name && email) ? (
                     <PaystackButton
-                      text="Make Payment"
+                      text="Make Payment and Submit"
                       className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center"
                       email={email}
                       amount={selectedPaymentPlan.amount}
@@ -588,27 +600,12 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                     </button>
                   )}
                 </div>
-              ) : paymentComplete ? (
-                <button
-                  type="button"
-                  onClick={handleFinish}
-                  disabled={loading}
-                  className="px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 flex items-center justify-center"
-                >
-                  {loading ? (
-                    <FaSpinner className="animate-spin mr-2" />
-                  ) : (
-                    <>
-                      <FaCheck className="mr-2" /> Finish
-                    </>
-                  )}
-                </button>
-              ) : (
+              ) : !loading && (
                 <button 
                   disabled 
                   className="px-6 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
                 >
-                  Select payment option
+                  {paymentComplete ? "Processing..." : "Select payment option"}
                 </button>
               )}
             </div>
