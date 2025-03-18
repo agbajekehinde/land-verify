@@ -569,7 +569,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 <div className="w-full max-w-xs">
                   {(name && email) ? (
                     <PaystackButton
-                      text="Make Payment"
+                      text="Make Payment & Submit Verification"
                       className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center"
                       email={email}
                       amount={selectedPaymentPlan.amount}
