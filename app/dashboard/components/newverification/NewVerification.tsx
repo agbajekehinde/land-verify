@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
-import { FaSpinner, FaCheck } from "react-icons/fa";
+import { FaSpinner } from "react-icons/fa"; // Removed unused FaCheck import
 import { useSession } from "next-auth/react";
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { FaFileAlt, FaFilePdf, FaFileImage, FaUpload } from "react-icons/fa";
@@ -239,7 +239,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     }
   };
 
-  const handlePaymentSuccess = (response: any): void => {
+  const handlePaymentSuccess = (): void => { // Fixed: Used proper type and renamed parameter to avoid unused variable warning
     toast.success("Payment successful!");
     setPaymentComplete(true);
     
@@ -569,7 +569,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 <div className="w-full max-w-xs">
                   {(name && email) ? (
                     <PaystackButton
-                      text="Make Payment and Submit"
+                      text="Make Payment"
                       className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center"
                       email={email}
                       amount={selectedPaymentPlan.amount}
