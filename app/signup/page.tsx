@@ -1,113 +1,113 @@
 "use client";
-
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 
-export default function SignupForm() {
-  const [form, setForm] = useState<{ firstName: string; lastName: string; email: string; password: string; }>({ firstName: "", lastName: "", email: "", password: "" });
+export default function EmailVerification() {
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+    
     try {
-      const response = await fetch("/api/signup", {
+      const response = await fetch("/api/verify-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ email }),
       });
-
+      
       const data = await response.json();
-      setLoading(false);
-
+      
       if (response.ok) {
+        setVerificationSent(true);
         toast.success(data.message);
-        setForm({ firstName: "", lastName: "", email: "", password: "" });
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      setLoading(false);
       toast.error("An unexpected error occurred");
-      console.error("Error submitting form:", error);
+      console.error("Error sending verification:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
-      <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
+      <div className="max-w-md mx-auto p-6 sm:p-8 lg:p-10 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
         <Link href="/">
           <img
             src="/LandVerify-logo.png"
             alt="LandVerify Logo"
-            className="mb-6 sm:mb-8 lg:mb-4 w-32 h-12 sm:w-40 sm:h-14 lg:w-48 lg:h-16 mx-auto"
+            className="mb-6 sm:mb-8 lg:mb-4 w-32 h-12 sm:w-40 sm:h-14 lg:w-52 lg:h-16 mx-auto"
           />
         </Link>
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">
-          Create Account
-        </h1>
-        <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded">
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            required
-            value={form.firstName}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            required
-            value={form.lastName}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            required
-            value={form.email}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-            value={form.password}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
-          />
-          <button
-            type="submit"
-            className="w-full py-2 bg-[#479101] text-white font-semibold rounded-md hover:bg-[#3a7a01] cursor-pointer"
-          >
-            {loading ? "Creating Account..." : "Create Account"}
-          </button>
-          <Toaster />
-          <div>
-            <p className="text-center mt-0">
-              Already have an account?{" "}
-              <Link href="/signin" className="text-[#479101] underline hover:underline">
-                Login
-              </Link>
+        
+        {!verificationSent ? (
+          <>
+            <h1 className="text-xl sm:text-2xl lg:text-2xl font-bold text-center mb-4 sm:mb-6">
+              Create Account
+            </h1>
+            <p className="text-center text-gray-600 mb-6">
+              Enter your email to receive a verification link
             </p>
-            <p className="text-center text-sm text-gray-400 mt-4">
-            By signing up, you agree to the <Link href="/terms-and-conditions" className="underline">LandVerify Terms and Conditions</Link>.
-          </p>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                required
+                className="block w-full p-3 border rounded hover:border-gray-500 focus:border-gray-500 focus:outline-none"
+              />
+              
+              <button
+                type="submit"
+                disabled={loading || !email}
+                className={`w-full py-3 ${
+                  !loading && email
+                    ? "bg-[#479101] hover:bg-[#3a7a01] cursor-pointer" 
+                    : "bg-gray-400 cursor-not-allowed"
+                } text-white font-semibold rounded-md transition-colors`}
+              >
+                {loading ? "Sending..." : "Send Verification Link"}
+              </button>
+            </form>
+          </>
+        ) : (
+          <div className="text-center">
+            <div className="mb-4 text-5xl">✉️</div>
+            <h2 className="text-xl font-bold mb-3">Verification Email Sent</h2>
+            <p className="text-gray-600 mb-4">
+              We&apos;ve sent a verification link to <strong>{email}</strong>. 
+              Please check your inbox and click the link to complete your registration.
+            </p>
+            <p className="text-gray-500 text-sm">
+              The link will expire in 15 minutes. If you don&apos;t see the email, please check your spam folder.
+            </p>
           </div>
-        </form>
+        )}
+        
+        <Toaster />
+        
+        <div className="mt-6">
+          <p className="text-center">
+            Already have an account?{" "}
+            <Link href="/signin" className="text-[#479101] underline hover:underline">
+              Login
+            </Link>
+          </p>
+          <p className="text-center text-sm text-gray-400 mt-4">
+            By signing up, you agree to the{" "}
+            <Link href="/terms-and-conditions" className="underline">
+              LandVerify Terms and Conditions
+            </Link>.
+          </p>
+        </div>
       </div>
     </div>
   );

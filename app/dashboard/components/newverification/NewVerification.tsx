@@ -241,6 +241,33 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
         
         if (data.verification) {
           setVerifications(prev => [data.verification, ...prev]);
+
+          // Send confirmation email using Resend
+          try {
+            const emailResponse = await fetch('/api/email/send-email', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                recipientEmail: email,
+                recipientName: name,
+                verificationId: data.verification.id,
+                address: form.address,
+                paymentType: selectedPaymentPlan?.type || "regular"
+              }),
+            });
+            
+            if (emailResponse.ok) {
+              console.log('Confirmation email sent');
+            } else {
+              console.error('Failed to send confirmation email');
+            }
+          } catch (emailError) {
+            console.error('Error sending confirmation email:', emailError);
+          }
+          
+          
         } else {
           try {
             const userId = session.user.id;
@@ -280,7 +307,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     }
   };
 
-  const handlePaymentSuccess = (): void => { // Fixed: Used proper type and renamed parameter to avoid unused variable warning
+  const handlePaymentSuccess = (): void => { 
     toast.success("Payment successful!");
     setPaymentComplete(true);
     
