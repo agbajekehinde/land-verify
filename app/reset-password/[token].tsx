@@ -26,7 +26,7 @@ export default function ResetPasswordPage() {
           setValidToken(false);
           toast.error(data.message || "Invalid or expired reset link");
         }
-      } catch (error) {
+      } catch {
         setValidToken(false);
         toast.error("Could not verify reset token");
       } finally {

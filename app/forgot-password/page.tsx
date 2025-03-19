@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 
@@ -9,7 +8,6 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +57,7 @@ export default function ForgotPasswordPage() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded">
-            <p className="text-center mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+            <p className="text-center mb-4">Enter your email address and we&apos;ll send you a link to reset your password.</p>
             <input
               type="email"
               placeholder="Email"
