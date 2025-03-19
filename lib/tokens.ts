@@ -2,22 +2,24 @@ import { randomBytes } from "crypto";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-
 export async function generatePasswordResetToken(email: string) {
     const token = randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 3600000); // 1 hour from now
     
     // Delete any existing token for this email
     await prisma.verificationToken.deleteMany({
-        where: { email },
+      where: { email },
     });
     
     // Create a new token
     await prisma.verificationToken.create({
-        data: {
-            email,
-            token,
-            expiresAt,
-        },
+      data: {
+        email,
+        token,
+        expiresAt,
+      },
     });
-}
+    
+    // Return the token
+    return { token };
+  }

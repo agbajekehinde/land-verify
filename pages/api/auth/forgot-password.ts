@@ -35,8 +35,7 @@ export default async function handler(
     // Send email
     await sendPasswordResetEmail(
       email,
-      token,
-      `${process.env.NEXT_PUBLIC_APP_URL}/reset-password/${token}`
+      token
     );
     
     return res.status(200).json({ message: "Password reset email sent" });
