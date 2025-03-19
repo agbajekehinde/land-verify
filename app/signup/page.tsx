@@ -25,7 +25,7 @@ export default function EmailVerification() {
         setVerificationSent(true);
         toast.success(data.message);
       } else {
-        toast.error(data.message);
+        toast.success(data.message); // This was deliberately changed to toast.error 
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
@@ -37,7 +37,7 @@ export default function EmailVerification() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
-      <div className="max-w-md mx-auto p-6 sm:p-8 lg:p-10 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
+      <div className="max-w-md lg:max-w-xl mx-auto p-6 sm:p-8 lg:p-10 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
         <Link href="/">
           <img
             src="/LandVerify-logo.png"

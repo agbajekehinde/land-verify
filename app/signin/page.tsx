@@ -14,17 +14,13 @@ export default function SignInPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     console.log("Sending login request:", { email, password });
-
     const result = await signIn("public", {
       email,
       password,
       redirect: false,
     });
-
     setLoading(false);
-
     if (result?.error) {
       toast.error("Invalid email or password");
     } else {
@@ -61,12 +57,10 @@ export default function SignInPage() {
             {loading ? "Signing In..." : "Sign In"}
           </button>
           <Toaster />
-          <div>
-            <p className="text-center mt-0">Don&apos;t have an account? <Link href="/signup" className="text-[#479101] underline hover:underline">Sign Up</Link></p>
+          <div className="flex justify-between">
+            <Link href="/forgot-password" className="text-[gray] underline hover:underline">Forgot password?</Link>
+          <p className="text-center text-[gray]">Don&apos;t have an account? <Link href="/signup" className="text-[gray] underline hover:underline">Sign Up</Link></p>
           </div>
-          <p className="text-center text-sm text-gray-400 mt-4">
-            By signing in, you agree to the <Link href="/terms-and-conditions" className="underline">LandVerify Terms and Conditions</Link>.
-          </p>
         </form>
       </div>
     </div>

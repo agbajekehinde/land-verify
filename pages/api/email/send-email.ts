@@ -24,7 +24,7 @@ export default async function handler(
 
   try {
     const data = await resend.emails.send({
-      from: `Land Verification Service <${process.env.EMAIL_FROM || 'onboarding@resend.dev'}>`,
+      from: `LandVerify <${process.env.EMAIL_FROM}>`,
       to: recipientEmail,
       subject: 'Your Verification Request Has Been Submitted',
       html: `

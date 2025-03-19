@@ -17,12 +17,12 @@ export default function KeyFeatures() {
           <div className="flex flex-1 flex-col items-center text-center p-6 bg-white rounded-lg shadow-md h-64">
             <UserGroupIcon className="w-12 h-12 text-[#479101]" />
             <h3 className="mt-4 text-xl font-semibold text-gray-800">Expert Verification</h3>
-            <p className="mt-2 text-gray-600">We connect you with certified town planners and legal professionals.</p>
+            <p className="mt-2 text-gray-600">A dedicated team of licensed town planners, surveyors, and legal professionals with extensive experience.</p>
           </div>
           <div className="flex flex-1 flex-col items-center text-center p-6 bg-white rounded-lg shadow-md h-64">
             <ClockIcon className="w-12 h-12 text-[#479101]" />
             <h3 className="mt-4 text-xl font-semibold text-gray-800">Fast & Reliable</h3>
-            <p className="mt-2 text-gray-600">Get results in as little as 48 hours.</p>
+            <p className="mt-2 text-gray-600">Get results between 5-7 working days or as quick as 48 hours.</p>
           </div>
         </div>
       </div>

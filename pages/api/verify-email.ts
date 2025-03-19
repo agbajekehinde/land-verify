@@ -49,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // Check if email already exists and is verified
+    // Check if email already exists and is verified - don't give specifics to prevent enumeration
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -57,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (existingUser && existingUser.emailVerified) {
       return res.status(400).json({ 
         success: false, 
-        message: 'This email is already registered. Please sign in instead.' 
+        message: 'Email sent. Please check your inbox to complete your registration' 
       });
     }
 
