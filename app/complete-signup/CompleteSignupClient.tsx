@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 interface FormState {
   fullName: string;
@@ -27,6 +28,7 @@ export default function CompleteSignup() {
   const [verifying, setVerifying] = useState(true);
   const [email, setEmail] = useState("");
   const [invalidToken, setInvalidToken] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<PasswordStrength>({
     hasMinLength: false,
     hasUpperCase: false,
@@ -95,6 +97,10 @@ export default function CompleteSignup() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -192,16 +198,16 @@ export default function CompleteSignup() {
             className="block w-full p-3 border rounded hover:border-gray-500 focus:border-gray-500 focus:outline-none"
           />
 
-          {/* Password field with requirements display */}
-          <div>
+          {/* Password field with toggle visibility button */}
+          <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
               required
               value={form.password}
               onChange={handleChange}
-              className={`block w-full p-3 border rounded focus:border-gray-500 focus:outline-none ${
+              className={`block w-full p-3 border rounded focus:border-gray-500 focus:outline-none pr-10 ${
                 form.password
                   ? Object.values(passwordStrength).every(Boolean)
                     ? "border-green-500"
@@ -209,6 +215,14 @@ export default function CompleteSignup() {
                   : ""
               }`}
             />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
 
             {form.password && (
               <div className="mt-2 text-sm">
