@@ -158,7 +158,7 @@ export default function CompleteSignup() {
         <div className="max-w-md mx-auto p-6 border border-gray-300 rounded-lg shadow-lg bg-white text-center">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
           <h1 className="text-xl font-bold mb-4">Invalid or Expired Token</h1>
-          <p className="mb-6">This verification link is invalid or has expired.</p>
+          <p className="mb-6">This verification link is either invalid or has expired.</p>
           <Link href="/signup" className="bg-[#479101] text-white px-4 py-2 rounded hover:bg-[#3a7a01]">
             Try Again
           </Link>
