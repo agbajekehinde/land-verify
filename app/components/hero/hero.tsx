@@ -14,7 +14,7 @@ export default function Hero() {
           <h1 className="text-4xl text-gray-900 md:text-4xl md:leading-bold">
             <strong>Verify Your Land/Property Investment with Confidence</strong>
           </h1>
-          <p>Avoid land scams and fraudulent property deals with LandVerify. <br/> Our expert-backed verification service ensures you buy only genuine, legally documented land and homes. Get your land/property verified within 48 hours to 7 days.</p>
+          <p>Avoid land scams and fraudulent property deals with LandVerify, our expert-backed verification service ensures you buy only genuine, legally documented land and homes. Get your land/property verified within 48 hours to 7 days.</p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
               href="/signup"
