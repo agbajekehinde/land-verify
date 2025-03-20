@@ -26,9 +26,10 @@ export default async function handler(
     const data = await resend.emails.send({
       from: `LandVerify <${process.env.EMAIL_FROM}>`,
       to: recipientEmail,
-      subject: 'Your Verification Request Has Been Submitted',
+      subject: '📄 Your Verification Request Has Been Submitted',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+       <img src="/LandVerify-logo.png" alt="LandVerify Logo" style="max-width: 180px; margin: 20px 0;">
           <h2 style="color: #2e7d32;">Verification Request Submitted</h2>
           <p>Dear ${recipientName || 'Customer'},</p>
           <p>Thank you for submitting your land verification request. We have received your request and payment successfully.</p>

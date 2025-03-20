@@ -88,10 +88,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const data = await resend.emails.send({
         from: 'LandVerify <support@landverify.ng>',
         to: email,
-        subject: 'Verify your email address',
+        subject: '✉️ Verify your email address',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <img src="${baseUrl}/public/LandVerify-logo.png" alt="LandVerify Logo" style="max-width: 180px; margin: 20px 0;">
+            <img src="${baseUrl}/LandVerify-logo.png" alt="LandVerify Logo" style="max-width: 180px; margin: 20px 0;">
             <h1 style="color: #333;">Verify your email address</h1>
             <p>Click the button below to verify your email and complete your registration with LandVerify.</p>
             <div style="margin: 30px 0;">

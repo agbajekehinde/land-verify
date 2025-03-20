@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from "@prisma/client";
 import { generatePasswordResetToken } from '@/lib/tokens';
-import { sendPasswordResetEmail } from '@/lib/email';
+import { sendPasswordResetEmail } from '@/lib/reset-password';
 
 const prisma = new PrismaClient();
 
@@ -35,8 +35,7 @@ export default async function handler(
     // Send email
     await sendPasswordResetEmail(
       email,
-      token,
-      `${process.env.NEXT_PUBLIC_APP_URL}/reset-password/${token}`
+      token
     );
     
     return res.status(200).json({ message: "Password reset email sent" });

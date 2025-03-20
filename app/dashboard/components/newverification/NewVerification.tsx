@@ -244,7 +244,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
 
           // Send confirmation email using Resend
           try {
-            const emailResponse = await fetch('/api/email/send-email', {
+            const emailResponse = await fetch('/api/email/verification-request-email', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
