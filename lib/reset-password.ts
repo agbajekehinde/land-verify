@@ -8,6 +8,8 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+
 export async function sendPasswordResetEmail(
   email: string,
   token: string,
@@ -19,7 +21,7 @@ export async function sendPasswordResetEmail(
     subject: "🔐 Reset your LandVerify password",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <img src="/LandVerify-logo.png" alt="LandVerify Logo" style="max-width: 200px; margin: 20px 0;">
+        <img src="${baseUrl}/LandVerify-logo.png" alt="LandVerify Logo" style="max-width: 180px; margin: 20px 0;">
         <h2>Reset Your Password</h2>
         <p>Hello,</p>
         <p>We received a request to reset your password for your LandVerify account.</p>
