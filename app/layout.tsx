@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'LandVerify',
   description: 'LandVerify - Secure your property investment with confidence.',
   metadataBase: new URL('https://landverify.com'),
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({
@@ -16,9 +19,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   );

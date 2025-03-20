@@ -2,6 +2,16 @@
 import React from "react";
 import { ReactNode } from "react";
 import SideNav from "./components/sidenav/sidenav";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'LandVerify',
+  description: 'LandVerify - Secure your property investment with confidence.',
+  metadataBase: new URL('https://landverify.com'),
+  icons: {
+    icon: '/favicon.png'
+  },
+};
 
 interface AdminLayoutProps {
   children: ReactNode;
