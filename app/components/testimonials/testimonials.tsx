@@ -9,7 +9,7 @@ const testimonials = [
     name: 'Emeka A.',
     location: 'Lagos',
     quote: 'LandVerify saved me from buying a disputed property. The verification process was quick and detailed!',
-    image: '/test-img.png' // Corrected path
+    image: '/hero-desktop.png' // Corrected path
   },
   {
     name: 'Zainab M.',
