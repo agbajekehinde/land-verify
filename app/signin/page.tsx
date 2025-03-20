@@ -58,9 +58,11 @@ export default function SignInPage() {
           </button>
           <Toaster />
           <div className="flex justify-between">
-            <Link href="/forgot-password" className="text-[gray] underline hover:underline">Forgot password?</Link>
+            <Link href="/forgot-password" className="text-[gray] underline hover:underline">Forgot password?</Link> </div>
+            <div className="flex justify-between">
           <p className="text-center text-[gray]">Don&apos;t have an account? <Link href="/signup" className="text-[gray] underline hover:underline">Sign Up</Link></p>
           </div>
+          
         </form>
       </div>
     </div>
