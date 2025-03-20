@@ -17,10 +17,11 @@ export default function Footer() {
           <span>Start Verification Now</span> 
           <ArrowRightIcon className="w-5 md:w-7" />
         </Link>
-      <p className="mt-4 text-sm text-gray-600">📍 Currently available in Lagos & Ogun states | More states coming soon!</p>
-      <div className='mt-8'>
-        <p className="mt-2 text-sm text-gray-600 pt-2">All rights reserved (c) 2025</p>
-      </div>
+      <p className="mt-8 text-sm text-gray-600">📍 Currently available in Lagos & Ogun states | More states coming soon!</p>
+      <div className='mt-4'> </div>
+      <p className='mt-8 text-sm text-gray-500'>LandVerify.ng is a product and property of LandVerify Digital Services, a company registered with the Nigeria Corporate Affairs Commission with RC Number: XXXXX </p>
+      <p className="mt-4 text-sm text-gray-500 pt-2">All rights reserved (c) 2025</p>
+
       <WhatsAppButton/>
     </footer>
   );
