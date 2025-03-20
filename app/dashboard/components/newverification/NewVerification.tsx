@@ -32,6 +32,13 @@ interface VerificationFormState {
   files: File[];
 }
 
+interface FormErrors {
+  address?: string;
+  city?: string;
+  state?: string;
+  landsize?: string;
+}
+
 // Base payment plan options
 interface PaymentPlan {
   type: "regular" | "priority";
@@ -55,6 +62,9 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
   // Payment state
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState<PaymentPlan | null>(null);
   const [paymentComplete, setPaymentComplete] = useState<boolean>(false);
+  
+  // Form validation errors
+  const [errors, setErrors] = useState<FormErrors>({});
   
   // User details for payment
   const [email, setEmail] = useState("");
@@ -122,6 +132,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     setStep(1);
     setSelectedPaymentPlan(null);
     setPaymentComplete(false);
+    setErrors({});
   };
 
   // Format coordinates to decimal format
@@ -139,6 +150,12 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    // Clear error for this field when user starts typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+    
     if (name === 'latitude' || name === 'longitude') {
       const formattedValue = formatCoordinate(value);
       setForm({ ...form, [name]: formattedValue });
@@ -178,10 +195,32 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     return <FaFileAlt className="text-gray-500" />;
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    
+    if (!form.address.trim()) {
+      newErrors.address = "This field is required";
+    }
+    
+    if (!form.city.trim()) {
+      newErrors.city = "This field is required";
+    }
+    
+    if (!form.state) {
+      newErrors.state = "This field is required";
+    }
+    
+    if (!form.landsize) {
+      newErrors.landsize = "This field is required";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleNextStep = () => {
     // Validate first step form
-    if (!form.address || !form.city || !form.state || !form.landsize) {
-      toast.error("Please fill in all required fields");
+    if (!validateForm()) {
       return;
     }
     
@@ -340,7 +379,9 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
         {step === 1 && (
           <form className="space-y-4">
             <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                Address <span className="text-gray-500 text-xs">Required</span>
+              </label>
               <input
                 id="address"
                 type="text"
@@ -348,13 +389,18 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 required
                 value={form.address}
                 onChange={handleChange}
-                className="w-full p-2 border rounded focus:border-gray-500"
+                className={`w-full p-2 border rounded focus:border-gray-500 ${errors.address ? 'border-red-500' : ''}`}
               />
+              {errors.address && (
+                <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                  City <span className="text-gray-500 text-xs">Required</span>
+                </label>
                 <input
                   id="city"
                   type="text"
@@ -362,12 +408,17 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                   required
                   value={form.city}
                   onChange={handleChange}
-                  className="w-full p-2 border rounded focus:border-gray-500"
+                  className={`w-full p-2 border rounded focus:border-gray-500 ${errors.city ? 'border-red-500' : ''}`}
                 />
+                {errors.city && (
+                  <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                )}
               </div>
 
               <div className="relative">
-                <label htmlFor="state" className="block text-sm font-medium text-gray-700">State</label>
+                <label htmlFor="state" className="block text-sm font-medium text-gray-700">
+                  State <span className="text-gray-500 text-xs">Required</span>
+                </label>
                 <div className="relative">
                   <select
                     id="state"
@@ -375,7 +426,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                     required
                     value={form.state}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
+                    className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.state ? 'border-red-500' : ''}`}
                   >
                     <option value="" className="text-gray-400">Select a state</option>
                     <option value="Lagos">Lagos</option>
@@ -383,6 +434,35 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                   </select>
                   <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
                 </div>
+                {errors.state && (
+                  <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+                )}
+              </div>
+
+              <div className="relative">
+                <label htmlFor="landsize" className="block text-sm font-medium text-gray-700">
+                  Select land size <span className="text-gray-500 text-xs">Required</span>
+                </label>
+                <div className="relative">
+                  <select
+                    id="landsize"
+                    name="landsize"
+                    required
+                    value={form.landsize}
+                    onChange={handleChange}
+                    className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.landsize ? 'border-red-500' : ''}`}
+                  >
+                    <option value="" className="text-gray-400">Select land size</option>
+                    <option value="Zero">Zero to 1 plot</option>
+                    <option value="1 to 3">2 plot to 5 plots</option>
+                    <option value="5 to 10">5 plot to 10 plots</option>
+                    <option value="others">Others</option>
+                  </select>
+                  <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+                </div>
+                {errors.landsize && (
+                  <p className="text-red-500 text-xs mt-1">{errors.landsize}</p>
+                )}
               </div>
 
               <div>
@@ -398,27 +478,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                   className="w-full p-2 border rounded focus:border-gray-500"
                 />
               </div>
-
-              <div className="relative">
-                <label htmlFor="landsize" className="block text-sm font-medium text-gray-700">Select land size</label>
-                <div className="relative">
-                  <select
-                    id="landsize"
-                    name="landsize"
-                    required
-                    value={form.landsize}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
-                  >
-                    <option value="" className="text-gray-400">Select land size</option>
-                    <option value="Zero">Zero to 1 plot</option>
-                    <option value="1 to 3">2 plot to 5 plots</option>
-                    <option value="5 to 10">5 plot to 10 plots</option>
-                    <option value="others">Others</option>
-                  </select>
-                  <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
-                </div>
-              </div>
+              
             </div>
 
             <div className="grid grid-cols-2 gap-4">

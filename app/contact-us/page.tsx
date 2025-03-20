@@ -13,8 +13,8 @@ const Contact: React.FC = () => {
         <div className="space-y-6">
           <Section title="Email">
             <ul className="list-disc pl-6">
-              <li>General Inquiries: <a href="mailto:hello@landverify.com" className="text-gray-600 underline">hello@landverify.com</a></li>
-              <li>Support: <a href="mailto:support@landverify.com" className="text-gray-600 underline">support@landverify.com</a></li>
+              <li>General Inquiries: <a href="mailto:hello@landverify.ng" className="text-gray-600 underline">hello@landverify.ng</a></li>
+              <li>Support: <a href="mailto:support@landverify.ng" className="text-gray-600 underline">support@landverify.ng</a></li>
             </ul>
           </Section>
 
