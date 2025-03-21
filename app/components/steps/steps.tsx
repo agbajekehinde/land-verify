@@ -16,7 +16,7 @@ export default function Steps() {
               </div>
               <div className="ml-4">
                 <h3 className="text-xl font-semibold text-gray-800">Submit Property Details</h3>
-                <p className="mt-2 text-gray-600">Provide basic information about the land or property you want to verify.</p>
+                <p className="mt-2 text-gray-600">Provide basic information about the land/property you want to verify.</p>
               </div>
             </div>
             <div className="flex items-start">
