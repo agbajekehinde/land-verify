@@ -25,7 +25,7 @@ export default function Steps() {
               </div>
               <div className="ml-4">
                 <h3 className="text-xl font-semibold text-gray-800">Expert Review</h3>
-                <p className="mt-2 text-gray-600">Our certified professionals analyze legal documents and trusted public records.</p>
+                <p className="mt-2 text-gray-600">Our certified professionals analyze legal documents and authentic public records.</p>
               </div>
             </div>
             <div className="flex items-start">
