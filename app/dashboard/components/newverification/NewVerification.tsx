@@ -516,9 +516,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                   Please upload any relevant documents, such as:
                 </div>
                 <ul className="mb-3 text-xs text-gray-600 pl-5 list-disc">
-                  <li>Survey Report</li>
-                  <li>Property Deed</li>
-                  <li>Land Receipt</li>
+                  <li>Survey Plan Document</li>
                 </ul>
                 
                 <div className="flex flex-col items-center justify-center">
