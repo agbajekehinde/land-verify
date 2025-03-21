@@ -510,13 +510,10 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Upload Files</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Upload Files <span className="text-gray-500 text-xs">Recommended</span></label>
               <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
-                <div className="mb-2 text-sm text-gray-500">
-                  Please upload any relevant documents, such as:
-                </div>
                 <ul className="mb-3 text-xs text-gray-600 pl-5 list-disc">
-                  <li>Survey Plan Document</li>
+                  <li>Please upload any relevant documents, such as Survey Plan Document</li>
                 </ul>
                 
                 <div className="flex flex-col items-center justify-center">
