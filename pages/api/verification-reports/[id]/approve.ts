@@ -58,13 +58,13 @@ export default async function handler(
     if (user && user.email) {
       try {
         await resend.emails.send({
-          from: 'support@landverify.ng', // Replace with your verified domain
+          from: 'support@landverify.ng', 
           to: user.email,
           subject: 'Your Verification Report Is Ready',
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
               <h2 style="color: #2563EB;">Good news, ${user.firstName}!</h2>
-              <p>Your verification report for the property at <strong>${address}, ${city}, ${state}</strong> has been approved and is now available for you to view.</p>
+              <p>Your verification report for the property at <strong>${address}, ${city}, ${state}</strong> has been completed and is now available for you to view.</p>
               <p>The verification has been completed successfully, and you can access all details through your account dashboard.</p>
               
               <div style="margin: 30px 0;">
