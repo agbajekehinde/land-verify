@@ -4,7 +4,7 @@
 import { useState, useRef, useEffect } from 'react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, Edit, CheckCircle, X, Eye } from 'lucide-react';
+import { ChevronDown, Edit, CheckCircle, Eye } from 'lucide-react';
 
 type ActionDropdownProps = {
   reportId: string;
@@ -64,7 +64,7 @@ export default function ActionDropdown({ reportId }: ActionDropdownProps) {
   };
 
   // Handle reject report action
-  const handleRejectReport = async () => {
+  /*const handleRejectReport = async () => {
     try {
       const response = await fetch(`/api/verification-reports/${reportId}/reject`, {
         method: 'PATCH',
@@ -82,7 +82,7 @@ export default function ActionDropdown({ reportId }: ActionDropdownProps) {
     } catch (error) {
       console.error('Error rejecting report:', error);
     }
-  };
+  };*/
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -127,15 +127,16 @@ export default function ActionDropdown({ reportId }: ActionDropdownProps) {
               </div>
             </button>
             
-            <button
+             {/*<button
               onClick={handleRejectReport}
               className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
             >
               <div className="flex items-center">
                 <X className="mr-2 h-4 w-4" />
-                Reject Report
+                Reject Report 
               </div>
-            </button>
+            </button> */}
+
           </div>
         </div>
       )}
