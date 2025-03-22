@@ -54,36 +54,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     
     // Send email notification to the partner using Resend
-    try {
-      const data = await resend.emails.send({
-        from: process.env.EMAIL_FROM || '',
-        to: partner.email,
-        subject: 'New Verification Assignment',
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2>New Verification Assignment</h2>
-            <p>Hello ${partner.firstName} ${partner.lastName},</p>
-            <p>You have been assigned a new verification request. Please log in to the portal to view and process this request.</p>
-            <p><strong>Verification Details:</strong></p>
-            <ul>
-              <li><strong>Address:</strong> ${verificationRequest.address}</li>
-              <li><strong>City:</strong> ${verificationRequest.city}</li>
-              <li><strong>State:</strong> ${verificationRequest.state}</li>
-              <li><strong>Postal Code:</strong> ${verificationRequest.postalCode}</li>
-            </ul>
-            <p><a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://landverify.ng'}/dashboard" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">View Assignment</a></p>
-            <p>Thank you,<br>Your Verification Team</p>
-          </div>
-        `,
-      });
-
-      return res.status(200).json({ message: 'Email sent successfully', data });
-    } catch (error) {
-      console.error('Error sending email:', error);
-      return res.status(500).json({ message: 'Failed to send email', error });
-    }
+   try {
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || '',
+      to: partner.email,
+      subject: 'New Verification Assignment',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>New Verification Assignment</h2>
+          <p>Hello ${partner.firstName} ${partner.lastName},</p>
+          <p>You have been assigned a new verification request. Please log in to the portal to view and process this request.</p>
+          <p><strong>Verification Details:</strong></p>
+          <ul>
+            <li><strong>Address:</strong> ${verificationRequest.address}</li>
+            <li><strong>City:</strong> ${verificationRequest.city}</li>
+            <li><strong>State:</strong> ${verificationRequest.state}</li>
+            <li><strong>Postal Code:</strong> ${verificationRequest.postalCode}</li>
+          </ul>
+          <p><a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://landverify.ng'}/dashboard" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">View Assignment</a></p>
+          <p>Thank you,<br>Your Verification Team</p>
+        </div>
+      `,
+    });
+    
+    return res.status(200).json(updatedVerification);
   } catch (error) {
-    console.error('Error processing verification request:', error);
-    return res.status(500).json({ message: 'Internal Server Error', error });
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to send email notification' });
+  }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to assign verification request' });
   }
 }
