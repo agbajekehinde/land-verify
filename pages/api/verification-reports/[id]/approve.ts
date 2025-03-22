@@ -58,7 +58,7 @@ export default async function handler(
     if (user && user.email) {
       try {
         await resend.emails.send({
-          from: 'support@landverify.ng', 
+          from: `LandVerify <${process.env.EMAIL_FROM}>`,
           to: user.email,
           subject: 'Your Verification Report Is Ready',
           html: `

@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Send email notification to the partner using Resend
    try {
     await resend.emails.send({
-      from: process.env.EMAIL_FROM || '',
+      from: `LandVerify <${process.env.EMAIL_FROM}>`,
       to: partner.email,
       subject: 'New Verification Assignment',
       html: `
@@ -72,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             <li><strong>Postal Code:</strong> ${verificationRequest.postalCode}</li>
           </ul>
           <p><a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://landverify.ng'}/dashboard" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">View Assignment</a></p>
-          <p>Thank you,<br>Your Verification Team</p>
+          <p>Thank you,<br>LandVerify Team</p>
         </div>
       `,
     });
