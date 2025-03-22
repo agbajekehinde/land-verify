@@ -2,7 +2,7 @@
 import React from 'react';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import WhatsAppButton from '../Whatsappbutton/Whatsappbutton';
+import Typeform from '../Typeform/typeform';
 
 export default function Footer() {
   return (
@@ -22,7 +22,7 @@ export default function Footer() {
       <p className='mt-8 text-sm text-gray-500'>LandVerify.ng is a product and property of LandVerify Digital Services, a company registered with the Nigeria Corporate Affairs Commission with RC Number: XXXXX </p>
       <p className="mt-4 text-sm text-gray-500 pt-2">All rights reserved (c) 2025</p>
 
-      <WhatsAppButton/>
+      <Typeform/>
     </footer>
   );
 }

@@ -3,7 +3,7 @@
  */
 const nextConfig = {
   typescript: {
-    ignoreBuildErrors: true, 
+    ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: false,
@@ -17,13 +17,18 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self';
-              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.paystack.com;
-              style-src 'self' 'unsafe-inline';
-              img-src 'self' data:;
-              connect-src 'self' https://api.paystack.co;
-              frame-src https://checkout.paystack.com;
+              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.paystack.com https://*.typeform.com;
+              style-src 'self' 'unsafe-inline' https://*.typeform.com;
+              img-src 'self' data: https://*.typeform.com;
+              connect-src 'self' https://api.paystack.co https://*.typeform.com;
+              frame-src 'self' https://checkout.paystack.com https://*.typeform.com;
+              frame-ancestors 'self';
             `.replace(/\s{2,}/g, ' ').trim(),
           },
+          {
+            key: 'Permissions-Policy',
+            value: 'fullscreen=*'
+          }
         ],
       },
     ];
