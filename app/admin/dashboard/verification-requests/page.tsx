@@ -9,7 +9,6 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 async function fetchVerificationRequests() {
   const requests = await prisma.verificationRequest.findMany({
-    select: { user: true },
     select: {
       id: true,
       address: true,
