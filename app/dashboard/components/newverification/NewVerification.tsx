@@ -676,62 +676,61 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 <p className="text-gray-600">Processing your verification request...</p>
               </div>
             )}
-
-            {/* Payment and navigation buttons */}
-            <div className="flex justify-between items-center">
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
-                disabled={loading}
-              >
-                Back
-              </button>
-              
-              {selectedPaymentPlan && !paymentComplete && !loading ? (
-                <div className="w-full max-w-xs">
-                  {(name && email) ? (
-                    <PaystackButton
-                      text="Make Payment & Submit"
-                      className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center"
-                      email={email}
-                      amount={selectedPaymentPlan.amount}
-                      publicKey={publicKey}
-                      metadata={{
-                        custom_fields: [
-                          {
-                            display_name: "Name",
-                            variable_name: "name",
-                            value: name,
-                          },
-                          {
-                            display_name: "Phone",
-                            variable_name: "phone",
-                            value: phone,
-                          },
-                        ],
-                      }}
-                      onSuccess={handlePaymentSuccess}
-                      onClose={handlePaymentClose}
-                    />
-                  ) : (
-                    <button 
-                      disabled 
-                      className="w-full py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
-                    >
-                      Fill required fields
-                    </button>
-                  )}
-                </div>
-              ) : !loading && (
-                <button 
-                  disabled 
-                  className="px-6 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
+              {/* Payment and navigation buttons */}
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="w-full sm:w-auto px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+                  disabled={loading}
                 >
-                  {paymentComplete ? "Processing..." : "Select payment option"}
+                  Back
                 </button>
-              )}
-            </div>
+                
+                {selectedPaymentPlan && !paymentComplete && !loading ? (
+                  <div className="w-full sm:max-w-xs">
+                    {(name && email) ? (
+                      <PaystackButton
+                        text="Make Payment & Submit"
+                        className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center"
+                        email={email}
+                        amount={selectedPaymentPlan.amount}
+                        publicKey={publicKey}
+                        metadata={{
+                          custom_fields: [
+                            {
+                              display_name: "Name",
+                              variable_name: "name",
+                              value: name,
+                            },
+                            {
+                              display_name: "Phone",
+                              variable_name: "phone",
+                              value: phone,
+                            },
+                          ],
+                        }}
+                        onSuccess={handlePaymentSuccess}
+                        onClose={handlePaymentClose}
+                      />
+                    ) : (
+                      <button 
+                        disabled 
+                        className="w-full py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
+                      >
+                        Fill required fields
+                      </button>
+                    )}
+                  </div>
+                ) : !loading && (
+                  <button 
+                    disabled 
+                    className="w-full sm:w-auto px-6 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
+                  >
+                    {paymentComplete ? "Processing..." : "Select payment option"}
+                  </button>
+                )}
+              </div>
           </div>
         )}
         <Toaster position="top-center" toastOptions={{ duration: 3000 }} />

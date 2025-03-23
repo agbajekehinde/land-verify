@@ -39,14 +39,14 @@ function Dashboard() {
             <VerificationProvider>
               <div>
                 <WelcomeSection />
-                <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
-                <p className="text-gray-600 text-sm sm:text-base">Start a new verification request</p>
-                <button 
-                  onClick={() => setIsOpen(true)} 
-                  className="bg-green-600 text-white w-48 sm:w-auto block text-center px-3 py-4 h-16 sm:h-auto sm:px-4 sm:py-2 text-sm sm:text-base rounded hover:bg-green-700 mt-2 sm:mt-0"
-                >
-                  Start New Verification
-                </button>
+                <div className="flex flex-col sm:flex-row bg-white p-6 rounded-lg shadow-md items-center justify-between gap-3 sm:gap-4">
+                  <p className="hidden sm:block text-gray-600 text-sm sm:text-base">Start a new verification request</p>
+                  <button
+                    onClick={() => setIsOpen(true)}
+                    className="w-full sm:max-w-xs bg-green-600 text-white flex items-center justify-center px-3 py-4 h-16 sm:h-auto sm:px-4 sm:py-2 text-base font-bold sm:text-base sm:font-medium rounded hover:bg-green-700"
+                  >
+                    Start New Verification
+                  </button>
                   {isOpen && <NewVerification isOpen={isOpen} setIsOpen={setIsOpen} />}
                 </div>
                 <VerificationHistory/>
