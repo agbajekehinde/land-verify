@@ -43,7 +43,7 @@ function Dashboard() {
                   <p className="hidden sm:block text-gray-600 text-sm sm:text-base">Start a new verification request</p>
                   <button
                     onClick={() => setIsOpen(true)}
-                    className="w-full sm:max-w-xs bg-green-600 text-white flex items-center justify-center px-3 py-4 h-16 sm:h-auto sm:px-4 sm:py-2 text-base font-bold sm:text-base sm:font-medium rounded hover:bg-green-700"
+                    className="w-full lg:w-56 sm:max-w-xs bg-green-600 text-white flex items-center justify-center px-2 py-4 h-16 sm:h-auto sm:px-2 sm:py-2 text-base font-bold sm:text-base sm:font-medium rounded hover:bg-green-700"
                   >
                     Start New Verification
                   </button>
