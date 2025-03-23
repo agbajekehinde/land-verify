@@ -23,7 +23,7 @@ export default function Hero() {
               <span>Start Verification</span> <ArrowRightIcon className="w-5 md:w-6" />
             </Link>
             <Link
-              href="/learn-more"
+              href="/about-us"
               className="flex w-full md:w-auto items-center justify-center gap-5 rounded-lg border border-[#479101] px-6 py-4 md:py-3 text-sm font-medium text-[#479101] transition-colors hover:bg-[#e6f4e1] md:text-base"
             >
               <span>Learn More</span>

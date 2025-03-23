@@ -454,8 +454,8 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                   >
                     <option value="" className="text-gray-400">Select land size</option>
                     <option value="Zero">Zero to 1 plot</option>
-                    <option value="1 to 3">2 plot to 5 plots</option>
-                    <option value="5 to 10">5 plot to 10 plots</option>
+                    <option value="1 to 3">2 plots to 5 plots</option>
+                    <option value="5 to 10">5 plots to 10 plots</option>
                     <option value="others">Others</option>
                   </select>
                   <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
