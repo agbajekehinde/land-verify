@@ -21,7 +21,6 @@ export async function sendPasswordResetEmail(
     subject: "🔐 Reset your LandVerify password",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <img src="${baseUrl}/LandVerify-logo.png" alt="LandVerify Logo" style="max-width: 180px; margin: 20px 0;">
         <h2>Reset Your Password</h2>
         <p>Hello,</p>
         <p>We received a request to reset your password for your LandVerify account.</p>

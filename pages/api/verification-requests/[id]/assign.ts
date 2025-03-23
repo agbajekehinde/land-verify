@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       subject: 'New Verification Assignment',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>New Verification Assignment</h2>
+          <h2 style="color: #2e7d32;>New Verification Assignment</h2>
           <p>Hello ${partner.firstName} ${partner.lastName},</p>
           <p>You have been assigned a new verification request. Please log in to the portal to view and process this request.</p>
           <p><strong>Verification Details:</strong></p>
@@ -71,7 +71,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             <li><strong>State:</strong> ${verificationRequest.state}</li>
             <li><strong>Postal Code:</strong> ${verificationRequest.postalCode}</li>
           </ul>
-          <p><a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://landverify.ng'}/dashboard" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">View Assignment</a></p>
+          <p><a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://landverify.ng'}/partner/signin" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">View Assignment</a></p>
           <p>Thank you,<br>LandVerify Team</p>
         </div>
       `,

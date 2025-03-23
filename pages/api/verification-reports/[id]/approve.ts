@@ -63,13 +63,13 @@ export default async function handler(
           subject: 'Your Verification Report Is Ready',
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
-              <h2 style="color: #2563EB;">Good news, ${user.firstName}!</h2>
+              <h2 style="color: #2e7d32;">Good news, ${user.firstName}!</h2>
               <p>Your verification report for the property at <strong>${address}, ${city}, ${state}</strong> has been completed and is now available for you to view.</p>
               <p>The verification has been completed successfully, and you can access all details through your account dashboard.</p>
               
               <div style="margin: 30px 0;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://landverify.ng'}/dashboard/verification-requests/${report.verificationRequestId}" 
-                   style="background-color: #2563EB; color: white; padding: 12px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://landverify.ng'}/signin" 
+                   style="background-color: #2e7d32; color: white; padding: 12px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
                   View Your Report
                 </a>
               </div>
