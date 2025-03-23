@@ -28,12 +28,17 @@ const nextConfig = {
           {
             key: 'Permissions-Policy',
             value: 'fullscreen=*'
-          },
-          {
-            source: "/sitemap.xml",
-            destination: "/api/sitemap.xml",
-          },
+          }
         ],
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: "/sitemap.xml",
+        destination: "/api/sitemap.xml",
+        permanent: true,
       },
     ];
   },
