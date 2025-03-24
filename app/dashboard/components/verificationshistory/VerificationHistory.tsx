@@ -40,7 +40,6 @@ const VerificationHistory: React.FC = () => {
 
   // Helper function to format status for display
   const formatStatus = (status: string) => {
-    // Convert from database format (e.g., IN_PROGRESS) to display format (e.g., In Progress)
     const words = status.split('_').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     );
@@ -72,7 +71,6 @@ const VerificationHistory: React.FC = () => {
 
   // Updated function to download findings as PDF
   const downloadFindings = async (findings: unknown | undefined, verification: VerificationRequest) => {
-    // Ensure we have findings to download
     if (!findings) {
       console.error("No findings available to download");
       return;
@@ -80,13 +78,10 @@ const VerificationHistory: React.FC = () => {
     
     try {
       setGeneratingPDF(true);
-      // Type assertion here since we've already checked it exists
       const reportFindings = findings as ReportFindings;
       
-      // Get report files from the verification report if available
       const reportFiles = verification.report?.reportFiles || [];
       
-      // Generate the PDF
       const doc = await generateVerificationPDF(
         reportFindings, 
         verification.address,
@@ -96,13 +91,11 @@ const VerificationHistory: React.FC = () => {
           postalCode: verification.postalCode,
           createdAt: verification.createdAt
         },
-        reportFiles // Pass report files to PDF generator
+        reportFiles
       );
       
-      // Generate a filename
       const fileName = `verification_report_${verification.address.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
       
-      // Save the PDF
       doc.save(fileName);
       
     } catch (error) {
@@ -125,21 +118,17 @@ const VerificationHistory: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {verifications.map((verification) => (
-            <div key={verification.id} className="p-4 border rounded-lg shadow-sm bg-gray-50 relative flex items-start justify-between">
-              <div>
+            <div key={verification.id} className="p-4 border rounded-lg shadow-sm bg-gray-50 relative flex flex-col sm:flex-row items-start justify-between">
+              <div className="flex-grow">
                 <p className="font-medium">{verification.address}, {verification.city}, {verification.state} {verification.postalCode}</p>
                 <p className="text-sm mt-1">
                   Status: <span className={getStatusColor(verification.status)}>{formatStatus(verification.status)}</span>
                 </p>
                 <p className="text-sm text-gray-500 mt-1">Date: {new Date(verification.createdAt).toLocaleDateString()}</p>
-                {verification.report && (
-                  <p className="text-sm mt-1">
-                  </p>
-                )}
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0 w-full sm:w-auto">
                 <button
-                  className="border border-gray-400 text-gray-600 px-3 py-1 rounded hover:bg-gray-200 transition"
+                  className="border border-gray-400 text-gray-600 px-3 py-1 rounded hover:bg-gray-200 transition w-full sm:w-auto"
                   onClick={() => setSelectedVerification(verification)}
                 >
                   View
@@ -148,7 +137,7 @@ const VerificationHistory: React.FC = () => {
                 {/* Download button - only show when report is approved */}
                 {shouldShowDownload(verification) && (
                   <button
-                    className={`border border-green-500 bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition flex items-center justify-center ${generatingPDF ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`border border-green-500 bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition flex items-center justify-center w-full sm:w-auto ${generatingPDF ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={() => downloadFindings(verification.report?.findings, verification)}
                     disabled={generatingPDF}
                   >
@@ -176,6 +165,7 @@ const VerificationHistory: React.FC = () => {
         </div>
       )}
 
+      {/* Rest of the component remains the same */}
       {/* Modal for viewing verification details */}
       {selectedVerification && (
           <div className="fixed inset-0 bg-gray bg-opacity-10 backdrop-blur-md flex items-center justify-center z-50">
