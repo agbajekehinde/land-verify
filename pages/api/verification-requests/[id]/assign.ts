@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       subject: 'New Verification Assignment',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2e7d32;>New Verification Assignment</h2>
+          <h2 style="color: #2e7d32;">New Verification Assignment</h2>
           <p>Hello ${partner.firstName} ${partner.lastName},</p>
           <p>You have been assigned a new verification request. Please log in to the portal to view and process this request.</p>
           <p><strong>Verification Details:</strong></p>
