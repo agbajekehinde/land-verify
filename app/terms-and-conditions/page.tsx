@@ -16,7 +16,7 @@ const TermsAndConditions: React.FC = () => {
           </Section>
 
           <Section title="2. Service Description">
-            <p>LandVerify provides a digital platform that connects prospective homeowners and property managers with verified experts in the real estate sector.</p>
+            <p>LandVerify provides a digital platform that connects prospective land and property owners with licensed experts in verifying authenticity/genuinety of a land/property within the accordance of the established laws.</p>
           </Section>
 
           <Section title="3. User Registration">
@@ -48,7 +48,7 @@ const TermsAndConditions: React.FC = () => {
           </Section>
 
           <Section title="9. Privacy Policy">
-            <p>Your use of our Service is governed by our Privacy Policy.</p>
+            <p>Your use of our Service is governed by our <a href="/privacy-policy" className="text-green-600 underline">Privacy Policy.</a>  </p>
           </Section>
 
           <Section title="10. Limitation of Liability">
@@ -72,7 +72,7 @@ const TermsAndConditions: React.FC = () => {
           </Section>
 
           <Section title="15. Contact Information">
-            <p>For questions, contact us at: <a href="mailto:contact@landverify.com" className="text-green-600 underline">contact@landverify.com</a> </p>
+            <p>For questions, contact us at: <a href="mailto:legal@landverify.ng" className="text-green-600 underline">legal@landverify.ng</a> </p>
            
           </Section>
         </div>
