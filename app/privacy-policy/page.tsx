@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer/footer";
@@ -11,13 +13,13 @@ const PrivacyPolicy: React.FC = () => {
         <p className="text-gray-500 text-center mb-4">Effective Date: March 14, 2025</p>
         
         <p className="mb-6">
-          This Privacy Policy governs the collection, use, sharing, and protection of your personal information by LandVerify ("we," "us," or "our"). 
+          This Privacy Policy governs the collection, use, sharing, and protection of your personal information by LandVerify (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). 
           By accessing our website or using our services, you consent to the practices described herein and agree to be bound by this Privacy Policy and our Terms and Conditions.
         </p>
         
         <div className="space-y-6">
           <Section title="1. Introduction">
-            <p>LandVerify is committed to protecting your privacy and ensuring the confidentiality of your personal information. This Policy explains how we collect, use, disclose, and safeguard your personal data in connection with your engagement with our digital platform, which connects prospective homeowners and property managers with verified real estate experts. Should you have any questions or concerns about our data practices, please refer to the "Contact Information" section below.</p>
+            <p>LandVerify is committed to protecting your privacy and ensuring the confidentiality of your personal information. This Policy explains how we collect, use, disclose, and safeguard your personal data in connection with your engagement with our digital platform, which connects prospective homeowners and property managers with verified real estate experts. Should you have any questions or concerns about our data practices, please refer to the &ldquo;Contact Information&rdquo; section below.</p>
           </Section>
 
           <Section title="2. Definitions">
