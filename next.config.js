@@ -17,9 +17,9 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self';
-              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.paystack.com https://*.typeform.com;
+              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.paystack.com https://*.typeform.com https://va.vercel-scripts.com;
               style-src 'self' 'unsafe-inline' https://*.typeform.com;
-              img-src 'self' data: https://*.typeform.com;
+              img-src 'self' data: https://*.typeform.com https://res.cloudinary.com;
               connect-src 'self' https://api.paystack.co https://*.typeform.com;
               frame-src 'self' https://checkout.paystack.com https://*.typeform.com;
               frame-ancestors 'self';
@@ -36,8 +36,8 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/sitemap.xml",
-        destination: "/api/sitemap.xml",
+        source: '/sitemap.xml',
+        destination: '/api/sitemap.xml',
         permanent: true,
       },
     ];

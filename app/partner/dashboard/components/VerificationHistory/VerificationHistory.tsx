@@ -413,7 +413,7 @@ const VerificationHistory: React.FC = () => {
                 </div>
                 
                 <div>
-                  <p className="font-medium mb-2">Is this property free of acquisition?</p>
+                  <p className="font-medium mb-2">Is this land/property free of acquisition?</p>
                   <div className="flex space-x-4">
                     <label className="flex items-center">
                       <input

@@ -24,7 +24,9 @@ const imageToDataURL = async (src: string): Promise<string> => {
         return;
       }
       ctx.drawImage(img, 0, 0);
-      resolve(canvas.toDataURL('image/jpeg'));
+      // Determine MIME type based on file extension
+      const mimeType = src.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
+      resolve(canvas.toDataURL(mimeType));
     };
     img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
     img.src = src;
@@ -45,9 +47,10 @@ export const generateVerificationPDF = async (
   // Create a new PDF document
   const doc = new jsPDF() as PDFDocumentWithAutoTable;
   
+  // Convert the logo image to a data URL and then add it to the PDF
   try {
-    const imgData = '/LandVerify-logo.png' ; 
-    doc.addImage(imgData, 'PNG', 15, 10, 36, 12);
+    const logoDataUrl = await imageToDataURL('/LandVerify-logo.png');
+    doc.addImage(logoDataUrl, 'PNG', 16, 12, 36, 12);
   } catch (error) {
     console.error('Error adding logo to PDF:', error);
   }
@@ -273,9 +276,14 @@ export const generateVerificationPDF = async (
     
     // Process each image
     for (let i = 0; i < reportFiles.length; i++) {
-      // Check if there's enough space for image + footer
-      // Added a larger margin (45mm) to ensure footer space
-      if (yPos > 190) {
+      // Set fixed dimensions for the image
+      const imgWidth = 160; // width in mm
+      const imgHeight = 90; // height in mm
+
+      // Calculate the total space needed: title (5mm) + image height + margin (20mm)
+      const spaceNeeded = 5 + imgHeight + 20;
+      // Ensure adding this image won't overlap with the footer at y = 265
+      if (yPos + spaceNeeded > 265) {
         doc.addPage();
         yPos = 20;
       }
@@ -283,25 +291,23 @@ export const generateVerificationPDF = async (
       try {
         // Convert image to data URL
         const imageDataUrl = await imageToDataURL(reportFiles[i]);
+        // Determine image type based on file extension for jsPDF
+        const imageType = reportFiles[i].toLowerCase().endsWith('.png') ? 'PNG' : 'JPEG';
         
         // Add image title
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         doc.text(`Image ${i + 1}`, 20, yPos);
         
-        // Add image
-        // Set a fixed width and calculate height based on aspect ratio
-        const imgWidth = 160; // width in mm
-        const imgHeight = 90; // height in mm - standard aspect ratio
+        // Add image with fixed dimensions
+        doc.addImage(imageDataUrl, imageType, 20, yPos + 5, imgWidth, imgHeight);
         
-        doc.addImage(imageDataUrl, 'JPEG', 20, yPos + 5, imgWidth, imgHeight);
-        
-        // Update yPos for next item
-        yPos += imgHeight + 20;
+        // Update yPos for the next image
+        yPos += spaceNeeded;
       } catch (error) {
         console.error(`Error processing image ${i + 1}:`, error);
         
-        // Add a placeholder for failed images
+        // Add a placeholder text if image fails to load
         doc.setFontSize(10);
         doc.text(`[Image ${i + 1} - Could not be displayed]`, 20, yPos + 5);
         yPos += 15;
