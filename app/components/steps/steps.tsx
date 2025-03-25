@@ -34,7 +34,7 @@ export default function Steps() {
               </div>
               <div className="ml-4">
                 <h3 className="text-xl font-semibold text-gray-800">Verification Report</h3>
-                <p className="mt-2 text-gray-600">Receive a detailed report on property authenticity within 48 hours to 7 days.</p>
+                <p className="mt-2 text-gray-600">Receive a detailed report on land/property authenticity and expert advice within 48 hours to 7 days.</p>
               </div>
             </div>
           </div>
