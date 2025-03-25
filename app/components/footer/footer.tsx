@@ -19,7 +19,7 @@ export default function Footer() {
         </Link>
       <p className="mt-8 text-sm text-gray-600">📍 Currently available in Lagos & Ogun states | More states coming soon!</p>
       <div className='mt-4'> </div>
-      <p className='mt-8 text-sm text-center text-gray-400'>LandVerify.ng is a product and property of LandVerify Digital Services, a company registered with the <br></br> Nigeria Corporate Affairs Commission with RC Number: XXXXX </p>
+      <p className='mt-8 text-sm text-center text-gray-400'>LandVerify.ng is a product and property of LandVerify Digital Services, a company registered with the <br></br> Nigeria Corporate Affairs Commission with RC Number: 8365907 </p>
       <p className="mt-4 text-sm text-gray-400 pt-2">All rights reserved (c) 2025</p>
 
       <Typeform/>
