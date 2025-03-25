@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import withSessionProvider from '@/app/withSessionProvider';
@@ -33,6 +33,9 @@ function VerificationReportsPage() {
   const router = useRouter();
   const [reports, setReports] = useState<VerificationReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // New filtering state
+  const [statusFilter, setStatusFilter] = useState('All');
 
   useEffect(() => {
     console.log('Verification Reports Page Session Status:', status);
@@ -106,6 +109,25 @@ function VerificationReportsPage() {
     }
   };
 
+  // Compute filtered reports based on the chosen statusFilter.
+  // When "All" is selected, return all reports.
+  // Otherwise, match using uppercase values.
+  // Also, ensure that 'DRAFT' reports always appear at the top.
+  const filteredReports = useMemo(() => {
+    const filtered = reports.filter(report => {
+      if (statusFilter === 'All') return true;
+      return report.status.toUpperCase() === statusFilter;
+    });
+
+    return filtered.sort((a, b) => {
+      const aDraft = a.status.toUpperCase() === 'DRAFT';
+      const bDraft = b.status.toUpperCase() === 'DRAFT';
+      if (aDraft && !bDraft) return -1;
+      if (bDraft && !aDraft) return 1;
+      return 0;
+    });
+  }, [reports, statusFilter]);
+
   // Show loading while checking authentication
   if (status === 'loading') {
     return <Spinner />;
@@ -120,6 +142,19 @@ function VerificationReportsPage() {
     <div className="p-4 lg:pl-72">
       <h1 className="text-2xl font-bold mb-6">Verification Reports</h1>
       
+      {/* Filters */}
+      <div className="mb-4 flex space-x-4">
+        <select 
+          value={statusFilter} 
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-3 py-2 border rounded"
+        >
+          <option value="All">All Statuses</option>
+          <option value="DRAFT">Draft</option>
+          <option value="APPROVED">Approved</option>
+        </select>
+      </div>
+
       {isLoading ? (
         <div className="grid grid-cols-1 gap-4">
           {[...Array(5)].map((_, index) => (
@@ -135,7 +170,7 @@ function VerificationReportsPage() {
             <thead>
               <tr className="text-left text-gray-600 border-b">
                 <th className="py-3 px-4 font-medium">Report ID</th>
-                <th className="py-3 px-4 font-medium">Request ID</th>
+                {/* Removed Request ID column */}
                 <th className="py-3 px-4 font-medium">Partner</th>
                 <th className="py-3 px-4 font-medium">User Email</th>
                 <th className="py-3 px-4 font-medium">Property Address</th>
@@ -146,11 +181,10 @@ function VerificationReportsPage() {
               </tr>
             </thead>
             <tbody>
-              {reports.map((report, index) => (
+              {filteredReports.map((report, index) => (
                 <React.Fragment key={report.id}>
                   <tr className="hover:bg-gray-100 transition">
                     <td className="py-3 px-4">{report.id}</td>
-                    <td className="py-3 px-4">{report.verificationRequestId}</td>
                     <td className="py-3 px-4">
                       {report.partner ? `${report.partner.firstName} ${report.partner.lastName}` : "N/A"}
                     </td>
@@ -171,9 +205,9 @@ function VerificationReportsPage() {
                       </div>
                     </td>
                   </tr>
-                  {index < reports.length - 1 && (
+                  {index < filteredReports.length - 1 && (
                     <tr>
-                      <td colSpan={9} className="border-t border-gray-300"></td>
+                      <td colSpan={8} className="border-t border-gray-300"></td>
                     </tr>
                   )}
                 </React.Fragment>
