@@ -42,10 +42,10 @@ function Dashboard() {
                 <div className="flex flex-col sm:flex-row bg-white p-6 rounded-lg shadow-md items-center justify-between gap-3 sm:gap-4">
                   <p className="hidden sm:block text-gray-600 text-sm sm:text-base">Start a new verification request</p>
                   <button
-                    onClick={() => setIsOpen(true)}
-                    className="w-full lg:w-56 sm:max-w-xs bg-green-600 text-white flex items-center justify-center px-2 py-4 h-16 sm:h-auto sm:px-2 sm:py-2 text-base font-bold sm:text-base sm:font-medium rounded hover:bg-green-700"
+                  onClick={() => setIsOpen(true)}
+                  className="w-full lg:w-56 sm:max-w-xs bg-green-600 text-white flex items-center justify-center px-2 py-2 h-12 sm:h-12 text-base font-bold sm:text-base sm:font-medium rounded hover:bg-green-700"
                   >
-                    Start New Verification
+                  Create New Verification
                   </button>
                   {isOpen && <NewVerification isOpen={isOpen} setIsOpen={setIsOpen} />}
                 </div>
