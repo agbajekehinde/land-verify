@@ -6,11 +6,10 @@ import { useVerification } from "@/app/partner/dashboard/components/Verification
 interface VerificationRequest {
   id: string;
   address: string;
-  city: string;
   state: string;
-  postalCode: string;
   status: string;
   createdAt: string;
+  lga: string;
   latitude?: number;
   longitude?: number;
   landsize?: string; // Added landsize property
@@ -246,7 +245,7 @@ const VerificationHistory: React.FC = () => {
           {verifications.map((verification) => (
             <div key={verification.id} className="p-4 border rounded-lg shadow-sm bg-gray-50 relative flex items-start justify-between">
               <div>
-                <p className="font-medium">{verification.address}, {verification.city}, {verification.state} {verification.postalCode}</p>
+                <p className="font-medium">{verification.address},{verification.lga}, {verification.state}</p>
                 <p className="text-sm mt-1">
                   Status: <span className={getStatusColor(verification.status)}>{formatStatus(verification.status)}</span>
                 </p>
@@ -284,11 +283,10 @@ const VerificationHistory: React.FC = () => {
               ✖️
             </button>
 
-            <h3 className="text-lg font-bold">Verification Details</h3>
+            <h1 className="text-2xl font-bold">Verification Details</h1>
             <p className="mt-2"><strong>Address:</strong> {selectedVerification.address}</p>
-            <p><strong>City:</strong> {selectedVerification.city}</p>
+            <p><strong>LGA:</strong> {selectedVerification.lga}</p> 
             <p><strong>State:</strong> {selectedVerification.state}</p>
-            <p><strong>Postal Code:</strong> {selectedVerification.postalCode}</p>
             
             {/* Display landsize if available */}
             {selectedVerification.landsize && (
@@ -307,7 +305,7 @@ const VerificationHistory: React.FC = () => {
             )}
             
             {/* Map view if address are available */}
-            {selectedVerification.address !== undefined && selectedVerification.city !== undefined && selectedVerification.state !== undefined && (
+            {selectedVerification.address !== undefined && selectedVerification.lga !== undefined && selectedVerification.state !== undefined && (
               <div className="mt-4">
                 <h4 className="font-semibold">Location Map:</h4>
                 <div className="mt-2 bg-gray-100 h-48 rounded flex items-center justify-center">
@@ -368,7 +366,7 @@ const VerificationHistory: React.FC = () => {
             <h1 className="text-2xl font-bold mb-4">Create Verification Report</h1>
             <p className="mb-4">
               <strong>Land: </strong> 
-              {selectedVerification.address}, {selectedVerification.city}, {selectedVerification.state} {selectedVerification.postalCode}
+              {selectedVerification.address}, {selectedVerification.lga || ""}, {selectedVerification.state}
             </p>
             
             {/* Display land size in the report modal as well */}
