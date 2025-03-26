@@ -57,7 +57,6 @@ export default async function handler(
       return res.status(401).json({ message: 'Unauthorized' });
     }
     
-    // Parse form data with formidable
     const form = formidable({ multiples: true });
     const [fields, files] = await new Promise<[formidable.Fields, formidable.Files]>((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
@@ -65,33 +64,31 @@ export default async function handler(
         resolve([fields, files]);
       });
     });
-
-    // Log parsed fields and files
-    console.log('Parsed fields:', fields);
-    console.log('Parsed files:', files);
     
-    // Helper function to extract field values whether they are strings or arrays
-    const getFieldValue = (field: unknown): string => {
+     // Log parsed fields and files
+     console.log('Parsed fields:', fields);
+     console.log('Parsed files:', files);
+
+     const getFieldValue = (field: unknown): string => {
       if (Array.isArray(field)) return field[0] as string;
       return (field as string) || '';
     };
 
     // Extract field values
     const address = getFieldValue(fields.address);
-    const city = getFieldValue(fields.city);
+    const lga = getFieldValue(fields.lga);
     const state = getFieldValue(fields.state);
-    const postalCode = getFieldValue(fields.postalCode);
     const landsize = getFieldValue(fields.landsize);
     const paymentType = getFieldValue(fields.paymentType) || 'regular'; 
     const paymentStatus = getFieldValue(fields.paymentStatus) || 'success'; 
     const paymentAmount = getFieldValue(fields.paymentAmount) || '0';
     
     // Optional fields
-    const latitudeStr = getFieldValue(fields.latitude) || '0'; // Default to 0 if not provided
-    const longitudeStr = getFieldValue(fields.longitude) || '0'; // Default to 0 if not provided
+    const latitudeStr = getFieldValue(fields.latitude) || '0';
+    const longitudeStr = getFieldValue(fields.longitude) || '0';
     
     // Validation
-    if (!address || !city || !state || !landsize) {
+    if (!address || !lga || !state || !landsize) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
     
@@ -107,10 +104,9 @@ export default async function handler(
         }
       },
       address,
-      city,
+      lga,
       state,
       landsize,
-      postalCode,
       latitude,
       longitude,
       paymentType, 
@@ -118,8 +114,11 @@ export default async function handler(
       paymentAmount: parseFloat(paymentAmount),
     };
     
+    
     // Upload files to Cloudinary
     const fileUrls: string[] = [];
+
+    // Normalize files to an array, even if there's only one file
     const fileArray = Array.isArray(files.files) ? files.files : files.files ? [files.files] : [];
     
     for (const file of fileArray) {

@@ -39,9 +39,8 @@ model VerificationRequest {
   userId     Int      // ✅ Match the `id` type in User
   partnerId  Int? 
   address    String
-  city       String
+  lga        String @default("Unknown")
   state      String
-  postalCode String
   landsize   String   @default("Unknown") // ✅ Default value added
   latitude   Float?
   longitude  Float?
