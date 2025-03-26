@@ -33,9 +33,8 @@ export interface VerificationReport {
 export interface VerificationRequest {
   id: string;
   address: string;
-  city: string;
+  lga: string;
   state: string;
-  postalCode: string;
   landsize: string;
   latitude?: number;
   longitude?: number;

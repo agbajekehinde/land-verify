@@ -86,9 +86,9 @@ const VerificationHistory: React.FC = () => {
         reportFindings, 
         verification.address,
         {
-          city: verification.city,
+          lga: verification.lga,
           state: verification.state,
-          postalCode: verification.postalCode,
+          landSize: verification.landsize,
           createdAt: verification.createdAt
         },
         reportFiles
@@ -120,7 +120,7 @@ const VerificationHistory: React.FC = () => {
           {verifications.map((verification) => (
             <div key={verification.id} className="p-4 border rounded-lg shadow-sm bg-gray-50 relative flex flex-col sm:flex-row items-start justify-between">
               <div className="flex-grow">
-                <p className="font-medium">{verification.address}, {verification.city}, {verification.state} {verification.postalCode}</p>
+                <p className="font-medium">{verification.address}, {verification.lga}, {verification.state}</p>
                 <p className="text-sm mt-1">
                   Status: <span className={getStatusColor(verification.status)}>{formatStatus(verification.status)}</span>
                 </p>
@@ -179,9 +179,8 @@ const VerificationHistory: React.FC = () => {
 
             <h3 className="text-lg font-bold">Verification Details</h3>
             <p className="mt-2"><strong>Address:</strong> {selectedVerification.address}</p>
-            <p><strong>City:</strong> {selectedVerification.city}</p>
+            <p><strong>LGA:</strong> {selectedVerification.lga}</p>
             <p><strong>State:</strong> {selectedVerification.state}</p>
-            <p><strong>Postal Code:</strong> {selectedVerification.postalCode}</p>
             <p><strong>Land Size:</strong> {selectedVerification.landsize}</p>
             <p><strong>Latitude:</strong> {selectedVerification.latitude}</p>
             <p><strong>Longitude:</strong> {selectedVerification.longitude}</p>
