@@ -50,7 +50,7 @@ function VerificationRequestsPage() {
 
   const fetchVerificationRequests = async () => {
     try {
-      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+      const headers: HeadersInit = { 'Content-Type': 'application/json'};
       const token = (session?.user as { token?: string })?.token;
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;

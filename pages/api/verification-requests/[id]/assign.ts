@@ -67,9 +67,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           <p><strong>Verification Details:</strong></p>
           <ul>
             <li><strong>Address:</strong> ${verificationRequest.address}</li>
-            <li><strong>City:</strong> ${verificationRequest.lga}</li>
+            <li><strong>LGA:</strong> ${verificationRequest.lga}</li>
             <li><strong>State:</strong> ${verificationRequest.state}</li>
-            <li><strong>Postal Code:</strong> ${verificationRequest.landsize}</li>
+            <li><strong>Plots:</strong> ${verificationRequest.landsize}</li>
           </ul>
           <p><a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://landverify.ng'}/partner/signin" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 10px;">View Assignment</a></p>
           <p>Thank you,<br>LandVerify Team</p>
