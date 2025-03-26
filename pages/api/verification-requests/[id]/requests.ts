@@ -22,9 +22,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       select: {
         id: true,
         address: true,
-        city: true,
+        landsize: true,
+        latitude: true,
+        longitude: true,
+        lga: true,
         state: true,
-        postalCode: true,
         status: true,
       },
     });

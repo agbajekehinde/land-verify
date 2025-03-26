@@ -37,9 +37,9 @@ export const generateVerificationPDF = async (
   findings: ReportFindings, 
   address: string,
   verificationDetails: {
-    city: string;
+    lga: string;
     state: string;
-    postalCode: string;
+    landSize: string;
     createdAt: string;
   },
   reportFiles?: string[] // Add reportFiles parameter
@@ -73,7 +73,7 @@ export const generateVerificationPDF = async (
   });
   
   doc.text(`Address: ${address}`, 20, 55);
-  doc.text(`${verificationDetails.city}, ${verificationDetails.state} ${verificationDetails.postalCode}`, 20, 62);
+  doc.text(`${verificationDetails.lga}, ${verificationDetails.state} ${verificationDetails.landSize}`, 20, 62);
   doc.text(`Verification Date: ${formattedDate}`, 20, 69);
   doc.text(`Report ID: ${Math.random().toString(36).substring(2, 10).toUpperCase()}`, 20, 76);
   

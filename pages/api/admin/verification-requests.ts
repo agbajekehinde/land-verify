@@ -26,9 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       select: {
         id: true,
         address: true,
-        city: true,
+        lga: true,
         state: true,
-        postalCode: true,
         status: true,
         landsize: true,
         latitude: true,

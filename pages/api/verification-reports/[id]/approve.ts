@@ -53,7 +53,7 @@ export default async function handler(
     
     // Send email notification to the user
     const { user } = report.verificationRequest;
-    const { address, city, state } = report.verificationRequest;
+    const { address, lga, state } = report.verificationRequest;
     
     if (user && user.email) {
       try {
@@ -64,7 +64,7 @@ export default async function handler(
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
               <h2 style="color: #2e7d32;">Good news, ${user.firstName}!</h2>
-              <p>Your verification report for the property at <strong>${address}, ${city}, ${state}</strong> has been completed and is now available for you to view.</p>
+              <p>Your verification report for the property at <strong>${address}, ${lga}, ${state}</strong> has been completed and is now available for you to view.</p>
               <p>The verification has been completed successfully, and you can access all details through your account dashboard.</p>
               
               <div style="margin: 30px 0;">

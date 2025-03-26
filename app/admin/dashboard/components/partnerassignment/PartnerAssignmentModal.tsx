@@ -13,9 +13,11 @@ interface Partner {
 interface VerificationRequest {
   id: string;
   address: string;
-  city: string;
+  lga: string;
   state: string;
-  postalCode: string;
+  landsize: string;
+  latitude: string;
+  longitude: string;
 }
 
 interface PartnerAssignmentModalProps {
@@ -101,7 +103,7 @@ const PartnerAssignmentModal: React.FC<PartnerAssignmentModalProps> = ({
           <div className="mb-4 p-3 bg-gray-50 rounded-md">
             <p className="font-medium text-gray-700">Verification Address:</p>
             <p className="text-gray-600">
-              {verificationDetails.address}, {verificationDetails.city}, {verificationDetails.state} {verificationDetails.postalCode}
+              {verificationDetails.address}, {verificationDetails.lga}, {verificationDetails.state}, {verificationDetails.landsize}
             </p>
           </div>
         )}

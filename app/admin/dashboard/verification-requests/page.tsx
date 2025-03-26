@@ -9,9 +9,8 @@ import ActionDropdown from '../components/actiondropdown/ActionDropdown';
 interface VerificationRequest {
   id: string;
   address: string;
-  city: string;
+  lga: string;
   state: string;
-  postalCode: string;
   status: string;
   landsize: string;
   latitude: number;
@@ -163,7 +162,7 @@ function VerificationRequestsPage() {
                   <th className="py-3 px-4 font-medium">ID</th>
                   <th className="py-3 px-4 font-medium">User Email</th>
                   <th className="py-3 px-4 font-medium">Address</th>
-                  <th className="py-3 px-4 font-medium">City</th>
+                  <th className="py-3 px-4 font-medium">LGA</th>
                   <th className="py-3 px-4 font-medium">State</th>
                   <th className="py-3 px-4 font-medium">Status</th>
                   <th className="py-3 px-4 font-medium">Actions</th>
@@ -175,8 +174,11 @@ function VerificationRequestsPage() {
                     <td className="py-3 px-4">{req.id}</td>
                     <td className="py-3 px-4">{req.user?.email || "N/A"}</td>
                     <td className="py-3 px-4">{req.address}</td>
-                    <td className="py-3 px-4">{req.city}</td>
+                    <td className="py-3 px-4">{req.lga}</td>
                     <td className="py-3 px-4">{req.state}</td>
+                    <td className="py-3 px-4">{req.paymentType}</td>
+                    <td className="py-3 px-4">{req.paymentAmount}</td>
+                    
                     <td className="py-3 px-4">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(req.status)}`}>
                         {req.status}
