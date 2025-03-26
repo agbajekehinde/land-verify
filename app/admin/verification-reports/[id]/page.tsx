@@ -113,7 +113,7 @@ export default async function ReportDetailsPage({ params }: { params: { id: stri
             <div className="grid grid-cols-3 gap-2">
               <dt className="text-gray-600">Address:</dt>
               <dd className="col-span-2">
-                {`${report.verificationRequest.address}, ${report.verificationRequest.city}, ${report.verificationRequest.state} ${report.verificationRequest.postalCode}`}
+                {`${report.verificationRequest.address}, ${report.verificationRequest.lga}, ${report.verificationRequest.state} ${report.verificationRequest.landsize}`}
               </dd>
             </div>
             <div className="grid grid-cols-3 gap-2">
