@@ -44,15 +44,15 @@ interface PaymentPlan {
 }
 
 const BASE_PAYMENT_PLANS: PaymentPlan[] = [
-  { type: "regular", amount: 5000000, label: "Regular Service (₦50,000)" },
-  { type: "priority", amount: 7500000, label: "Priority Service (₦75,000)" }
+  { type: "regular", amount: 1000000, label: "Regular Service (₦10,000)" },
+  { type: "priority", amount: 1500000, label: "Priority Service (₦15,000)" }
 ];
 
 // LGA pricing multipliers for custom logic
 const LGA_PRICING_MULTIPLIERS = {
   Lagos: {
     default: 0.5,
-    "Ikoyi-Lekki": 2,      // Very premium area
+    "Ibeju-Lekki": 2,      // Very premium area
     "Lagos Island": 1.5,   // Premium area
     "Eti-Osa": 1.75,       // Another premium area
     "Badagry": 0.25        // Less expensive area
