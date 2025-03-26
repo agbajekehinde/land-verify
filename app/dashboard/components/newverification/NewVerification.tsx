@@ -55,7 +55,7 @@ const LGA_PRICING_MULTIPLIERS = {
     "Ibeju-Lekki": 2,      // Very premium area
     "Lagos Island": 1.5,   // Premium area
     "Eti-Osa": 1.75,       // Another premium area
-    "Badagry": 0.25        // Less expensive area
+    "Badagry": 0.25       // Less expensive area
   },
   Ogun: {
     default: 0.5,
@@ -151,13 +151,13 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
         landsizeMultiplier = 1;
         break;
       case "3 to 5":
-        landsizeMultiplier = 2;
+        landsizeMultiplier = 1;
         break;
       case "6 to 10":
-        landsizeMultiplier = 3;
+        landsizeMultiplier = 1;
         break;
       case "others":
-        landsizeMultiplier = 4;
+        landsizeMultiplier = 1;
         break;
       default:
         landsizeMultiplier = 1;
