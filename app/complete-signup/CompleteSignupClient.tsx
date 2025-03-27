@@ -143,8 +143,8 @@ export default function CompleteSignup() {
 
   if (verifying) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-        <div className="max-w-md mx-auto p-6 border border-gray-300 rounded-lg shadow-lg bg-white text-center">
+      <div className="flex items-start justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
+      <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900 mx-auto mb-4"></div>
           <p>Verifying your email...</p>
         </div>
@@ -154,8 +154,8 @@ export default function CompleteSignup() {
 
   if (invalidToken) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-        <div className="max-w-md mx-auto p-6 border border-gray-300 rounded-lg shadow-lg bg-white text-center">
+      <div className="flex items-start justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
+      <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
           <h1 className="text-xl font-bold mb-4">Invalid or Expired Token</h1>
           <p className="mb-6">This verification link is either invalid or has expired.</p>
@@ -168,7 +168,7 @@ export default function CompleteSignup() {
   }
 
   return (
-    <div className="flex items-start sm:items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
+    <div className="flex items-start justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
       <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
         <Link href="/">
           <img
