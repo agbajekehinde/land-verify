@@ -80,7 +80,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // Generate the verification URL
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXTAUTH_URL;
     const verificationUrl = `${baseUrl}/complete-signup?token=${token}`;
 
     // Send the verification email using Resend
