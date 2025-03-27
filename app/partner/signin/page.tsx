@@ -33,7 +33,7 @@ export default function PartnerSignInPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
+    <div className="flex items-start sm:items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
       <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
         <Link href="/">
           <img src="/Landverify-partner.svg" alt="LandVerify Partner Logo" className="mb-0 sm:mb-4 lg:mb-4 w-32 h-8 w-16 sm:h-14 lg:w-56 lg:h-13 mx-auto"/>
