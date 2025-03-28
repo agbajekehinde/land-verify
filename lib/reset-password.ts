@@ -24,7 +24,7 @@ export async function sendPasswordResetEmail(
         <p>Hello,</p>
         <p>We received a request to reset your password for your LandVerify account.</p>
         <p>Please click the button below to reset your password:</p>
-        <div style="text-align: center; margin: 30px 0;">
+         <div style="margin: 30px 0;">
           <a href="${appRouterResetLink}" style="background-color: #479101; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Reset Password</a>
         </div>
             <p> or copy and paste the following link into your browser:</p>
