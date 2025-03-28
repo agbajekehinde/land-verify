@@ -96,8 +96,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             <div style="margin: 30px 0;">
               <a href="${verificationUrl}" style="background-color: #479101; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Complete Your Registration</a>
             </div>
+            <p> or copy and paste the following link into your browser:</p>
+            <p>${verificationUrl}</p>
             <p style="color: #666; font-size: 14px;">This link will expire in 15 minutes for security reasons.</p>
             <p style="color: #666; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
+            <p>Best regards,<br>The LandVerify Team</p>
+
           </div>
         `,
       });

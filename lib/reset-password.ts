@@ -27,6 +27,8 @@ export async function sendPasswordResetEmail(
         <div style="text-align: center; margin: 30px 0;">
           <a href="${appRouterResetLink}" style="background-color: #479101; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Reset Password</a>
         </div>
+            <p> or copy and paste the following link into your browser:</p>
+            <p>${appRouterResetLink}</p>
         <p>This link will expire in 1 hour.</p>
         <p>If you did not request this reset, please ignore this email.</p>
         <p>Regards,<br>The LandVerify Team</p>

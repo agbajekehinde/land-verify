@@ -39,19 +39,19 @@ const FAQs: React.FC = () => {
 const faqData = [
   {
     question: 'What is LandVerify?',
-    answer: 'LandVerify is a land verification/authentication tech platform that helps prospective property buyers verify the authenticity of land or landed property using a team of certified town planners and legal professionals.',
+    answer: 'LandVerify is a land verification/authentication tech platform that helps prospective property land/properties buyers verify the authenticity of land or properties using a team of certified town planners and legal professionals.',
   },
   {
     question: 'How long does the verification process take?',
-    answer: 'The process takes between 48 hours and 5 working days, depending on the complexity of the case.',
+    answer: 'The process takes between 48 hours or 5 working days, depending on the service chosen.',
   },
   {
     question: 'What documents do I need for verification?',
-    answer: 'You will need to provide key documents such as the property deed, survey plan, and any related legal paperwork.',
+    answer: 'You will need to provide key details like the full address or the property deed, survey plan, and any related legal paperwork.',
   },
   {
     question: 'How much does it cost to verify a property?',
-    answer: 'Pricing depends on the type of property and the depth of verification required. Contact us for a custom quote.',
+    answer: 'Pricing depends on the type of verification service selected',
   },
   {
     question: 'Is LandVerify available in all states?',
@@ -59,7 +59,7 @@ const faqData = [
   },
   {
     question: 'What happens if a property fails verification?',
-    answer: 'If a property is found to be fraudulent or legally disputed, we will provide a detailed report outlining the issues and guidance on the next steps.',
+    answer: 'If a property is found to not be free to purchase or not verified, we will provide a detailed report outlining the issues we discovered and advice on the next steps.',
   },
   {
     question: 'How do I get started?',
