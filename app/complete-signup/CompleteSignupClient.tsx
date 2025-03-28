@@ -12,10 +12,6 @@ interface FormState {
 
 interface PasswordStrength {
   hasMinLength: boolean;
-  hasUpperCase: boolean;
-  hasLowerCase: boolean;
-  hasNumber: boolean;
-  hasSpecialChar: boolean;
 }
 
 export default function CompleteSignup() {
@@ -31,10 +27,6 @@ export default function CompleteSignup() {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<PasswordStrength>({
     hasMinLength: false,
-    hasUpperCase: false,
-    hasLowerCase: false,
-    hasNumber: false,
-    hasSpecialChar: false,
   });
   const [formValid, setFormValid] = useState(false);
 
@@ -74,10 +66,6 @@ export default function CompleteSignup() {
   useEffect(() => {
     const strength = {
       hasMinLength: form.password.length >= 8,
-      hasUpperCase: /[A-Z]/.test(form.password),
-      hasLowerCase: /[a-z]/.test(form.password),
-      hasNumber: /[0-9]/.test(form.password),
-      hasSpecialChar: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(form.password),
     };
     setPasswordStrength(strength);
   }, [form.password]);
@@ -85,11 +73,7 @@ export default function CompleteSignup() {
   // Check form validity
   useEffect(() => {
     const isPasswordValid =
-      passwordStrength.hasMinLength &&
-      passwordStrength.hasUpperCase &&
-      passwordStrength.hasLowerCase &&
-      passwordStrength.hasNumber &&
-      passwordStrength.hasSpecialChar;
+      passwordStrength.hasMinLength 
 
     const areAllFieldsFilled = !!form.fullName && !!form.password;
     setFormValid(isPasswordValid && areAllFieldsFilled);
@@ -233,21 +217,9 @@ export default function CompleteSignup() {
                   <li className={passwordStrength.hasMinLength ? "text-green-500" : "text-red-500"}>
                     ✓ At least 8 characters
                   </li>
-                  <li className={passwordStrength.hasUpperCase ? "text-green-500" : "text-red-500"}>
-                    ✓ At least one uppercase letter
-                  </li>
-                  <li className={passwordStrength.hasLowerCase ? "text-green-500" : "text-red-500"}>
-                    ✓ At least one lowercase letter
-                  </li>
-                  <li className={passwordStrength.hasNumber ? "text-green-500" : "text-red-500"}>
-                    ✓ At least one number
-                  </li>
-                  <li className={passwordStrength.hasSpecialChar ? "text-green-500" : "text-red-500"}>
-                    ✓ At least one special character
-                  </li>
                 </ul>
               </div>
-            )}
+            )}  
           </div>
 
           <button
@@ -262,7 +234,6 @@ export default function CompleteSignup() {
             {loading ? "Creating Account..." : "Complete Registration"}
           </button>
         </form>
-
         <Toaster />
       </div>
     </div>
