@@ -38,16 +38,15 @@ export default function SignInPage() {
   return (
     <div className="flex flex-col items-center min-h-screen p-4 sm:p-2 lg:p-4 bg-gray-100">
       <div>
-      <Link href="/">
-        <img
-          src="/LandVerify-logo.png"
-          alt="LandVerify Logo"
-          className="mb-2 sm:h-0 h-12 sm:mb-8 lg:mb-4 w-32 sm:w-32 sm:h-12 lg:w-52 lg:h-16 mx-auto"
-        />
-          </Link>
+        <Link href="/">
+          <img
+            src="/LandVerify-logo.png"
+            alt="LandVerify Logo"
+            className="mb-2 sm:h-0 h-12 sm:mb-8 lg:mb-4 w-32 sm:w-32 sm:h-12 lg:w-52 lg:h-16 mx-auto"
+          />
+        </Link>
       </div>
-    
-      <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
+      <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
         <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">
           Sign In
         </h1>
@@ -58,7 +57,7 @@ export default function SignInPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="max-w-xl mx-auto block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
+            className="w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
           />
           <div className="relative">
             <input

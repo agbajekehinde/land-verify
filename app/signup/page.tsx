@@ -45,7 +45,7 @@ export default function EmailVerification() {
         />
       </Link>
       
-      <div className="max-w-xl w-full p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
+      <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
         {!verificationSent ? (
           <>
             <h1 className="text-xl sm:text-2xl lg:text-2xl font-bold text-center mb-4 sm:mb-6">
