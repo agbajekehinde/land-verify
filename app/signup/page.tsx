@@ -41,7 +41,7 @@ export default function EmailVerification() {
         <img
           src="/LandVerify-logo.png"
           alt="LandVerify Logo"
-          className="h-12 sm:mb-0 lg:mb-4 w-32 sm:w-32 lg:w-52 lg:h-16"
+          className="mb-2 sm:mb-8 lg:mb-4 h-12 sm:mb-0 lg:mb-4 w-32 sm:w-32 lg:w-52 lg:h-16"
         />
       </Link>
       

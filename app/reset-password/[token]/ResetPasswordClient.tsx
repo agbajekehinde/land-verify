@@ -139,7 +139,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
           <img
             src="/LandVerify-logo.png"
             alt="LandVerify Logo"
-            className="mx-auto mb-6 w-36 h-14"
+            className="mb-2 sm:mb-8 lg:mb-4 mx-auto mb-6 w-36 h-14"
           />
         </Link>
         <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
@@ -160,7 +160,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
           <img
             src="/LandVerify-logo.png"
             alt="LandVerify Logo"
-            className="mx-auto mb-6 w-36 h-14"
+            className="mb-2 sm:mb-8 lg:mb-4 mx-auto mb-6 w-36 h-14"
           />
         </Link>
         <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
@@ -186,7 +186,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
         <img
           src="/LandVerify-logo.png"
           alt="LandVerify Logo"
-          className="mx-auto mb-6 w-36 h-14"
+          className="mb-2 sm:mb-8 lg:mb-4 mx-auto mb-6 w-36 h-14"
         />
       </Link>
       <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">

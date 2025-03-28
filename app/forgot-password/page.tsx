@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
         <img
           src="/LandVerify-logo.png"
           alt="LandVerify Logo"
-          className="mb-6 sm:mb-8 lg:mb-4 w-32 h-12 sm:w-40 sm:h-14 lg:w-52 lg:h-16"
+          className="mb-2 sm:mb-8 lg:mb-4 w-32 h-12 sm:w-40 sm:h-14 lg:w-52 lg:h-16"
         />
       </Link>
       <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
