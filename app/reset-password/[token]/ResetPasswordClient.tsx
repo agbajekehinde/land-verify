@@ -134,11 +134,15 @@ export default function ResetPasswordClient({ token }: { token: string }) {
 
   if (verifying) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+        <Link href="/">
+          <img
+            src="/LandVerify-logo.png"
+            alt="LandVerify Logo"
+            className="mx-auto mb-6 w-36 h-14"
+          />
+        </Link>
         <div className="max-w-xl w-full mx-auto p-8 border rounded-lg shadow-lg bg-white text-center">
-          <Link href="/">
-            <img src="/LandVerify-logo.png" alt="LandVerify Logo" className="mx-auto mb-6 w-36 h-14"/>
-          </Link>
           <h1 className="text-2xl font-bold mb-4">Verifying Reset Link</h1>
           <p>Please wait while we verify your reset link...</p>
           <button onClick={retryVerification} className="mt-6 px-6 py-2 bg-[#479101] text-white rounded-md">
@@ -151,11 +155,15 @@ export default function ResetPasswordClient({ token }: { token: string }) {
 
   if (!validToken) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+        <Link href="/">
+          <img
+            src="/LandVerify-logo.png"
+            alt="LandVerify Logo"
+            className="mx-auto mb-6 w-36 h-14"
+          />
+        </Link>
         <div className="max-w-xl w-full mx-auto p-4 border rounded-lg shadow-lg bg-white text-center">
-          <Link href="/">
-            <img src="/LandVerify-logo.png" alt="LandVerify Logo" className="mx-auto mb-6 w-36 h-14"/>
-          </Link>
           <h1 className="text-2xl font-bold mb-4">Invalid Reset Link</h1>
           <p>This password reset link is invalid or has expired.</p>
           {verificationError && <p className="text-red-500">Error: {verificationError}</p>}
@@ -173,11 +181,15 @@ export default function ResetPasswordClient({ token }: { token: string }) {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <Link href="/">
+        <img
+          src="/LandVerify-logo.png"
+          alt="LandVerify Logo"
+          className="mx-auto mb-6 w-36 h-14"
+        />
+      </Link>
       <div className="max-w-xl w-full mx-auto p-8 border rounded-lg shadow-lg bg-white">
-        <Link href="/">
-          <img src="/LandVerify-logo.png" alt="LandVerify Logo" className="mx-auto mb-6 w-36 h-14"/>
-        </Link>
         <h1 className="text-2xl font-bold text-center mb-6">Reset Password</h1>
         <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
           <div className="relative">

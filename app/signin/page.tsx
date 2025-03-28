@@ -36,16 +36,21 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex items-start justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-100">
+    <div className="flex flex-col items-center min-h-screen p-4 sm:p-2 lg:p-4 bg-gray-100">
+      <div>
+      <Link href="/">
+        <img
+          src="/LandVerify-logo.png"
+          alt="LandVerify Logo"
+          className="mb-2 sm:h-0 h-12 sm:mb-8 lg:mb-4 w-32 sm:w-32 sm:h-12 lg:w-52 lg:h-16 mx-auto"
+        />
+          </Link>
+      </div>
+    
       <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
-        <Link href="/">
-          <img 
-            src="/LandVerify-logo.png" 
-            alt="LandVerify Logo" 
-            className="mb-4 sm:mb-8 lg:mb-4 w-32 h-12 sm:w-40 sm:h-14 lg:w-52 lg:h-16 mx-auto"
-          />
-        </Link>
-        <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">Sign In</h1>
+        <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">
+          Sign In
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded">
           <input
             type="email"
@@ -73,22 +78,28 @@ export default function SignInPage() {
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="w-full py-2 bg-[#479101] text-white font-semibold rounded-md hover:bg-[#3a7a01] cursor-pointer"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
           <Toaster />
           <div className="flex justify-between">
-            <Link href="/forgot-password" className="text-[gray] underline hover:underline">
+            <Link
+              href="/forgot-password"
+              className="text-[gray] underline hover:underline"
+            >
               Forgot password?
             </Link>
           </div>
           <div className="flex justify-between">
             <p className="text-center text-[gray]">
-              Don&apos;t have an account? 
-              <Link href="/signup" className="text-[gray] underline hover:underline ml-1">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/signup"
+                className="text-[gray] underline hover:underline ml-1"
+              >
                 Sign Up
               </Link>
             </p>
