@@ -6,7 +6,23 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import Link from "next/link";
 
 export default function SignupForm() {
-  const [form, setForm] = useState<{ firstName: string; lastName: string; email: string; title: string; password: string; phone: string }>({ firstName: "", lastName: "", email: "", password: "", title: "", phone: "" });
+  const [form, setForm] = useState<{ 
+    firstName: string; 
+    lastName: string; 
+    email: string; 
+    title: string; 
+    password: string; 
+    phone: string;
+    state: string;
+  }>({
+    firstName: "", 
+    lastName: "", 
+    email: "", 
+    title: "", 
+    password: "", 
+    phone: "",
+    state: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -18,7 +34,7 @@ export default function SignupForm() {
     setLoading(true);
 
     try {
-        const response = await fetch("/api/partner-signup", {
+      const response = await fetch("/api/partner-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -29,7 +45,7 @@ export default function SignupForm() {
 
       if (response.ok) {
         toast.success(data.message);
-        setForm({ firstName: "", title: "", lastName: "", email: "", password: "", phone: "" });
+        setForm({ firstName: "", title: "", lastName: "", email: "", password: "", phone: "", state: "" });
       } else {
         toast.error(data.message);
       }
@@ -45,32 +61,34 @@ export default function SignupForm() {
       <div className="max-w-xl mx-auto p-6 sm:p-8 lg:p-12 border border-gray-300 rounded-lg shadow-lg w-full bg-white">
         <Link href="/">
           <img
-            src="/Landverify-partner.svg" alt="LandVerify Partner Logo" className="mb-0 sm:mb-4 lg:mb-4 w-32 h-8 w-16 sm:h-14 lg:w-56 lg:h-13 mx-auto"/>
+            src="/Landverify-partner.svg" 
+            alt="LandVerify Partner Logo" 
+            className="mb-0 sm:mb-4 lg:mb-4 w-32 h-8 w-16 sm:h-14 lg:w-56 lg:h-13 mx-auto"
+          />
         </Link>
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">
           Sign up as a Partner
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded">
-
-        <div className="relative">
-              <label htmlFor="state" className="block text-sm font-medium text-gray-700">Title</label>
-              <div className="relative">
-                <select
-                  id="title"
-                  name="title"
-                  required
-                  value={form.title}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
-                >
-                  <option value="" className="text-gray-400">Title</option>
-                  <option value="Tpl">Tpl</option>
-                  <option value="Mr">Mr</option>
-                  <option value="Mrs">Mrs</option>
-                </select>
-                <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
-              </div>
+          <div className="relative">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+            <div className="relative">
+              <select
+                id="title"
+                name="title"
+                required
+                value={form.title}
+                onChange={handleChange}
+                className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
+              >
+                <option value="" className="text-gray-400">Title</option>
+                <option value="Tpl">Tpl</option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+              </select>
+              <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
             </div>
+          </div>
 
           <input
             type="text"
@@ -90,6 +108,25 @@ export default function SignupForm() {
             onChange={handleChange}
             className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
           />
+          <div className="relative">
+            <label htmlFor="state" className="block text-sm font-medium text-gray-700">State</label>
+            <div className="relative">
+              <select
+                id="state"
+                name="state"
+                required
+                value={form.state}
+                onChange={handleChange}
+                className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
+              >
+                <option value="" disabled>Select State</option>
+                <option value="Lagos">Lagos</option>
+                <option value="Ogun">Ogun</option>
+              </select>
+              <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+            </div>
+          </div>
+
           <input
             type="email"
             name="email"
@@ -100,7 +137,7 @@ export default function SignupForm() {
             className="block w-full p-2 border rounded hover:border-gray-500 focus:border-gray-500"
           />
 
-            <input
+          <input
             type="number"
             name="phone"
             placeholder="Phone Number"
@@ -135,7 +172,8 @@ export default function SignupForm() {
             </p>
           </div>
           <p className="text-center text-sm text-gray-400 mt-4">
-            By signing up, you agree to the <Link href="/terms-and-conditions" className="underline">LandVerify Terms and Conditions</Link>.
+            By signing up, you agree to the{" "}
+            <Link href="/terms-and-conditions" className="underline">LandVerify Terms and Conditions</Link>.
           </p>
         </form>
       </div>
