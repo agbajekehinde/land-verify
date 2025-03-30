@@ -8,13 +8,13 @@ import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <div className="flex flex-col items-center justify-center bg-[#00000] p-2 pt-24 py-32">
+    <div className="flex flex-col items-center justify-center bg-[#00000] p-2 pt-12 py-32 md:pt-24 md:pb-32">
       <div className="flex grow flex-col gap-4 md:flex-row items-center justify-top px-6 py-2 md:px-20">
         <div className="flex flex-col justify-center items-start gap-6 rounded-lg bg-white p-6 md:w-1/2">
-          <h1 className="text-4xl text-gray-900 md:text-4xl md:leading-bold">
+          <h1 className="flex text-4xl text-gray-900 md:text-4xl md:leading-bold">
             <strong>Secure Your Land/Property Investment with Confidence</strong>
           </h1>
-          <p>Avoid scams and fraudulent land/property deals with our expert team of licensed town planners, surveyors, and legal advisers. Receive your comprehensive verification report and guidance within 48 hours.</p>
+          <p>Avoid scams and fraudulent land/property deals with our expert team of licensed town planners, surveyors, and legal advisers. Receive your comprehensive verification report and guidance within 48 hours. <br></br></p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
               href="/signup"
