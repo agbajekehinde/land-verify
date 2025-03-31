@@ -62,11 +62,11 @@ export default function ForgotPasswordPage() {
           </div>
         ) : (
           <>
-            <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">
+            <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-center mb-2 sm:mb-2 lg:mb-2">
               Forgot Password?
             </h1>
             <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded">
-              <p className="text-center mb-4">
+              <p className="text-center mb-2 sm:mb-2 lg:mb-2">
                 Enter your email address and we&apos;ll send you a link to reset your
                 password.
               </p>
