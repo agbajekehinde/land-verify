@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
             <p>A password reset link has been sent to your email.</p>
             <p>
               Please check your inbox and follow the instructions to reset your
-              password.
+              passworsd.
             </p>
             <p>
               <Link href="/signin" className="text-[#479101] underline hover:underline">
