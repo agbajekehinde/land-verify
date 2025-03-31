@@ -163,7 +163,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
             className="mb-2 sm:mb-8 lg:mb-4 mx-auto mb-6 w-36 h-14"
           />
         </Link>
-        <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
+        <div className="">
           <h1 className="text-2xl font-bold mb-4">Invalid Reset Link</h1>
           <p>This password reset link is invalid or has expired.</p>
           {verificationError && <p className="text-red-500">Error: {verificationError}</p>}
@@ -181,7 +181,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
   }
 
   return (
-    <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
+    <div className="">
       <Link href="/">
         <img
           src="/LandVerify-logo.png"
