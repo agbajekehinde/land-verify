@@ -61,8 +61,7 @@ function PartnersPage() {
       setFilteredPartners(data);
   
       // Ensure Lagos and Ogun are always included
-      const states: string[] = Array.from(new Set([...data.map((partner) => partner.state), "Lagos", "Ogun"]))
-        .filter(Boolean)
+      const states: string[] = Array.from(new Set([...data.map((partner) => partner.state).filter((state): state is string => state !== null), "Lagos", "Ogun"]))
         .sort();
   
       setAvailableStates(states);
