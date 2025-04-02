@@ -18,7 +18,7 @@ interface VerificationRequest {
 }
 
 interface ReportFormData {
-  isAddressMatchSurvey: string;
+  DoesAddressMatchSurvey: string;
   isPropertyFreeOfAcquisition: string;
   comments: string;
   reportFiles: File[];
@@ -33,7 +33,7 @@ const VerificationHistory: React.FC = () => {
   const [selectedVerification, setSelectedVerification] = useState<VerificationRequest | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [reportData, setReportData] = useState<ReportFormData>({
-    isAddressMatchSurvey: "",
+    DoesAddressMatchSurvey: "",
     isPropertyFreeOfAcquisition: "",
     comments: "",
     reportFiles: []
@@ -123,7 +123,7 @@ const VerificationHistory: React.FC = () => {
     // Also clear the selected verification to fully go back to the main screen
     setSelectedVerification(null);
     setReportData({
-      isAddressMatchSurvey: "",
+      DoesAddressMatchSurvey: "",
       isPropertyFreeOfAcquisition: "",
       comments: "",
       reportFiles: []
@@ -165,7 +165,7 @@ const VerificationHistory: React.FC = () => {
       }
       
       // Determine if report is complete based on both radio questions being answered
-      const isComplete = reportData.isAddressMatchSurvey !== "" && 
+      const isComplete = reportData.DoesAddressMatchSurvey !== "" && 
                         reportData.isPropertyFreeOfAcquisition !== "";
                          
       // Set appropriate status
@@ -177,7 +177,7 @@ const VerificationHistory: React.FC = () => {
         partnerId: Number(partnerId),
         reportFiles: uploadedFileUrls,
         findings: {
-          isAddressMatchSurvey: reportData.isAddressMatchSurvey === "yes",
+          DoesAddressMatchSurvey: reportData.DoesAddressMatchSurvey === "yes",
           isPropertyFreeOfAcquisition: reportData.isPropertyFreeOfAcquisition === "yes",
           comments: reportData.comments
         },
@@ -388,9 +388,9 @@ const VerificationHistory: React.FC = () => {
                     <label className="flex items-center">
                       <input
                         type="radio"
-                        name="isAddressMatchSurvey"
+                        name="DoesAddressMatchSurvey"
                         value="yes"
-                        checked={reportData.isAddressMatchSurvey === "yes"}
+                        checked={reportData.DoesAddressMatchSurvey === "yes"}
                         onChange={handleInputChange}
                         className="mr-2"
                       />
@@ -399,9 +399,9 @@ const VerificationHistory: React.FC = () => {
                     <label className="flex items-center">
                       <input
                         type="radio"
-                        name="isAddressMatchSurvey"
+                        name="DoesAddressMatchSurvey"
                         value="no"
-                        checked={reportData.isAddressMatchSurvey === "no"}
+                        checked={reportData.DoesAddressMatchSurvey === "no"}
                         onChange={handleInputChange}
                         className="mr-2"
                       />

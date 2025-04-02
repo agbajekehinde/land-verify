@@ -7,6 +7,7 @@ interface VerificationRequest {
   address: string;
   city: string;
   state: string;
+  lga: string;
   postalCode: string;
   status: string;
   createdAt: string;
