@@ -14,7 +14,10 @@ export default function Hero() {
           <h1 className="flex text-4xl text-gray-900 md:text-4xl md:leading-bold">
             <strong>Secure Your Land/Property Investment with Confidence</strong>
           </h1>
-          <p>Don&apos;t Risk It—Verify It! Our experts authenticate your land/property purchase in 48 hours. Secure your investment before it's too late!</p>    <div className="flex flex-col gap-4 md:flex-row w-full">
+          <p>
+            Don&apos;t Risk It—Verify It! Our experts authenticate your land/property purchase in 48 hours. Secure your investment before it&apos;s too late!
+          </p>
+          <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
               href="/signup"
               className="flex w-full md:w-auto items-center justify-center gap-5 rounded-lg bg-[#3a7a01] px-6 py-4 md:py-3 text-sm font-medium text-white transition-colors hover:bg-[#3a7a01] md:text-base"
@@ -28,12 +31,12 @@ export default function Hero() {
               <span>Learn More</span>
             </Link>
           </div>
-
-
-
-          <p className="text-xs"><span>🚀 Pilot Phase: Currently available in Lagos and Ogun states, expanding soon.</span></p>
+          <p className="text-xs">
+            <span>🚀 Pilot Phase: Currently available in Lagos and Ogun states, expanding soon.</span>
+          </p>
         </div>
         <div className="">
+          {/* Add Hero Images Here */}
           <Image
             src="/hero-desktop.png"
             layout="responsive"
