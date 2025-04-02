@@ -22,7 +22,7 @@ interface VerificationReport {
       email: string | null;
     };
     address: string;
-    city: string;
+    lga: string;
     state: string;
     postalCode: string;
   };
@@ -190,7 +190,7 @@ function VerificationReportsPage() {
                     </td>
                     <td className="py-3 px-4">{report.verificationRequest.user?.email || "N/A"}</td>
                     <td className="py-3 px-4">
-                      {`${report.verificationRequest.address}, ${report.verificationRequest.city}, ${report.verificationRequest.state} ${report.verificationRequest.postalCode}`}
+                      {`${report.verificationRequest.address}, ${report.verificationRequest.lga}, ${report.verificationRequest.state}`}
                     </td>
                     <td className="py-3 px-4">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(report.status)}`}>
