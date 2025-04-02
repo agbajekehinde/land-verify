@@ -14,7 +14,7 @@ export default function Hero() {
           <h1 className="flex text-4xl text-gray-900 md:text-4xl md:leading-bold">
             <strong>Secure Your Land/Property Investment with Confidence</strong>
           </h1>
-          <p>Avoid scams and fraudulent land/property deals with our expert team of licensed town planners, surveyors, and legal advisers. Receive your comprehensive verification report and guidance within 48 hours. <br></br></p>
+          <p>Don’t fall victim to land/property fraud! Our expert team of licensed town planners, surveyors, and legal advisers will verify your property and provide expert advice. Get peace of mind before you buy—start your verification today! </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
               href="/signup"
