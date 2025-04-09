@@ -15,7 +15,7 @@ export default function Hero() {
             <strong>Secure Your Land/Property Investment with Confidence</strong>
           </h1>
           <p>
-            Don&apos;t Risk It—Verify It! Our experts authenticate and advise you on your land/property purchase in 48 hours. Secure your investment before it&apos;s too late!
+            Don&apos;t Risk It—Verify It! Our experts authenticate and advise you on your land/property before purchase in 48 hours. Secure your investment before it&apos;s too late!
           </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
