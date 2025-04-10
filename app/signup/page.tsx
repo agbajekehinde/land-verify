@@ -98,7 +98,7 @@ export default function EmailVerification() {
           <p className="text-center">
             Already have an account?{" "}
             <Link href="/signin" className="text-[#479101] underline hover:underline">
-              Login
+              Log In
             </Link>
           </p>
           <p className="text-center text-sm text-gray-400 mt-4">

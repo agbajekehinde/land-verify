@@ -48,7 +48,7 @@ export default function SignInPage() {
       </div>
       <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
         <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8">
-          Sign In
+          Log In
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded">
           <input
@@ -81,7 +81,7 @@ export default function SignInPage() {
             type="submit"
             className="w-full py-2 bg-[#479101] text-white font-semibold rounded-md hover:bg-[#3a7a01] cursor-pointer"
           >
-            {loading ? "Signing In..." : "Sign In"}
+            {loading ? "Loging In..." : "Log In"}
           </button>
           <Toaster />
           <div className="flex justify-between">
@@ -99,7 +99,7 @@ export default function SignInPage() {
                 href="/signup"
                 className="text-[gray] underline hover:underline ml-1"
               >
-                Sign Up
+                Create Account
               </Link>
             </p>
           </div>
