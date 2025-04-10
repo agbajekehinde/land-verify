@@ -99,7 +99,7 @@ export default function SignInPage() {
                 href="/signup"
                 className="text-[gray] underline hover:underline ml-1"
               >
-                Create Account
+                Create account
               </Link>
             </p>
           </div>
