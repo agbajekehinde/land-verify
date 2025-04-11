@@ -87,21 +87,19 @@ export default function SignInPage() {
           <div className="flex justify-between">
             <Link
               href="/forgot-password"
-              className="text-[gray] underline hover:underline"
+              className="text-gray-500 hover:underline"
             >
               Forgot password?
             </Link>
           </div>
-          <div className="flex justify-between">
-            <p className="text-center text-[gray]">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/signup"
-                className="text-[gray] underline hover:underline ml-1"
-              >
-                Create account
-              </Link>
-            </p>
+          <div className="text-left text-gray-500">
+            <p className="md:inline">Don&apos;t have an account?</p>{" "}
+            <Link
+              href="/signup"
+              className="text-gray-500 underline hover:underline block md:inline mt-1 md:mt-0 md:ml-1"
+            >
+              Create account
+            </Link>
           </div>
         </form>
       </div>
