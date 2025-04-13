@@ -441,18 +441,22 @@ const VerificationHistory: React.FC = () => {
               
               <div>
                 <label htmlFor="comments" className="block mb-1 font-medium">Comments</label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Please make use of the template below as a guide <br></br>
+                    <a className="underline mt-2" href="https://docs.google.com/document/d/1e6_fZAlKc8bfPibMx2a-M9K3IXgpAc9rmx2koYroQuQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer"> Verification report template</a>
+                </p>
                 <textarea
                   id="comments"
                   name="comments"
                   value={reportData.comments}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md h-28"
+                  className="w-full p-2 border rounded-md h-28 mt-2"
                   placeholder="Enter any additional comments or observations..."
                 ></textarea>
               </div>
               
               <div>
-                <label htmlFor="reportFiles" className="block mb-1 font-medium">Upload Files</label>
+                <label htmlFor="reportFiles" className="block mb-1 font-medium">Upload verification evidence</label>
                 <input
                   type="file"
                   id="reportFiles"

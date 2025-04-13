@@ -37,4 +37,3 @@ export function rateLimit({ interval, uniqueTokenPerInterval, limit }: Options) 
       }),
   };
 }
-//               value={password}
