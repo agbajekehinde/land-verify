@@ -1,4 +1,3 @@
-// app/admin/components/actiondropdown/VerificationReportActions.tsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -8,9 +7,10 @@ import { ChevronDown, Edit, CheckCircle, Eye } from 'lucide-react';
 
 type ActionDropdownProps = {
   reportId: string;
+  isApproved?: boolean; // New prop to track approval status
 };
 
-export default function ActionDropdown({ reportId }: ActionDropdownProps) {
+export default function ActionDropdown({ reportId, isApproved = false }: ActionDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -116,16 +116,18 @@ export default function ActionDropdown({ reportId }: ActionDropdownProps) {
               </div>
             </button>
             
-            {/* Show the Approve option for any status - removing the condition to always make it available */}
-            <button
-              onClick={handleApproveReport}
-              className="block w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-gray-100"
-            >
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4" />
-                Approve & Release
-              </div>
-            </button>
+            {/* Only show Approve button if the report is not already approved */}
+            {!isApproved && (
+              <button
+                onClick={handleApproveReport}
+                className="block w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-gray-100"
+              >
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4" />
+                  Approve & Release
+                </div>
+              </button>
+            )}
             
              {/*<button
               onClick={handleRejectReport}

@@ -201,7 +201,10 @@ function VerificationReportsPage() {
                     <td className="py-3 px-4">{formatDate(report.updatedAt)}</td>
                     <td className="py-3 px-4 text-center">
                       <div className="text-xl font-bold p-2 hover:bg-gray-200">
-                        <ActionDropdown reportId={report.id}/>
+                        <ActionDropdown 
+                          reportId={report.id} 
+                          isApproved={report.status === 'APPROVED'} 
+                        />
                       </div>
                     </td>
                   </tr>
