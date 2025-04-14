@@ -40,6 +40,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             email: true,
           },
         },
+        partner: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
       orderBy: {
         id: 'desc' // Optional: order by most recent first

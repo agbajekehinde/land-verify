@@ -49,7 +49,7 @@ export default function EmailVerification() {
         {!verificationSent ? (
           <>
             <h1 className="text-xl sm:text-2xl lg:text-2xl font-bold text-center mb-4 sm:mb-6">
-              Create Account
+              Create Your Account
             </h1>
             <p className="text-center text-gray-600 mb-6">
               Enter your email to receive a verification link
@@ -74,7 +74,7 @@ export default function EmailVerification() {
                     : "bg-gray-400 cursor-not-allowed"
                 } text-white font-semibold rounded-md transition-colors`}
               >
-                {loading ? "Sending..." : "Send Verification Link"}
+                {loading ? "Creating Your Account..." : "Create My Account"}
               </button>
             </form>
           </>

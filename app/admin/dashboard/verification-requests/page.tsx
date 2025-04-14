@@ -21,6 +21,10 @@ interface VerificationRequest {
   user: {
     email: string;
   } | null;
+  partner: {
+    firstName: string;
+    lastName: string;
+  } | null;
 }
 
 function VerificationRequestsPage() {
@@ -164,6 +168,7 @@ function VerificationRequestsPage() {
                   <th className="py-3 px-4 font-medium">Address</th>
                   <th className="py-3 px-4 font-medium">LGA</th>
                   <th className="py-3 px-4 font-medium">State</th>
+                  <th className="py-3 px-4 font-medium">Partner</th>
                   <th className="py-3 px-4 font-medium">Status</th>
                   <th className="py-3 px-4 font-medium">Actions</th>
                 </tr>
@@ -176,6 +181,9 @@ function VerificationRequestsPage() {
                     <td className="py-3 px-4">{req.address}</td>
                     <td className="py-3 px-4">{req.lga}</td>
                     <td className="py-3 px-4">{req.state}</td>
+                    <td className="py-3 px-4">
+        {req.partner ? `${req.partner.firstName} ${req.partner.lastName}` : "Not Assigned"}
+      </td>
                     <td className="py-3 px-4">{req.paymentType}</td>
                     <td className="py-3 px-4">{req.paymentAmount}</td>
                     
