@@ -5,11 +5,11 @@ import Link from 'next/link';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
+  
   return (
     <header className="sticky top-0 bg-white shadow-sm z-50">
       <div className="flex items-center justify-between p-4">
@@ -31,10 +31,10 @@ export default function Header() {
           <Link href="/contact-us" className="text-gray-800 hover:text-green-500 mx-2">Contact</Link>
           <Link href="/signin" className="text-gray-800 hover:text-green-500 mx-2">Login</Link>
         </nav>
-
+        
         {/* Hamburger Menu Button */}
-        <button 
-          className="md:hidden p-2 focus:outline-none" 
+        <button
+          className="md:hidden p-2 focus:outline-none"
           onClick={toggleMenu}
           aria-label="Toggle menu"
         >
@@ -45,27 +45,27 @@ export default function Header() {
           </div>
         </button>
       </div>
-
-      {/* Mobile Navigation */}
+      
+      {/* Mobile Navigation - Now absolute positioned */}
       {isMenuOpen && (
-        <nav className="md:hidden px-4 py-2 bg-white border-t flex flex-col">
-          <Link 
-            href="/about-us" 
-            className="text-gray-800 hover:text-green-500 py-3 border-b"
+        <nav className="md:hidden absolute left-0 right-0 bg-white border-t flex flex-col shadow-md">
+          <Link
+            href="/about-us"
+            className="text-gray-800 hover:text-green-500 py-3 px-4 border-b"
             onClick={() => setIsMenuOpen(false)}
           >
             About
           </Link>
-          <Link 
-            href="/contact-us" 
-            className="text-gray-800 hover:text-green-500 py-3 border-b"
+          <Link
+            href="/contact-us"
+            className="text-gray-800 hover:text-green-500 py-3 px-4 border-b"
             onClick={() => setIsMenuOpen(false)}
           >
             Contact
           </Link>
-          <Link 
-            href="/signin" 
-            className="text-gray-800 hover:text-green-500 py-3"
+          <Link
+            href="/signin"
+            className="text-gray-800 hover:text-green-500 py-3 px-4"
             onClick={() => setIsMenuOpen(false)}
           >
             Login
