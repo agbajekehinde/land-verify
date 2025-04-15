@@ -365,7 +365,7 @@ const VerificationHistory: React.FC = () => {
 
             <h1 className="text-2xl font-bold mb-4">Create Verification Report</h1>
             <p className="mb-4">
-              <strong>Land: </strong> 
+              <strong>Land/Property Address: </strong> 
               {selectedVerification.address}, {selectedVerification.lga || ""}, {selectedVerification.state}
             </p>
             
