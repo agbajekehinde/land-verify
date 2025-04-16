@@ -519,7 +519,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">Eastings</label>
+                <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">Easting</label>
                 <input
                   id="latitude"
                   type="text"
@@ -532,7 +532,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
               </div>
 
               <div>
-                <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">Northings</label>
+                <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">Northing</label>
                 <input
                   id="longitude"
                   type="text"
