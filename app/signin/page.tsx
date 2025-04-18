@@ -84,14 +84,17 @@ export default function SignInPage() {
             {loading ? "Loging In..." : "Log In"}
           </button>
           <Toaster />
-          <div className="flex justify-between">
+
+          <div className="text-left text-gray-500">
+            <p className="md:inline">Forgot your password?</p>{" "}
             <Link
               href="/forgot-password"
-              className="text-gray-500 hover:underline"
+              className="text-gray-500 underline hover:underline block md:inline mt-1 md:mt-0 md:ml-1"
             >
-              Forgot password?
+              Reset password
             </Link>
           </div>
+
           <div className="text-left text-gray-500">
             <p className="md:inline">Don&apos;t have an account?</p>{" "}
             <Link
