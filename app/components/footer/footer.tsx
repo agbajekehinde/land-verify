@@ -11,17 +11,21 @@ export default function Footer() {
       <h4 className="mt-2 text-lg text-gray-700">Don&apos;t fall victim to property fraud. Verify before you buy!</h4>
       <div className='py-2'> </div>
       <Link
-          href="/signup"
-          className="flex w-full md:w-auto items-center justify-center gap-5 rounded-lg bg-[#3a7a01] px-6 py-4 md:py-3 text-sm md:text-2xl font-bold text-white transition-colors hover:bg-[#3a7a01]"
-        >
-          <span>Start Verification Now</span> 
-          <ArrowRightIcon className="w-5 md:w-7" />
-        </Link>
+        href="/signup"
+        className="flex w-full md:w-auto items-center justify-center gap-5 rounded-lg bg-[#3a7a01] px-6 py-4 md:py-3 text-sm md:text-2xl font-bold text-white transition-colors hover:bg-[#3a7a01]"
+      >
+        <span>Start Verification Now</span>
+        <ArrowRightIcon className="w-5 md:w-7" />
+      </Link>
       <p className="mt-8 text-sm text-gray-600">📍 Currently available in Lagos & Ogun states | More states coming soon!</p>
+      
+      <p className="mt-4 text-sm text-gray-600">
+        Need help? reach out to <a href="mailto:support@landverify.ng" className="text-gray-600 underline hover:underline">support@landverify.ng</a> or send us a message on <a href="https://wa.me/message/2M46JKYVDQRVM1" className="text-gray-600 underline hover:underline">+234 902 962 8530</a>
+      </p>
+      
       <div className='mt-4'> </div>
       <p className='mt-8 text-sm text-center text-gray-400'>LandVerify.ng is a product and property of LandVerify Digital Services, a company registered with the <br></br> Nigeria Corporate Affairs Commission with RC Number: 8365907 </p>
       <p className="mt-4 text-sm text-gray-400 pt-2">All rights reserved (c) 2025</p>
-
       <Typeform/>
     </footer>
   );
