@@ -12,7 +12,7 @@ interface VerificationRequest {
   lga: string;
   latitude?: number;
   longitude?: number;
-  landsize?: string; // Added landsize property
+  landsize?: string;
   files?: string[];
   userId: number;
 }
@@ -32,6 +32,7 @@ const VerificationHistory: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedVerification, setSelectedVerification] = useState<VerificationRequest | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [showSubmitConfirmModal, setShowSubmitConfirmModal] = useState(false);
   const [reportData, setReportData] = useState<ReportFormData>({
     DoesAddressMatchSurvey: "",
     isPropertyFreeOfAcquisition: "",
@@ -120,8 +121,10 @@ const VerificationHistory: React.FC = () => {
 
   const closeReportModal = () => {
     setIsReportModalOpen(false);
-    // Also clear the selected verification to fully go back to the main screen
-    setSelectedVerification(null);
+    // Clear the selected verification only if we're not in the details view
+    if (!showSubmitConfirmModal) {
+      setSelectedVerification(null);
+    }
     setReportData({
       DoesAddressMatchSurvey: "",
       isPropertyFreeOfAcquisition: "",
@@ -220,12 +223,17 @@ const VerificationHistory: React.FC = () => {
       );
       setVerifications(updatedVerifications);
       
-      // Close modal and reset form
-      closeReportModal();
+      // Close all modals and reset form
+      setShowSubmitConfirmModal(false);
+      setIsReportModalOpen(false);
+      setSelectedVerification(null);
       alert('Verification report created successfully');
     } catch (error) {
       console.error('Error creating verification report:', error);
       setError(error instanceof Error ? error.message : 'Failed to create verification report. Please try again.');
+      // Keep the confirmation modal closed, but reopen the report modal to show the error
+      setShowSubmitConfirmModal(false);
+      setIsReportModalOpen(true);
     } finally {
       setSubmitting(false);
     }
@@ -273,7 +281,7 @@ const VerificationHistory: React.FC = () => {
       )}
 
       {/* Verification Details Modal */}
-      {selectedVerification && !isReportModalOpen && (
+      {selectedVerification && !isReportModalOpen && !showSubmitConfirmModal && (
           <div className="fixed inset-0 bg-gray bg-opacity-10 backdrop-blur-md flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
             <button
@@ -380,7 +388,14 @@ const VerificationHistory: React.FC = () => {
               </div>
             )}
 
-            <form onSubmit={submitReport} className="space-y-4">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                setIsReportModalOpen(false);
+                setShowSubmitConfirmModal(true);
+              }} 
+              className="space-y-4"
+            >
               <div className="space-y-4">
                 <div>
                   <p className="font-medium mb-2">Does the address above match survey records?</p>
@@ -393,6 +408,7 @@ const VerificationHistory: React.FC = () => {
                         checked={reportData.DoesAddressMatchSurvey === "yes"}
                         onChange={handleInputChange}
                         className="mr-2"
+                        required
                       />
                       Yes
                     </label>
@@ -404,6 +420,7 @@ const VerificationHistory: React.FC = () => {
                         checked={reportData.DoesAddressMatchSurvey === "no"}
                         onChange={handleInputChange}
                         className="mr-2"
+                        required
                       />
                       No
                     </label>
@@ -421,6 +438,7 @@ const VerificationHistory: React.FC = () => {
                         checked={reportData.isPropertyFreeOfAcquisition === "yes"}
                         onChange={handleInputChange}
                         className="mr-2"
+                        required
                       />
                       Yes
                     </label>
@@ -432,6 +450,7 @@ const VerificationHistory: React.FC = () => {
                         checked={reportData.isPropertyFreeOfAcquisition === "no"}
                         onChange={handleInputChange}
                         className="mr-2"
+                        required
                       />
                       No
                     </label>
@@ -452,6 +471,7 @@ const VerificationHistory: React.FC = () => {
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md h-28 mt-2"
                   placeholder="Enter any additional comments or observations..."
+                  required
                 ></textarea>
               </div>
               
@@ -463,6 +483,7 @@ const VerificationHistory: React.FC = () => {
                   multiple
                   onChange={handleFileChange}
                   className="w-full p-2 border rounded-md"
+                  required
                 />
                 <p className="text-xs text-gray-500 mt-1">Upload images or documents related to the verification</p>
                 
@@ -505,6 +526,38 @@ const VerificationHistory: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      
+      {/* Submit Confirmation Modal */}
+      {showSubmitConfirmModal && selectedVerification && (
+        <div className="fixed inset-0 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h1 className="text-xl font-bold text-gray-900 mb-4">Submit Verification Report?</h1>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to submit this verification report? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => {
+                  setShowSubmitConfirmModal(false); // Hide confirmation modal
+                  setIsReportModalOpen(true); // Show the report form modal again
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={(e) => {
+                  submitReport(e as React.FormEvent);
+                }}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                disabled={submitting}
+              >
+                {submitting ? 'Submitting...' : 'Yes, Submit'}
+              </button>
+            </div>
           </div>
         </div>
       )}

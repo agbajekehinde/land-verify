@@ -168,7 +168,7 @@ function VerificationRequestsPage() {
                   <th className="py-3 px-4 font-medium">Address</th>
                   <th className="py-3 px-4 font-medium">LGA</th>
                   <th className="py-3 px-4 font-medium">State</th>
-                  <th className="py-3 px-4 font-medium">Partner</th>
+                  <th className="py-3 px-4 font-medium">Assigned Partner</th>
                   <th className="py-3 px-4 font-medium">Status</th>
                   <th className="py-3 px-4 font-medium">Actions</th>
                 </tr>

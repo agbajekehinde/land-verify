@@ -170,7 +170,6 @@ function VerificationReportsPage() {
             <thead>
               <tr className="text-left text-gray-600 border-b">
                 <th className="py-3 px-4 font-medium">Report ID</th>
-                {/* Removed Request ID column */}
                 <th className="py-3 px-4 font-medium">Partner</th>
                 <th className="py-3 px-4 font-medium">User Email</th>
                 <th className="py-3 px-4 font-medium">Property Address</th>
