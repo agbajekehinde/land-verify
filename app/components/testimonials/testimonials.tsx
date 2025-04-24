@@ -9,13 +9,13 @@ const testimonials = [
     name: 'Emeka A.',
     location: 'Lagos',
     quote: 'LandVerify saved me from buying a disputed property. The verification process was quick and detailed!',
-    image: '/hero-desktop.png' // Corrected path
+    image: '/testimonial - Emeka.png' // Corrected path
   },
   {
     name: 'Zainab M.',
     location: 'Ogun',
     quote: 'A must-have service for anyone buying property in Nigeria. Highly recommended!',
-    image: '/hero-desktop.png' // Corrected path
+    image: '/testimonial - Z.png' // Corrected path
   }
 ];
 
@@ -25,7 +25,7 @@ const Testimonials: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
-    }, 5000); // Change slide every 5 seconds
+    }, 10000); // Change slide every 10 seconds
     return () => clearInterval(interval);
   }, []);
 
