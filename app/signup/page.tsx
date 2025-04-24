@@ -37,13 +37,15 @@ export default function EmailVerification() {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 sm:p-2 lg:p-4 bg-gray-100">
-      <Link href="/" className="">
-        <img
-          src="/LandVerify-logo.png"
-          alt="LandVerify Logo"
-          className="mb-2 sm:mb-8 lg:mb-4 h-12 sm:mb-0 lg:mb-4 w-32 sm:w-32 lg:w-52 lg:h-16"
-        />
-      </Link>
+        <Link href="/">
+          <img
+            src="/LandVerify-logo.png"
+            alt="LandVerify Logo"
+            width={160}
+            height={80}
+            className="dark:block mt-2 mb-2 sm:mb-2 lg:mb-2"
+          />
+        </Link>
       
       <div className="w-full max-w-md sm:max-w-xl mx-auto p-6 sm:p-4 lg:p-12 border border-gray-300 rounded-lg shadow-lg bg-white">
         {!verificationSent ? (

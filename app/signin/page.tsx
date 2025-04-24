@@ -42,7 +42,9 @@ export default function SignInPage() {
           <img
             src="/LandVerify-logo.png"
             alt="LandVerify Logo"
-            className="mb-2 sm:mb-8 lg:mb-4 sm:h-0 h-12 sm:mb-8 lg:mb-4 w-32 sm:w-32 sm:h-12 lg:w-52 lg:h-16 mx-auto"
+            width={160}
+            height={80}
+            className="dark:block mt-2 mb-2 sm:mb-2 lg:mb-2"
           />
         </Link>
       </div>
