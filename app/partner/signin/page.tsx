@@ -60,8 +60,20 @@ export default function PartnerSignInPage() {
             {loading ? "Signing In..." : "Sign In"}
           </button>
           <Toaster />
+
+          <div className="text-left text-gray-500">
+            <p className="md:inline">Forgot your password?</p>{" "}
+            <Link
+              href="/partner/forgot-password"
+              className="text-left text-gray-500 underline hover:underline block md:inline mt-1 md:mt-0 md:ml-1"
+            >
+              Reset password
+            </Link>
+          </div>
+
+
           <div>
-            <p className="text-center mt-2">Don&apos;t have an account? <Link href="/partner/signup" className="text-[#479101] underline hover:underline">Sign Up as Partner</Link></p>
+            <p className="text-left mt-2">Don&apos;t have an account? <Link href="/partner/signup" className="text-[#479101] underline hover:underline">Sign Up as Partner</Link></p>
           </div>
         </form>
       </div>
