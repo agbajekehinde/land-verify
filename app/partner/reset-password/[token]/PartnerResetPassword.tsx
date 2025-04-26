@@ -29,7 +29,7 @@ export default function ResetPasswordPage({ token }: { token: string }) {
         } else {
           setIsValid(true);
         }
-      } catch (error) {
+      } catch {
         toast.error("Failed to validate token");
         setIsValid(false);
       } finally {
