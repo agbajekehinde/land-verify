@@ -66,7 +66,6 @@ export default async function handler(
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="text-align: center; margin-bottom: 20px;">
-            <img src="${process.env.NEXT_PUBLIC_BASE_URL}/Landverify-partner.svg" alt="LandVerify Logo" style="height: 60px;">
           </div>
           <h1 style="color: #479101; text-align: center;">Password Reset Request</h1>
           <p>Hello ${partner.firstName},</p>
