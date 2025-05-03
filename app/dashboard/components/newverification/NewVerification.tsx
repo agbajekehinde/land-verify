@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
-import { FaSpinner } from "react-icons/fa"; // Removed unused FaCheck import
+import { FaSpinner } from "react-icons/fa"; 
 import { useSession } from "next-auth/react";
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { FaFileAlt, FaFilePdf, FaFileImage, FaUpload } from "react-icons/fa";
@@ -61,7 +61,13 @@ const LGA_PRICING_MULTIPLIERS = {
     default: 0.5,
     "Obafemi Owode": 1.25,
     "Abeokuta South": 1,
-    "Ewekoro": 0.25        // Less expensive area
+    "Ewekoro": 0.25       
+  },
+  Oyo: {
+    default: 1  // base score pricing multiplier
+  },
+  FCT: {
+    default: 1  // base score pricing multiplier
   }
 };
 
@@ -110,6 +116,17 @@ const ogunLgas = [
   "Sagamu",
   "Yewa North",
   "Yewa South"
+];
+
+const oyoLgas = [
+  "Afijio", "Akinyele", "Atiba", "Atisbo", "Egbeda", "Ibadan North", "Ibadan North-East", "Ibadan North-West",
+  "Ibadan South-East", "Ibadan South-West", "Ibarapa Central", "Ibarapa East", "Ibarapa North", "Ido", "Irepo",
+  "Iseyin", "Itesiwaju", "Iwajowa", "Kajola", "Lagelu", "Ogbomosho North", "Ogbomosho South", "Ogo Oluwa",
+  "Olorunsogo", "Oluyole", "Ona Ara", "Orelope", "Ori Ire", "Oyo East", "Oyo West", "Saki East", "Saki West", "Surulere"
+];
+
+const fctLgas = [
+  "Abaji", "Abuja Municipal", "Bwari", "Gwagwalada", "Kuje", "Kwali"
 ];
 
 export default function NewVerification({ isOpen, setIsOpen }: NewVerificationProps) {
@@ -446,6 +463,9 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                   >
                     <option value="Lagos">Lagos</option>
                     <option value="Ogun">Ogun</option>
+                    <option value="Oyo">Oyo</option>
+                    <option value="FCT">FCT</option>
+
                   </select>
                   <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
                 </div>
@@ -458,7 +478,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                 <label htmlFor="lga" className="block text-sm font-medium text-gray-700">
                   LGA <span className="text-gray-500 text-xs">Required</span>
                 </label>
-                {form.state === "Lagos" || form.state === "Ogun" ? (
+                {["Lagos", "Ogun", "Oyo", "FCT"].includes(form.state) ? (
                   <div className="relative">
                     <select
                       id="lga"
@@ -469,7 +489,16 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                       className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.lga ? 'border-red-500' : ''}`}
                     >
                       <option value="" className="text-gray-400">Select an LGA</option>
-                      {(form.state === "Lagos" ? lagosLgas : ogunLgas).map(lga => (
+                      {form.state === "Lagos" && lagosLgas.map(lga => (
+                        <option key={lga} value={lga}>{lga}</option>
+                      ))}
+                      {form.state === "Ogun" && ogunLgas.map(lga => (
+                        <option key={lga} value={lga}>{lga}</option>
+                      ))}
+                      {form.state === "Oyo" && oyoLgas.map(lga => (
+                        <option key={lga} value={lga}>{lga}</option>
+                      ))}
+                      {form.state === "FCT" && fctLgas.map(lga => (
                         <option key={lga} value={lga}>{lga}</option>
                       ))}
                     </select>
