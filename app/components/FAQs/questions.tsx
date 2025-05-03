@@ -55,7 +55,7 @@ const faqData = [
   },
   {
     question: 'Is LandVerify available in all states?',
-    answer: 'Currently, our services are available in Lagos and Ogun states, with plans to expand soon.',
+    answer: 'Currently, our services are available in Lagos, Ogun, Oyo, and the FCT, with plans to expand soon.',
   },
   {
     question: 'What happens if a property fails verification?',

@@ -17,7 +17,7 @@ export default function Footer() {
         <span>Start Verification Now</span>
         <ArrowRightIcon className="w-5 md:w-7" />
       </Link>
-      <p className="mt-8 text-sm text-gray-600">📍 Currently available in Lagos & Ogun states | More states coming soon!</p>
+      <p className="mt-8 text-sm text-gray-600">📍 Currently available in Lagos, Ogun, Oyo, and the FCT | More states coming soon!</p>
       
       <p className="mt-4 text-sm text-gray-600">
         Need help? reach out to <a href="mailto:support@landverify.ng" className="text-gray-600 underline hover:underline">support@landverify.ng</a> or send us a message on <a href="https://wa.me/message/2M46JKYVDQRVM1" className="text-gray-600 underline hover:underline">+234 902 962 8530</a>

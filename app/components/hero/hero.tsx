@@ -32,7 +32,7 @@ export default function Hero() {
             </Link>
           </div>
           <p className="text-xs">
-            <span>🚀 Pilot Phase: Currently available in Lagos and Ogun states, expanding soon.</span>
+            <span>🚀 Pilot Phase: Currently available in Lagos, Ogun, Oyo, and the FCT, expanding soon.</span>
           </p>
         </div>
         <div className="">
