@@ -117,15 +117,9 @@ export default async function handler(
     
     // Upload files to Cloudinary
     const fileUrls: string[] = [];
-
-    // Normalize files to an array, even if there's only one file
-    const fileArray = Array.isArray(files.files) ? files.files : files.files ? [files.files] : [];
     
     for (const file of fileArray) {
       if (file && file.filepath) {
-        // Log file details before upload
-        console.log('Uploading file:', file);
-
         // Check if file type is allowed
         if (!isAllowedFileType(file)) {
           console.warn(`Skipping upload of unsupported file type: ${file.mimetype}`);
