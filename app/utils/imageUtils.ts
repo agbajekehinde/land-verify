@@ -1,17 +1,12 @@
 // imageUtils.ts
 
 import sharp from 'sharp';
-import { createWorker, Worker } from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
 import { GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf.js';
 GlobalWorkerOptions.workerSrc = 'pdfjs-dist/legacy/build/pdf.worker.js';
 
-/**
- * Enhanced image preprocessing for different document types
- * @param imageBuffer The image buffer to preprocess
- * @param documentType Optional hint about document type for specialized processing
- * @returns Processed image buffer
- */
+
 export async function preprocessImageForOCR(
     imageBuffer: Buffer, 
     documentType?: 'certificate' | 'id' | 'utility' | 'generic'
@@ -131,7 +126,6 @@ export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
     }
 }
 
-
 /**
  * Improved text extraction that handles both images and PDFs
  * @param fileBuffer File buffer to extract text from
@@ -158,20 +152,18 @@ export async function extractTextFromDocument(
         }
         
         if (mimeType.startsWith('image/')) {
-            const worker: Worker = await createWorker();
-
+            const worker = await createWorker(language);
+            
             try {
                 console.log('Preprocessing image for OCR...');
                 const processedImageBuffer = await preprocessImageForOCR(fileBuffer, documentType);
                 console.log('Image preprocessing complete');
 
-                await (worker as unknown as { loadLanguage(language: string): Promise<void> }).loadLanguage(language);
-                await worker.reinitialize(language);
-
-                const params: Record<string, string> = {
+                // Set Tesseract parameters
+                const params: Record<string, string | boolean | number> = {
                     preserve_interword_spaces: '1',
-                    tessjs_create_hocr: '0',
-                    tessjs_create_tsv: '0',
+                    tessjs_create_hocr: false,
+                    tessjs_create_tsv: false,
                 };
 
                 if (documentType === 'certificate') {
@@ -308,15 +300,13 @@ export async function extractTextFromImage(
     language = 'eng',
     whitelist?: string
 ): Promise<string> {
-    const worker: Worker = await createWorker();
+    // Create worker with language specified at creation time
+    const worker = await createWorker(language);
 
     try {
         const processedImageBuffer = await preprocessImage(imageBuffer);
 
-        await (worker as unknown as { loadLanguage(language: string): Promise<void> }).loadLanguage(language);
-        await worker.reinitialize(language);
-
-        const params: Record<string, string> = {
+        const params: Record<string, string | boolean> = {
             tessedit_pageseg_mode: '6',
             preserve_interword_spaces: '1',
         };
