@@ -44,24 +44,24 @@ interface PaymentPlan {
 }
 
 const BASE_PAYMENT_PLANS: PaymentPlan[] = [
-  { type: "regular", amount: 1000000, label: "Regular Service (₦10,000)" },
-  { type: "priority", amount: 1500000, label: "Priority Service (₦15,000)" }
+  { type: "regular", amount: 500000, label: "Regular Service (₦5,000)" },
+  { type: "priority", amount: 600000, label: "Priority Service (₦6,000)" }
 ];
 
 // LGA pricing multipliers for custom logic
 const LGA_PRICING_MULTIPLIERS = {
   Lagos: {
-    default: 0.5,
-    "Ibeju-Lekki": 2,      // Very premium area
-    "Lagos Island": 1.5,   // Premium area
-    "Eti-Osa": 1.75,       // Another premium area
-    "Badagry": 0.25       // Less expensive area
+    default: 1,
+    "Ibeju-Lekki": 1,      // Very premium area
+    "Lagos Island": 1,   // Premium area
+    "Eti-Osa": 1,       // Another premium area
+    "Badagry": 1       // Less expensive area
   },
   Ogun: {
-    default: 0.5,
-    "Obafemi Owode": 1.25,
+    default: 1,
+    "Obafemi Owode": 1,
     "Abeokuta South": 1,
-    "Ewekoro": 0.25       
+    "Ewekoro": 1       
   },
   Oyo: {
     default: 1  // base score pricing multiplier
@@ -281,9 +281,6 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     }
     if (!form.lga.trim()) {
       newErrors.lga = "This field is required";
-    }
-    if (!form.landsize) {
-      newErrors.landsize = "This field is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -522,13 +519,12 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
 
             <div className="relative">
               <label htmlFor="landsize" className="block text-sm font-medium text-gray-700">
-                Land Size <span className="text-gray-500 text-xs">Required</span>
+                Land Size
               </label>
               <div className="relative">
                 <select
                   id="landsize"
                   name="landsize"
-                  required
                   value={form.landsize}
                   onChange={handleChange}
                   className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.landsize ? 'border-red-500' : ''}`}

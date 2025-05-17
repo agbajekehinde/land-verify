@@ -2,16 +2,40 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { X } from "lucide-react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   
+  const [showBanner, setShowBanner] = useState(true);
+  const closeBanner = () => {
+    setShowBanner(false);
+  };
+  
   return (
     <header className="sticky top-0 bg-white shadow-sm z-50">
+      {showBanner && (
+        <div className="relative w-full bg-blue-100 text-blue-800 p-2 flex justify-between items-center px-8">
+          <div className="">
+            <h2 className="text-sm font-bold text-blue-900">
+             📣 Limited Offer - Protect Your Property from Demolitions
+            </h2>
+            <p className="text-xs">
+              For less than ₦5,000, verify your land and check it complies with states planning regulations. Get result within 48 hours.
+            </p>
+          </div>
+          <button 
+            onClick={closeBanner}
+            className="absolute top-1 right-1 text-blue-700 hover:text-blue-900 p-1 rounded-full hover:bg-blue-200 transition-colors"
+            aria-label="Close banner"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center">
           <Link href="/">
