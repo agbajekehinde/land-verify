@@ -59,7 +59,7 @@ const faqData = [
   },
   {
     question: 'What happens if a property fails verification?',
-    answer: 'If a property is found to not be free to purchase or not verified, we will provide a detailed report outlining the issues we discovered and advice on the next steps.',
+    answer: 'If a land/property is found to not be free to purchase or not verified, we will provide a detailed report outlining the issues we discovered and advice on the next steps.',
   },
   {
     question: 'How do I get started?',
