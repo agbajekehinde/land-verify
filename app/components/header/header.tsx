@@ -21,7 +21,7 @@ export default function Header() {
         <div className="relative w-full bg-blue-100 text-blue-800 p-2 flex justify-between items-center px-8">
           <div className="">
             <h2 className="text-sm font-bold text-blue-900">
-             📣 Limited Offer - Protect Your Property from Demolitions
+              📣 Limited Offer - Act Now to Prevent Demolition
             </h2>
             <p className="text-xs">
               For less than ₦5,000, verify your land and check it complies with states planning regulations. Get result within 48 hours.
