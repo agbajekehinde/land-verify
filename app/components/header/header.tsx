@@ -24,7 +24,7 @@ export default function Header() {
               📣 Limited Offer - Act Now to Prevent Demolition
             </h2>
             <p className="text-xs">
-              For less than ₦5,000, verify your land and check it complies with states planning regulations. Get result within 48 hours.
+              For less than ₦10,000, verify your land and check it complies with states planning regulations. Get result within 48 hours.
             </p>
           </div>
           <button 

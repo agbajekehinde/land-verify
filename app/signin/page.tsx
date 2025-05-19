@@ -79,7 +79,7 @@ export default function SignInPage() {
              📣 Limited Offer - Act Now to Prevent Demolition
             </h2>
             <p className="text-xs">
-              For less than ₦5,000, verify your land and check it complies with states planning regulations. Get result within 48 hours.
+              For less than ₦10,000, verify your land and check it complies with states planning regulations. Get result within 48 hours.
             </p>
           </div>
           <button 
@@ -194,7 +194,7 @@ export default function SignInPage() {
           
           <div className="bg-white/10 p-4 rounded-lg mb-8 backdrop-blur-sm">
             <h5 className="text-sm sm:text-base font-medium mb-2 text-white">
-              For less than <span className="text-yellow-300 font-bold text-lg">₦5,000</span>, get a comprehensive verification report on your land or property within <span className="text-yellow-300 font-bold">48 hours</span>
+              For less than <span className="text-yellow-300 font-bold text-lg">₦10,000</span>, get a comprehensive verification report on your land or property within <span className="text-yellow-300 font-bold">48 hours</span>
             </h5>
           </div>
           
