@@ -343,13 +343,13 @@ export default async function handler(
     const address = getFieldValue(fields.address);
     const lga = getFieldValue(fields.lga);
     const state = getFieldValue(fields.state);
-    const landsize = getFieldValue(fields.landsize);
     const paymentType = getFieldValue(fields.paymentType) || 'regular'; 
     const paymentStatus = getFieldValue(fields.paymentStatus) || 'success'; 
     const paymentAmount = getFieldValue(fields.paymentAmount) || '0';
     
     // Optional fields
     const latitudeStr = getFieldValue(fields.latitude) || '0';
+    const landsize = getFieldValue(fields.landsize) || '0'; 
     const longitudeStr = getFieldValue(fields.longitude) || '0';
     
     // Input validation

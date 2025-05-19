@@ -162,22 +162,22 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
       return;
     }
     
-    let landsizeMultiplier = 1;
+    let landsizeMultiplier = 0;
     switch (form.landsize) {
       case "Zero to 2":
-        landsizeMultiplier = 1;
+        landsizeMultiplier = 0;
         break;
       case "3 to 5":
-        landsizeMultiplier = 1;
+        landsizeMultiplier = 0;
         break;
       case "6 to 10":
-        landsizeMultiplier = 1;
+        landsizeMultiplier = 0;
         break;
       case "others":
-        landsizeMultiplier = 1;
+        landsizeMultiplier = 0;
         break;
       default:
-        landsizeMultiplier = 1;
+        landsizeMultiplier = 0;
     }
     
     let lgaMultiplier = 0;
