@@ -44,8 +44,8 @@ interface PaymentPlan {
 }
 
 const BASE_PAYMENT_PLANS: PaymentPlan[] = [
-  { type: "regular", amount: 500000, label: "Regular Service (₦5,000)" },
-  { type: "priority", amount: 600000, label: "Priority Service (₦6,000)" }
+  { type: "regular", amount: 1000000, label: "Regular Service (₦10,000)" },
+  { type: "priority", amount: 1500000, label: "Priority Service (₦15,000)" }
 ];
 
 // LGA pricing multipliers for custom logic
@@ -664,8 +664,8 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
                         <h3 className="font-medium text-lg">{plan.label}</h3>
                         <p className="text-sm text-gray-500">
                           {plan.type === "regular" 
-                            ? "Standard processing time: 5-7 working days" 
-                            : "Expedited processing: 48 hours"}
+                            ? "Standard processing time: within 3 days" 
+                            : "Expedited processing: 24 hours"}
                         </p>
                       </div>
                       <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
