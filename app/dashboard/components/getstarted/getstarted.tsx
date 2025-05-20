@@ -15,7 +15,7 @@ const GetStarted: React.FC = () => {
           <strong>Regular</strong> - Evaluation could take up to <strong>5-7 working days</strong>
         </p>
         <p className="text-sm">
-          <strong>Priority</strong> - Evaluation process could take up to <strong>48hrs</strong>
+          <strong>Priority</strong> - Evaluation process could take up to <strong>24hrs</strong>
         </p>
       </div>
     </div>
