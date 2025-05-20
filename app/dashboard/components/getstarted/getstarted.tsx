@@ -12,7 +12,7 @@ const GetStarted: React.FC = () => {
 
       <div className="mt-4">
         <p className="text-sm">
-          <strong>Regular</strong> - Evaluation could take up to <strong>5-7 working days</strong>
+          <strong>Regular</strong> - Evaluation could take up to <strong>3-5 working days</strong>
         </p>
         <p className="text-sm">
           <strong>Priority</strong> - Evaluation process could take up to <strong>24hrs</strong>
