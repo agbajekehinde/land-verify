@@ -25,7 +25,7 @@ export default function Steps() {
               </div>
               <div className="ml-4">
                 <h3 className="text-xl font-semibold text-gray-800">Expert Review</h3>
-                <p className="mt-2 text-gray-600">Our certified professionals analyze legal documents and authentic public records.</p>
+                <p className="mt-2 text-gray-600">Our certified professionals analyze legal documents and authentic public land records.</p>
               </div>
             </div>
             <div className="flex items-start">
@@ -34,7 +34,7 @@ export default function Steps() {
               </div>
               <div className="ml-4">
                 <h3 className="text-xl font-semibold text-gray-800">Verification Report</h3>
-                <p className="mt-2 text-gray-600">Receive a detailed report on land/property authenticity and expert advice within 48 hours to 7 days.</p>
+                <p className="mt-2 text-gray-600">Receive a detailed report on land/property authenticity and expert advice within 24 hours to 3 days.</p>
               </div>
             </div>
           </div>
