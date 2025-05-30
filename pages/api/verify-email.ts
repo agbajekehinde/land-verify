@@ -91,6 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         subject: '✉️ Verify your email address',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+           <img src="https://cloud1.email2go.io/c719661049fdb28eb938384500b8ad60/e9cce5ec81bc0cb4e4abf456a251ead73a741e6270b1cb63a2c29d2a77cffe73.png"; style="width: 160px;">
             <h1 style="color: #333;">Verify your email address</h1>
             <p>Click the button below to verify your email and complete your registration with LandVerify.</p>
             <div style="margin: 30px 0;">

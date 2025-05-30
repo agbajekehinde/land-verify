@@ -20,6 +20,7 @@ export async function sendPasswordResetEmail(
     subject: "🔐 Reset your LandVerify password",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+       <img src="https://cloud1.email2go.io/c719661049fdb28eb938384500b8ad60/e9cce5ec81bc0cb4e4abf456a251ead73a741e6270b1cb63a2c29d2a77cffe73.png"; style="width: 160px;">
         <h2>Reset Your Password</h2>
         <p>Hello,</p>
         <p>We received a request to reset your password for your LandVerify account.</p>

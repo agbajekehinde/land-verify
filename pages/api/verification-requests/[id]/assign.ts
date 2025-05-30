@@ -61,6 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       subject: 'New Verification Assignment',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+         <img src="https://cloud1.email2go.io/c719661049fdb28eb938384500b8ad60/e9cce5ec81bc0cb4e4abf456a251ead73a741e6270b1cb63a2c29d2a77cffe73.png"; style="width: 160px;">
           <h2 style="color: #2e7d32;">New Verification Assignment</h2>
           <p>Hello ${partner.firstName} ${partner.lastName},</p>
           <p>You have been assigned a new verification request. Please log in to the portal to view and process this request.</p>
