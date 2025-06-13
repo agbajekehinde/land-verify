@@ -301,100 +301,104 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     setSelectedPaymentPlan(plan);
   };
 
-  const submitVerification = async () => {
-    if (!session?.user?.id) {
-      toast.error("User session not found. Please log in.");
-      return;
-    }
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("userId", session.user.id);
-      formData.append("address", form.address);
-      formData.append("lga", form.lga); 
-      formData.append("state", form.state);
-      formData.append("landsize", form.landsize);
-      formData.append("paymentStatus", "success"); 
-      formData.append("paymentAmount", selectedPaymentPlan?.amount.toString() || "0");
-      formData.append("paymentType", selectedPaymentPlan?.type || "regular");
+ // Replace the submitVerification function in your client component with this:
 
-      if (form.latitude.trim() !== "") 
-        formData.append("latitude", form.latitude);
-      if (form.longitude.trim() !== "") 
-        formData.append("longitude", form.longitude);
+const submitVerification = async () => {
+  if (!session?.user?.id) {
+    toast.error("User session not found. Please log in.");
+    return;
+  }
+  setLoading(true);
+  try {
+    const formData = new FormData();
+    formData.append("userId", session.user.id);
+    formData.append("address", form.address);
+    formData.append("lga", form.lga); 
+    formData.append("state", form.state);
+    formData.append("landsize", form.landsize);
+    formData.append("paymentStatus", "success"); 
+    formData.append("paymentAmount", selectedPaymentPlan?.amount.toString() || "0");
+    formData.append("paymentType", selectedPaymentPlan?.type || "regular");
 
-      // Append each file individually
-      form.files.forEach((file) => {
-        formData.append("files", file);
-      });
+    if (form.latitude.trim() !== "") 
+      formData.append("latitude", form.latitude);
+    if (form.longitude.trim() !== "") 
+      formData.append("longitude", form.longitude);
+
+    // Append each file individually
+    form.files.forEach((file) => {
+      formData.append("files", file);
+    });
+    
+    const response = await fetch("/api/newverification/new-verification", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      toast.success("Verification submitted successfully!");
       
-      const response = await fetch("/api/newverification/new-verification", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        toast.success("Verification submitted successfully!");
-        if (data.verification) {
-          setVerifications(prev => [data.verification, ...prev]);
-          try {
-            const emailResponse = await fetch('/api/email/verification-request-email', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                recipientEmail: email,
-                recipientName: name,
-                verificationId: data.verification.id,
-                address: form.address,
-                paymentType: selectedPaymentPlan?.type || "regular"
-              }),
-            });
-            if (emailResponse.ok) {
-              console.log('Confirmation email sent');
-            } else {
-              console.error('Failed to send confirmation email');
-            }
-          } catch (emailError) {
-            console.error('Error sending confirmation email:', emailError);
-          }
-        } else {
-          try {
-            const userId = session.user.id;
-            const historyResponse = await fetch(`/api/users/${userId}/verificationHistory`);
-            if (historyResponse.ok) {
-              const historyData = await historyResponse.json();
-              setVerifications(historyData);
-            }
-          } catch (fetchError) {
-            console.error("Error fetching updated verification history:", fetchError);
-          }
-        }
-        
-        setForm({
-          address: "",
-          lga: "",
-          state: "",
-          latitude: "",
-          longitude: "",
-          landsize: "",
-          files: [],
+      // ✅ FIX: Use the correct verificationId from the response
+      try {
+        const emailResponse = await fetch('/api/email/verification-request-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            recipientEmail: email,
+            recipientName: name,
+            verificationId: data.verificationId, // ✅ FIXED: Use data.verificationId instead of data.verification.id
+            address: form.address,
+            paymentType: selectedPaymentPlan?.type || "regular"
+          }),
         });
-        setTimeout(() => {
-          closeModal();
-        }, 600);
-      } else {
-        toast.error(data.message || "Failed to submit verification.");
+        
+        if (emailResponse.ok) {
+          console.log('Confirmation email sent successfully');
+        } else {
+          const emailError = await emailResponse.json();
+          console.error('Failed to send confirmation email:', emailError);
+        }
+      } catch (emailError) {
+        console.error('Error sending confirmation email:', emailError);
       }
-    } catch (error) {
-      console.error("An error occurred while submitting:", error);
-      toast.error("An error occurred while submitting.");
-    } finally {
-      setLoading(false);
+      
+      // Update verifications list
+      try {
+        const userId = session.user.id;
+        const historyResponse = await fetch(`/api/users/${userId}/verificationHistory`);
+        if (historyResponse.ok) {
+          const historyData = await historyResponse.json();
+          setVerifications(historyData);
+        }
+      } catch (fetchError) {
+        console.error("Error fetching updated verification history:", fetchError);
+      }
+      
+      setForm({
+        address: "",
+        lga: "",
+        state: "",
+        latitude: "",
+        longitude: "",
+        landsize: "",
+        files: [],
+      });
+      setTimeout(() => {
+        closeModal();
+      }, 600);
+    } else {
+      toast.error(data.message || "Failed to submit verification.");
     }
-  };
+  } catch (error) {
+    console.error("An error occurred while submitting:", error);
+    toast.error("An error occurred while submitting.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handlePaymentSuccess = (): void => { 
     toast.success("Payment successful!");
