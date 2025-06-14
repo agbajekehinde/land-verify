@@ -51,7 +51,7 @@ export default function Header() {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-4">
-          <Link href="/about-us" className="text-gray-800 hover:text-green-500 mx-2">About</Link>
+          <Link href="/about-us" className="text-gray-800 hover:text-green-500 mx-2">About Us</Link>
           <Link href="/contact-us" className="text-gray-800 hover:text-green-500 mx-2">Contact</Link>
           <Link href="/signin" className="text-gray-800 hover:text-green-500 mx-2">Login</Link>
         </nav>
