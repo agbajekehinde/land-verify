@@ -11,6 +11,7 @@ import cloudinary from "cloudinary";
 import formidable from 'formidable';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 // Define types 
 interface CloudinaryUploadResponse {
@@ -88,7 +89,27 @@ const getAllowedFileTypes = (): string[] => [
   'application/pdf'
 ];
 
-// ...existing code...
+// Get the appropriate temp directory for the environment
+const getTempDir = (): string => {
+  // In Vercel/serverless environments, use /tmp
+  // In local development, use os.tmpdir() or create a temp directory
+  if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+    return '/tmp';
+  }
+  
+  // For local development, try to use project tmp or system temp
+  const projectTmp = path.join(process.cwd(), 'tmp');
+  try {
+    if (!fs.existsSync(projectTmp)) {
+      fs.mkdirSync(projectTmp, { recursive: true });
+    }
+    return projectTmp;
+  } catch (error) {
+    console.warn('Could not create project tmp directory, using system temp:', error);
+    return os.tmpdir();
+  }
+};
+
 /**
  * Analyzes document integrity and performs full-text matching against user address
  * @param files Array of uploaded files
@@ -294,25 +315,21 @@ export default async function handler(
       return res.status(401).json({ message: 'Unauthorized' });
     }
     
+    // Get the appropriate temp directory
+    const uploadDir = getTempDir();
+    
     // Configure formidable for file uploads
     const form = formidable({ 
       multiples: true,
       maxFileSize: 10 * 1024 * 1024, // 10MB
       keepExtensions: true,
-      // Create temp directory if it doesn't exist
-      uploadDir: path.join(process.cwd(), 'tmp'),
+      uploadDir: uploadDir, // Use the determined temp directory
       filter: (part) => {
         // Accept all parts that aren't files, or files with allowed types
         if (!part.originalFilename) return true;
         return getAllowedFileTypes().includes(part.mimetype || '');
       }
     });
-    
-    // Ensure upload directory exists
-    const uploadDir = path.join(process.cwd(), 'tmp');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
     
     // Parse the form data
     const [fields, filesObj] = await new Promise<[formidable.Fields, formidable.Files]>((resolve, reject) => {
@@ -430,7 +447,7 @@ export default async function handler(
       paymentType, 
       paymentStatus,
       paymentAmount: parseFloat(paymentAmount),
-      documentIntegrity: documentIntegrity as unknown as Prisma.InputJsonValue, // Changed from 'any'
+      documentIntegrity: documentIntegrity as unknown as Prisma.InputJsonValue,
       files: fileUrls,
       createdAt: new Date(),
       updatedAt: new Date()
