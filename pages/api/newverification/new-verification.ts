@@ -4,9 +4,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { PrismaClient, Prisma } from "@prisma/client";
-import { detectImageTampering } from '@/app/utils/imageUtils';
-import { checkDocumentContainsAddress } from '@/app/utils/addressExtraction';
-import { extractFullTextFromDocument } from '@/app/utils/imageUtils';
 import cloudinary from "cloudinary";
 import formidable from 'formidable';
 import fs from 'fs';
@@ -18,51 +15,6 @@ interface CloudinaryUploadResponse {
   secure_url: string;
   public_id: string;
   [key: string]: unknown;
-}
-
-interface DocumentIntegrityResult {
-  overallScore: number;
-  imageAnalysis: {
-    score: number;
-    details: Array<{
-      filename: string;
-      result: {
-        score: number;
-        details?: {
-          blurredRegionsDetected: boolean;
-          inconsistentQualityRegions: number;
-          suspiciousEdges: boolean;
-        }
-      };
-    }>;
-  };
-  addressMatching: {
-    score: number;
-    details: {
-      exactMatch: boolean;
-      normalizedMatch: boolean;
-      tokenMatchScore: number;
-    };
-    extractedAddress: string;
-    extractionConfidence: number;
-    matchDetails: {
-      matchedWords: number;
-      totalWords: number;
-      partialMatches: string[];
-    };
-  };
-}
-
-interface ImageAnalysisItem {
-  filename: string;
-  result: {
-    score: number;
-    details?: {
-      blurredRegionsDetected: boolean;
-      inconsistentQualityRegions: number; 
-      suspiciousEdges: boolean;
-    }
-  };
 }
 
 // Disable the default body parser for file uploads
@@ -110,143 +62,8 @@ const getTempDir = (): string => {
   }
 };
 
-/**
- * Analyzes document integrity and performs full-text matching against user address
- * @param files Array of uploaded files
- * @param userAddress Address provided by user
- * @returns Document integrity analysis results
- */
-async function analyzeDocumentIntegrity(
-  files: formidable.File[], 
-  userAddress: string
-): Promise<DocumentIntegrityResult> {
-  const imageAnalysisResults: ImageAnalysisItem[] = [];
-  let bestMatchScore = 0;
-  let bestMatchDetails = {
-    exactMatch: false,
-    partialMatches: [] as string[],
-    matchedWords: 0,
-    totalWords: 0
-  };
-  let bestExtractedText = '';
-  
-  console.log(`Analyzing ${files.length} files for integrity and address matching`);
-  console.log(`User provided address: "${userAddress}"`);
-  
-  // Process each file
-  for (const file of files) {
-    if (!file || !file.filepath) continue;
-    
-    try {
-      const fileMimeType = file.mimetype || '';
-      const filename = file.originalFilename || 'unknown';
-      
-      console.log(`Processing file: ${filename} (${fileMimeType})`);
-      
-      // For supported files, perform analysis
-      if (fileMimeType.startsWith('image/') || fileMimeType === 'application/pdf') {
-        const fileBuffer = fs.readFileSync(file.filepath);
-        
-        // Check for image tampering if it's an image
-        if (fileMimeType.startsWith('image/')) {
-          const analysisResult = await detectImageTampering(fileBuffer);
-          
-          imageAnalysisResults.push({
-            filename: filename,
-            result: analysisResult
-          });
-        }
-        
-        // Extract full text from document
-        console.log(`Extracting text from ${filename}...`);
-        try {
-          // Use our new full text extraction function
-          const extractedText = await extractFullTextFromDocument(fileBuffer, fileMimeType);
-          
-          if (extractedText && extractedText.trim().length > 0) {
-            console.log(`Extracted ${extractedText.length} characters from ${filename}`);
-            
-            // Check if document contains the address using full-text matching
-            const matchResult = checkDocumentContainsAddress(extractedText, userAddress);
-            console.log(`Address match score: ${matchResult.score} (matched ${matchResult.details.matchedWords}/${matchResult.details.totalWords} words)`);
-            
-            // If this is our best match so far, save it
-            if (matchResult.score > bestMatchScore) {
-              bestMatchScore = matchResult.score;
-              bestMatchDetails = matchResult.details;
-              bestExtractedText = extractedText;
-              
-              console.log(`New best match in ${filename} with score ${bestMatchScore}`);
-              if (matchResult.details.partialMatches.length > 0) {
-                console.log('Matching contexts:');
-                matchResult.details.partialMatches.forEach((match, i) => {
-                  console.log(`  ${i+1}. "${match}"`);
-                });
-              }
-            }
-          } else {
-            console.log(`No text extracted from ${filename}`);
-          }
-        } catch (extractError) {
-          console.error(`Error extracting text from ${filename}:`, extractError);
-        }
-      }
-    } catch (err) {
-      console.error(`Error processing file ${file.originalFilename}:`, err);
-    }
-  }
-  
-  // Calculate overall image integrity score if we have results
-  let imageIntegrityScore = 1.0;
-  if (imageAnalysisResults.length > 0) {
-    imageIntegrityScore = imageAnalysisResults.reduce(
-      (sum, item) => sum + item.result.score, 0
-    ) / imageAnalysisResults.length;
-  }
-  
-  // Calculate final results
-  // For address matching, use our best match score
-  const addressMatchResult = {
-    score: bestMatchScore,
-    details: {
-      exactMatch: bestMatchDetails.exactMatch,
-      normalizedMatch: bestMatchScore > 0.8, // Consider high scores as normalized matches
-      tokenMatchScore: bestMatchScore
-    }
-  };
-  
-  // Calculate overall integrity score
-  // Balance between image integrity and address matching
-  const addressWeight = bestMatchScore > 0 ? 0.5 : 0;
-  const imageWeight = 1 - addressWeight;
-  
-  const overallScore = (imageIntegrityScore * imageWeight) + (bestMatchScore * addressWeight);
-  
-  // Prepare the final result
-  return {
-    overallScore: parseFloat(overallScore.toFixed(2)),
-    imageAnalysis: {
-      score: parseFloat(imageIntegrityScore.toFixed(2)),
-      details: imageAnalysisResults
-    },
-    addressMatching: {
-      ...addressMatchResult,
-      extractedAddress: bestExtractedText.substring(0, 200) + (bestExtractedText.length > 200 ? '...' : ''),
-      extractionConfidence: bestMatchScore,
-      matchDetails: {
-        matchedWords: bestMatchDetails.matchedWords,
-        totalWords: bestMatchDetails.totalWords,
-        partialMatches: bestMatchDetails.partialMatches.slice(0, 3) // Include up to 3 matching contexts
-      }
-    }
-  };
-}
 
-/**
- * Handles file uploads to Cloudinary
- * @param files Array of files to upload
- * @returns Array of secure URLs for uploaded files
- */
+
 async function uploadFilesToCloudinary(files: formidable.File[]): Promise<string[]> {
   const fileUrls: string[] = [];
   const allowedTypes = getAllowedFileTypes();
@@ -390,45 +207,15 @@ export default async function handler(
     const latitude = parseFloat(latitudeStr);
     const longitude = parseFloat(longitudeStr);
     
-    // Document integrity analysis only if files are provided
-    let documentIntegrity: DocumentIntegrityResult;
     let fileUrls: string[] = [];
     
     if (fileArray.length > 0) {
-      // Run document integrity analysis with address extraction
-      console.log('Starting document integrity analysis...');
-      console.time('documentIntegrityAnalysis');
-      documentIntegrity = await analyzeDocumentIntegrity(fileArray, address);
-      console.timeEnd('documentIntegrityAnalysis');
-      
+
       // Upload files to Cloudinary
       console.log('Uploading files to Cloudinary...');
       fileUrls = await uploadFilesToCloudinary(fileArray);
       console.log(`Uploaded ${fileUrls.length} files to Cloudinary`);
     } else {
-      // Default values when no files are provided
-      documentIntegrity = {
-        overallScore: 0,
-        imageAnalysis: {
-          score: 0,
-          details: []
-        },
-        addressMatching: {
-          score: 0,
-          details: {
-            exactMatch: false,
-            normalizedMatch: false,
-            tokenMatchScore: 0
-          },
-          extractedAddress: '',
-          extractionConfidence: 0,
-          matchDetails: {
-            matchedWords: 0,
-            totalWords: 0,
-            partialMatches: []
-          }
-        }
-      };
     }
     
     // Prepare verification data
@@ -447,7 +234,6 @@ export default async function handler(
       paymentType, 
       paymentStatus,
       paymentAmount: parseFloat(paymentAmount),
-      documentIntegrity: documentIntegrity as unknown as Prisma.InputJsonValue,
       files: fileUrls,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -463,7 +249,6 @@ export default async function handler(
     return res.status(200).json({
       message: 'Verification request submitted successfully',
       verificationId: newVerification.id,
-      documentIntegrity,
       fileCount: fileUrls.length
     });
     
