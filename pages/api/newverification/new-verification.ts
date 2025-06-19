@@ -215,7 +215,6 @@ export default async function handler(
       console.log('Uploading files to Cloudinary...');
       fileUrls = await uploadFilesToCloudinary(fileArray);
       console.log(`Uploaded ${fileUrls.length} files to Cloudinary`);
-    } else {
     }
     
     // Prepare verification data
