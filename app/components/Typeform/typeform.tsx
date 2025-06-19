@@ -1,7 +1,6 @@
 // app/components/WhatsAppButton.tsx
 "use client";
 import React from 'react';
-import Script from 'next/script';
 
 const Typeform = ()=>{
   return (
