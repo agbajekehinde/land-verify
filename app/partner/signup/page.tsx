@@ -122,6 +122,8 @@ export default function SignupForm() {
                 <option value="" disabled>Select State</option>
                 <option value="Lagos">Lagos</option>
                 <option value="Ogun">Ogun</option>
+                <option value="Oyo">Oyo</option>
+                <option value="Abuja">Abuja</option>
               </select>
               <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
             </div>
