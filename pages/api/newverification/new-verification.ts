@@ -49,7 +49,6 @@ const getTempDir = (): string => {
     return '/tmp';
   }
   
-  // For local development, try to use project tmp or system temp
   const projectTmp = path.join(process.cwd(), 'tmp');
   try {
     if (!fs.existsSync(projectTmp)) {

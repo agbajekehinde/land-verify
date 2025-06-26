@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE "Partner" ADD COLUMN     "state" TEXT;
-
--- AlterTable
-ALTER TABLE "User" ALTER COLUMN "id" SET DEFAULT CAST(FLOOR(RANDOM() * 9000 + 1000) AS INT);

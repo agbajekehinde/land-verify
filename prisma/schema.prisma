@@ -36,38 +36,38 @@ model Partner {
 }
 
 model VerificationRequest {
-  id            String              @id @default(uuid())
-  userId        Int
-  address       String
-  files         String[]
-  status        Status              @default(PENDING)
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  latitude      Float?
-  longitude     Float?
-  state         String
-  landsize      String              @default("Unknown")
-  partnerId     Int?
-  paymentAmount Float               @default(0)
-  paymentStatus String              @default("pending")
+  id                String              @id @default(uuid())
+  userId            Int
+  address           String
+  files             String[]
+  status            Status              @default(PENDING)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  latitude          Float?
+  longitude         Float?
+  state             String
+  landsize          String              @default("Unknown")
+  partnerId         Int?
+  paymentAmount     Float               @default(0)
+  paymentStatus     String              @default("pending")
+  paymentType       String              @default("regular")
+  lga               String              @default("Unknown")
   documentIntegrity Json?
-  paymentType   String              @default("regular")
-  lga           String              @default("Unknown")
-  report        VerificationReport?
-  partner       Partner?            @relation(fields: [partnerId], references: [id])
-  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  report            VerificationReport?
+  partner           Partner?            @relation(fields: [partnerId], references: [id])
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationReport {
   id                    String              @id @default(uuid())
   verificationRequestId String              @unique
-  partnerId             Int
+  partnerId             Int?
   reportFiles           String[]
   findings              Json?
   status                ReportStatus        @default(DRAFT)
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
-  partner               Partner             @relation(fields: [partnerId], references: [id])
+  partner               Partner?            @relation(fields: [partnerId], references: [id])
   verificationRequest   VerificationRequest @relation(fields: [verificationRequestId], references: [id], onDelete: Cascade)
 }
 
@@ -77,6 +77,14 @@ model VerificationToken {
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  name      String   // e.g., client name
+  createdAt DateTime @default(now())
+  active    Boolean  @default(true)
 }
 
 enum Status {
