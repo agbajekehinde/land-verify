@@ -4,7 +4,6 @@ import React, { useRef, useState } from "react";
 import Header from "../components/header/header";
 import Footer from "../components/footer/footer";
 
-// Modern design tokens with better contrast
 const styles = {
   codeBlock: "relative rounded-lg bg-slate-900 text-slate-100 p-6 text-sm font-mono overflow-x-auto my-6 border border-slate-700 shadow-lg",
   sectionTitle: "text-2xl font-bold mt-12 mb-4 text-slate-900 border-b border-slate-200 pb-2",
@@ -224,7 +223,7 @@ function useFindingsPolling(
           <CodeBlock code={`{
   "address": "123 Main St, Lagos",
   "files": ["https://res.cloudinary.com/demo/image/upload/sample.jpg"],
-  "userId": 3386,
+  "userId": 32344386,
   "lga": "Ikeja",         // optional
   "state": "Lagos",       // optional
   "landsize": "500sqm",   // optional
@@ -241,7 +240,7 @@ function useFindingsPolling(
 }`} />
 
           <h3 className={styles.subTitle}>Example cURL</h3>
-          <CodeBlock code={`curl -X POST "https://landverify.ng/api/verification/submit" \\
+          <CodeBlock code={`curl -X POST "https://app.landverify.ng/api/verification/submit" \\
   -H "Content-Type: application/json" \\
   -H "x-api-key: YOUR_API_KEY" \\
   -d '{
@@ -272,7 +271,7 @@ function useFindingsPolling(
 }`} />
 
           <h3 className={styles.subTitle}>Example cURL</h3>
-          <CodeBlock code={`curl "https://landverify.ng/api/verification-requests/2e5ab633-ea41-4d99-809c-efbf1e1e6925/requests" \\
+          <CodeBlock code={`curl "https://app.landverify.ng/api/verification-requests/2e5ab633-ea41-4d99-809c-efbf1e1e6925/requests" \\
   -H "x-api-key: YOUR_API_KEY"`} />
         </section>
 
@@ -295,7 +294,7 @@ function useFindingsPolling(
 }`} />
 
           <h3 className={styles.subTitle}>Example cURL</h3>
-          <CodeBlock code={`curl "https://landverify.ng/api/verification-requests/2e5ab633-ea41-4d99-809c-efbf1e1e6925/findings" \\
+          <CodeBlock code={`curl "https://app.landverify.ng/api/verification-requests/2e5ab633-ea41-4d99-809c-efbf1e1e6925/findings" \\
   -H "x-api-key: YOUR_API_KEY"`} />
         </section>
 
