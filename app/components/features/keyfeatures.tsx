@@ -12,7 +12,7 @@ export default function KeyFeatures() {
           <div className="flex flex-1 flex-col items-center text-center p-6 bg-white rounded-lg shadow-md h-64">
             <ShieldCheckIcon className="w-12 h-12 text-[#479101]" />
             <h3 className="mt-4 text-xl font-semibold text-gray-800">Protects Investment</h3>
-            <p className="mt-2 text-gray-600">Intelligent GIS technology and expert reports tell you if your property is safe, risky, or a red-flag investment-before you buy.</p>
+            <p className="mt-2 text-gray-600">Intelligent GIS technology and expert reports tell you if a property is safe, risky, or a red-flag investment-before you buy.</p>
           </div>
           <div className="flex flex-1 flex-col items-center text-center p-6 bg-white rounded-lg shadow-md h-64">
             <UserGroupIcon className="w-12 h-12 text-[#479101]" />
