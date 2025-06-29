@@ -12,10 +12,10 @@ export default function Hero() {
       <div className="flex grow flex-col gap-4 md:flex-row items-center justify-top px-6 py-2 md:px-20">
         <div className="flex flex-col justify-center items-start gap-6 rounded-lg bg-white p-6 md:w-1/2">
           <h1 className="flex text-4xl text-gray-900 md:text-4xl md:leading-bold">
-            <strong>Secure Your Land/Property Investment with Confidence</strong>
+            <strong>Protect Your Property Investment with Expert-Verified Reports</strong>
           </h1>
           <p>
-            Avoid demolitions and legal risks. Check government acquisition status, zoning, and 10+ environmental factors. Powered by GIS technology and our in-house team of certified surveyors, town planners, and property lawyers - so you buy with total confidence.
+            Avoid demolitions and legal risks. Check government acquisition status, zoning, and 20+ environmental factors. Powered by GIS technology and our in-house team of certified surveyors, town planners, and property lawyers - so you buy with total confidence. Get your property report withing 24 hours, and enjoy peace of mind knowing your investment is secure.
           </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
