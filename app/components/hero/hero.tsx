@@ -15,7 +15,7 @@ export default function Hero() {
             <strong>Protect Your Property Investment with Expert-Verified Reports</strong>
           </h1>
           <p>
-            Avoid demolitions and legal risks. Check compliance with states survey, physical planning regulations and other 20+ environmental risks. Powered by advanced GIS technology and team of expert surveyors, town planners, and lawyers. Get comprehensive report within 24 hours!
+            Avoid demolitions and legal risks. Check compliance with states survey, physical planning and 20+ environmental risks. Powered by advanced GIS technology and team of expert surveyors, town planners, and lawyers. Get comprehensive report within 24 hours!
           </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
