@@ -15,7 +15,7 @@ export default function Hero() {
             <strong>Secure Your Land/Property Investment with Confidence</strong>
           </h1>
           <p>
-            Don&apos;t Risk It - Verify It! Our team of licensed townplanners, surveyors, and lawyers verify and advise you on a land/property before you buy it. Get results within 24 hours. Secure your investment before it&apos;s too late!
+            Avoid demolitions and legal risks. Check government acquisition status, zoning, and 10+ environmental factors. Powered by GIS technology and our in-house team of certified surveyors, town planners, and property lawyers - so you buy with total confidence.
           </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
