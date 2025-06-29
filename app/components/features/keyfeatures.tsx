@@ -11,8 +11,8 @@ export default function KeyFeatures() {
         <div className="mt-10 flex flex-col gap-8 md:flex-row md:gap-12">
           <div className="flex flex-1 flex-col items-center text-center p-6 bg-white rounded-lg shadow-md h-64">
             <ShieldCheckIcon className="w-12 h-12 text-[#479101]" />
-            <h3 className="mt-4 text-xl font-semibold text-gray-800">Combat Fraud</h3>
-            <p className="mt-2 text-gray-600">Protect yourself from fake land titles, double sales, and forged documents.</p>
+            <h3 className="mt-4 text-xl font-semibold text-gray-800">Protects Investment</h3>
+            <p className="mt-2 text-gray-600">With intelligent GIS technology & expert verification report, we tell you if its safe, risky or red flag investment before buying.</p>
           </div>
           <div className="flex flex-1 flex-col items-center text-center p-6 bg-white rounded-lg shadow-md h-64">
             <UserGroupIcon className="w-12 h-12 text-[#479101]" />
