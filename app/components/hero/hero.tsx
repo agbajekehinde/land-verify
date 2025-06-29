@@ -15,7 +15,7 @@ export default function Hero() {
             <strong>Protect Your Property Investment with Expert-Verified Reports</strong>
           </h1>
           <p>
-            Avoid demolitions and legal risks. Check government acquisition status, zoning, and 20+ environmental factors. Powered by GIS technology and our in-house team of certified surveyors, town planners, and property lawyers - so you buy with total confidence. Get your property report withing 24 hours, and enjoy peace of mind knowing your investment is secure.
+            Avoid demolitions and legal risks. Check government acquisition status, zoning, and 20+ environmental factors. Powered by advanced GIS technology and our team of certified surveyors, town planners, and lawyers. Get your property report withing 24 hours!
           </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
