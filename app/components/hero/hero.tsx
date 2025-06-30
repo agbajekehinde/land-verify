@@ -14,7 +14,7 @@ export default function Hero() {
           <h1 className="flex text-4xl text-gray-900 md:text-4xl md:leading-bold">
             <strong>Protect Your Property Investment with Expert-Verified Reports</strong>
           </h1>
-          <p>Avoid demolitions and legal risks. Receive in 24hrs, evaluation report on land acquisition risks and more than 20 environmental and planning factors with our digital land verification service, powered by advanced GIS technology and expert analysis.
+          <p>Avoid demolitions and legal risks. Receive in 24hrs, evaluation report on land acquisition risks and more than 20 environmental and planning factors with our digital land verification service. Powered by advanced GIS technology and expert analysis.
 
           </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
