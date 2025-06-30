@@ -14,8 +14,8 @@ export default function Hero() {
           <h1 className="flex text-4xl text-gray-900 md:text-4xl md:leading-bold">
             <strong>Protect Your Property Investment with Expert-Verified Reports</strong>
           </h1>
-          <p>
-            Avoid demolitions and legal risks. Check compliance with states survey, physical planning and 20+ environmental risks. Powered by advanced GIS technology and team of expert surveyors, town planners, and lawyers. Get comprehensive report within 24 hours!
+          <p>Avoid demolitions and legal risks. Check compliance with states survey, physical planning and review 20+ critical environmental and planning factors with a GIS-powered, expert-reviewed compliance report in 24 hours.
+
           </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
