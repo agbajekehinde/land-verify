@@ -315,7 +315,7 @@ export const generateVerificationPDF = async (
     }
   }
   
-  // Add footer with disclaimer
+  // Add footer - page numbers for all pages, disclaimer only on last page
   const generatedDate = new Date(verificationDetails.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -325,26 +325,30 @@ export const generateVerificationPDF = async (
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.setFontSize(8).setTextColor(180, 180, 180);
+    
+    // Add disclaimer only on the last page
+    if (i === pageCount) {
+      doc.setFontSize(8).setTextColor(180, 180, 180);
 
-    const disclaimer = 
-      `Disclaimer: This verification report is based on information available as of ${generatedDate} and is provided for informational purposes only. `+
-      `LandVerify does not warrant or guarantee the accuracy, completeness, or reliability of the information contained herein. `+
-      `This report does not constitute legal, financial, or professional advice, nor does it serve as a substitute for independent due diligence.\n\n`+
-      `LandVerify expressly disclaims liability for errors, omissions, or misrepresentations in the data provided. `+
-      `By using this report, the recipient acknowledges that LandVerify shall not be held responsible for any damages arising from reliance on this information.`;
+      const disclaimer = 
+        `Disclaimer: This verification report is based on information available as of ${generatedDate} and is provided for informational purposes only. `+
+        `LandVerify does not warrant or guarantee the accuracy, completeness, or reliability of the information contained herein. `+
+        `This report does not constitute legal, financial, or professional advice, nor does it serve as a substitute for independent due diligence.\n\n`+
+        `LandVerify expressly disclaims liability for errors, omissions, or misrepresentations in the data provided. `+
+        `By using this report, the recipient acknowledges that LandVerify shall not be held responsible for any damages arising from reliance on this information.`;
+      
+      doc.text(
+        disclaimer,
+        20, 
+        265, 
+        {
+          align: 'left',
+          maxWidth: 170 
+        }
+      );
+    }
     
-    doc.text(
-      disclaimer,
-      20, 
-      265, 
-      {
-        align: 'left',
-        maxWidth: 170 
-      }
-    );
-    
-    // Add page number with more space from disclaimer
+    // Add page number on all pages
     doc.setFontSize(9).setTextColor(80, 80, 80);
     doc.text(`Page ${i} of ${pageCount}`, 105, 290, { align: 'center' });
   }

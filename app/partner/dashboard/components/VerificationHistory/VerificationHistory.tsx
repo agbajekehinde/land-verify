@@ -20,6 +20,27 @@ interface VerificationRequest {
 interface ReportFormData {
   DoesAddressMatchSurvey: string;
   isPropertyFreeOfAcquisition: string;
+  locatedInResidentialArea: string;
+  locatedInCommercialZone: string;
+  locatedInMixedArea: string;
+  identifiedInExpansionPlans: string;
+  erosionOrFloodRisk: string;
+  closeToIndustrialOrWaste: string;
+  nearHighVoltageLines: string;
+  nearRoadExpansionZone: string;
+  accessibleByRegisteredRoad: string;
+  withinDrainageOrWetlands: string;
+  legalAccessRightOfWay: string;
+  suitableSoilProfile: string;
+  suitableTopography: string;
+  suitableProximityToUtilities: string;
+  suitableProximityToServices: string;
+  suitableProximityToTransport: string;
+  suitableProximityToHazards: string;
+  suitableProximityToMarket: string;
+  suitableProximityToEducation: string;
+  suitableProximityToHealthcare: string;
+  suitableProximityToRecreation: string;
   comments: string;
   reportFiles: File[];
 }
@@ -36,6 +57,27 @@ const VerificationHistory: React.FC = () => {
   const [reportData, setReportData] = useState<ReportFormData>({
     DoesAddressMatchSurvey: "",
     isPropertyFreeOfAcquisition: "",
+    locatedInResidentialArea: "",
+    locatedInCommercialZone: "",
+    locatedInMixedArea: "",
+    identifiedInExpansionPlans: "",
+    erosionOrFloodRisk: "",
+    closeToIndustrialOrWaste: "",
+    nearHighVoltageLines: "",
+    nearRoadExpansionZone: "",
+    accessibleByRegisteredRoad: "",
+    withinDrainageOrWetlands: "",
+    legalAccessRightOfWay: "",
+    suitableSoilProfile: "",
+    suitableTopography: "",
+    suitableProximityToUtilities: "",
+    suitableProximityToServices: "",
+    suitableProximityToTransport: "",
+    suitableProximityToHazards: "",
+    suitableProximityToMarket: "",
+    suitableProximityToEducation: "",
+    suitableProximityToHealthcare: "",
+    suitableProximityToRecreation: "",
     comments: "",
     reportFiles: []
   });
@@ -64,7 +106,6 @@ const VerificationHistory: React.FC = () => {
 
   // Helper function to format status for display
   const formatStatus = (status: string) => {
-    // Convert from database format (e.g., IN_PROGRESS) to display format (e.g., In Progress)
     const words = status.split('_').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     );
@@ -115,23 +156,41 @@ const VerificationHistory: React.FC = () => {
   const openReportModal = (verification: VerificationRequest) => {
     setSelectedVerification(verification);
     setIsReportModalOpen(true);
-    // Reset error state when opening modal
     setError(null);
   };
 
   const closeReportModal = () => {
     setIsReportModalOpen(false);
-    // Clear the selected verification only if we're not in the details view
     if (!showSubmitConfirmModal) {
       setSelectedVerification(null);
     }
     setReportData({
       DoesAddressMatchSurvey: "",
       isPropertyFreeOfAcquisition: "",
+      locatedInResidentialArea: "",
+      locatedInCommercialZone: "",
+      locatedInMixedArea: "",
+      identifiedInExpansionPlans: "",
+      erosionOrFloodRisk: "",
+      closeToIndustrialOrWaste: "",
+      nearHighVoltageLines: "",
+      nearRoadExpansionZone: "",
+      accessibleByRegisteredRoad: "",
+      withinDrainageOrWetlands: "",
+      legalAccessRightOfWay: "",
+      suitableSoilProfile: "",
+      suitableTopography: "",
+      suitableProximityToUtilities: "",
+      suitableProximityToServices: "",
+      suitableProximityToTransport: "",
+      suitableProximityToHazards: "",
+      suitableProximityToMarket: "",
+      suitableProximityToEducation: "",
+      suitableProximityToHealthcare: "",
+      suitableProximityToRecreation: "",
       comments: "",
       reportFiles: []
     });
-    // Clear any error messages
     setError(null);
   };
 
@@ -140,9 +199,8 @@ const VerificationHistory: React.FC = () => {
     
     if (!selectedVerification || !partnerId) return;
     
-    // Start submitting process
     setSubmitting(true);
-    setError(null); // Clear any previous errors
+    setError(null);
     
     try {
       // First, upload files if any
@@ -167,14 +225,36 @@ const VerificationHistory: React.FC = () => {
         uploadedFileUrls = uploadResult.fileUrls;
       }
       
-      // Determine if report is complete based on both radio questions being answered
-      const isComplete = reportData.DoesAddressMatchSurvey !== "" && 
-                        reportData.isPropertyFreeOfAcquisition !== "";
+      // Fixed: Correct logic for determining if report is complete
+      const isComplete = (
+        reportData.DoesAddressMatchSurvey !== "" &&
+        reportData.accessibleByRegisteredRoad !== "" &&
+        reportData.closeToIndustrialOrWaste !== "" &&
+        reportData.comments !== "" &&
+        reportData.erosionOrFloodRisk !== "" &&
+        reportData.identifiedInExpansionPlans !== "" &&
+        reportData.isPropertyFreeOfAcquisition !== "" &&
+        reportData.legalAccessRightOfWay !== "" &&
+        reportData.locatedInCommercialZone !== "" &&
+        reportData.locatedInMixedArea !== "" &&
+        reportData.locatedInResidentialArea !== "" &&
+        reportData.nearHighVoltageLines !== "" &&
+        reportData.nearRoadExpansionZone !== "" &&
+        reportData.suitableProximityToEducation !== "" &&
+        reportData.suitableProximityToHazards !== "" &&
+        reportData.suitableProximityToHealthcare !== "" &&
+        reportData.suitableProximityToMarket !== "" &&
+        reportData.suitableProximityToRecreation !== "" &&
+        reportData.suitableProximityToServices !== "" &&
+        reportData.suitableProximityToTransport !== "" &&
+        reportData.suitableProximityToUtilities !== "" &&
+        reportData.suitableSoilProfile !== "" &&
+        reportData.suitableTopography !== "" &&
+        reportData.withinDrainageOrWetlands !== ""
+      );
                          
-      // Set appropriate status
       const newStatus = isComplete ? 'COMPLETED' : 'IN_PROGRESS';
       
-      // Create report data
       const reportPayload = {
         verificationRequestId: selectedVerification.id,
         partnerId: Number(partnerId),
@@ -182,15 +262,34 @@ const VerificationHistory: React.FC = () => {
         findings: {
           DoesAddressMatchSurvey: reportData.DoesAddressMatchSurvey === "yes",
           isPropertyFreeOfAcquisition: reportData.isPropertyFreeOfAcquisition === "yes",
+          locatedInResidentialArea: reportData.locatedInResidentialArea === "yes",
+          locatedInCommercialZone: reportData.locatedInCommercialZone === "yes",
+          locatedInMixedArea: reportData.locatedInMixedArea === "yes",
+          identifiedInExpansionPlans: reportData.identifiedInExpansionPlans === "yes",
+          erosionOrFloodRisk: reportData.erosionOrFloodRisk === "yes",
+          closeToIndustrialOrWaste: reportData.closeToIndustrialOrWaste === "yes",
+          nearHighVoltageLines: reportData.nearHighVoltageLines === "yes",
+          nearRoadExpansionZone: reportData.nearRoadExpansionZone === "yes",
+          accessibleByRegisteredRoad: reportData.accessibleByRegisteredRoad === "yes",
+          withinDrainageOrWetlands: reportData.withinDrainageOrWetlands === "yes",
+          legalAccessRightOfWay: reportData.legalAccessRightOfWay === "yes",
+          suitableSoilProfile: reportData.suitableSoilProfile === "yes",
+          suitableTopography: reportData.suitableTopography === "yes",
+          suitableProximityToUtilities: reportData.suitableProximityToUtilities === "yes",
+          suitableProximityToServices: reportData.suitableProximityToServices === "yes",
+          suitableProximityToTransport: reportData.suitableProximityToTransport === "yes",
+          suitableProximityToHazards: reportData.suitableProximityToHazards === "yes",
+          suitableProximityToMarket: reportData.suitableProximityToMarket === "yes",
+          suitableProximityToEducation: reportData.suitableProximityToEducation === "yes",
+          suitableProximityToHealthcare: reportData.suitableProximityToHealthcare === "yes",
+          suitableProximityToRecreation: reportData.suitableProximityToRecreation === "yes",
           comments: reportData.comments
         },
         status: 'DRAFT'
       };
 
-      // Debug log the payload
       console.log("Submitting report payload:", reportPayload);
       
-      // Submit report - using a properly formatted endpoint
       const response = await fetch('/api/verificationReports/reports', {
         method: 'POST',
         headers: {
@@ -204,7 +303,6 @@ const VerificationHistory: React.FC = () => {
         throw new Error(errorData.message || 'Failed to create verification report');
       }
       
-      // Update verification status to the appropriate status (IN_PROGRESS or COMPLETED)
       const statusResponse = await fetch(`/api/verification-requests/${selectedVerification.id}/status`, {
         method: 'PATCH',
         headers: {
@@ -217,13 +315,11 @@ const VerificationHistory: React.FC = () => {
         throw new Error('Failed to update verification status');
       }
       
-      // Update local state
       const updatedVerifications = verifications.map(v => 
         v.id === selectedVerification.id ? { ...v, status: newStatus } : v
       );
       setVerifications(updatedVerifications);
       
-      // Close all modals and reset form
       setShowSubmitConfirmModal(false);
       setIsReportModalOpen(false);
       setSelectedVerification(null);
@@ -231,7 +327,6 @@ const VerificationHistory: React.FC = () => {
     } catch (error) {
       console.error('Error creating verification report:', error);
       setError(error instanceof Error ? error.message : 'Failed to create verification report. Please try again.');
-      // Keep the confirmation modal closed, but reopen the report modal to show the error
       setShowSubmitConfirmModal(false);
       setIsReportModalOpen(true);
     } finally {
@@ -282,7 +377,7 @@ const VerificationHistory: React.FC = () => {
 
       {/* Verification Details Modal */}
       {selectedVerification && !isReportModalOpen && !showSubmitConfirmModal && (
-          <div className="fixed inset-0 bg-gray bg-opacity-10 backdrop-blur-md flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-md flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
             <button
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer p-2 rounded-full hover:bg-gray-200 transition"
@@ -296,7 +391,6 @@ const VerificationHistory: React.FC = () => {
             <p><strong>LGA:</strong> {selectedVerification.lga}</p> 
             <p><strong>State:</strong> {selectedVerification.state}</p>
             
-            {/* Display landsize if available */}
             {selectedVerification.landsize && (
               <p><strong>Land Size:</strong> {selectedVerification.landsize}</p>
             )}
@@ -304,7 +398,6 @@ const VerificationHistory: React.FC = () => {
             <p><strong>Status:</strong> <span className={getStatusColor(selectedVerification.status)}>{formatStatus(selectedVerification.status)}</span></p>
             <p><strong>Date:</strong> {new Date(selectedVerification.createdAt).toLocaleDateString()}</p>
             
-            {/* Display latitude and longitude if available */}
             {selectedVerification.latitude !== undefined && selectedVerification.longitude !== undefined && (
               <div className="mt-2">
                 <p><strong>Latitude:</strong> {selectedVerification.latitude}</p>
@@ -312,13 +405,12 @@ const VerificationHistory: React.FC = () => {
               </div>
             )}
             
-            {/* Map view if address are available */}
-            {selectedVerification.address !== undefined && selectedVerification.lga !== undefined && selectedVerification.state !== undefined && (
+            {selectedVerification.address && selectedVerification.lga && selectedVerification.state && (
               <div className="mt-4">
                 <h4 className="font-semibold">Location Map:</h4>
                 <div className="mt-2 bg-gray-100 h-48 rounded flex items-center justify-center">
                   <a 
-                    href={`https://www.google.com/maps?q=${selectedVerification.address},${selectedVerification.city},${selectedVerification.state}`} 
+                    href={`https://www.google.com/maps?q=${selectedVerification.address},${selectedVerification.lga},${selectedVerification.state}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 underline"
@@ -361,8 +453,8 @@ const VerificationHistory: React.FC = () => {
 
       {/* Report Creation Modal */}
       {isReportModalOpen && selectedVerification && (
-          <div className="fixed inset-0 bg-gray bg-opacity-10 backdrop-blur-md flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative max-h-90vh overflow-y-auto">
+         <div className="fixed inset-0 flex items-center justify-center bg-transparent backdrop-blur-md z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative max-h-screen overflow-y-auto">
             <button
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer p-2 rounded-full hover:bg-gray-200 transition"
               onClick={closeReportModal}
@@ -377,7 +469,6 @@ const VerificationHistory: React.FC = () => {
               {selectedVerification.address}, {selectedVerification.lga || ""}, {selectedVerification.state}
             </p>
             
-            {/* Display land size in the report modal as well */}
             {selectedVerification.landsize && (
               <p className="mb-4"><strong>Land Size: </strong> {selectedVerification.landsize}</p>
             )}
@@ -426,7 +517,37 @@ const VerificationHistory: React.FC = () => {
                     </label>
                   </div>
                 </div>
-                
+
+                <div>
+                  <p className="font-medium mb-2">Is the property located in a residential area?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="locatedInResidentialArea"
+                        value="yes"
+                        checked={reportData.locatedInResidentialArea === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="locatedInResidentialArea"
+                        value="no"
+                        checked={reportData.locatedInResidentialArea === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
                 <div>
                   <p className="font-medium mb-2">Is this land/property free of acquisition?</p>
                   <div className="flex space-x-4">
@@ -456,106 +577,721 @@ const VerificationHistory: React.FC = () => {
                     </label>
                   </div>
                 </div>
-              </div>
-              
-              <div>
-                <label htmlFor="comments" className="block mb-1 font-medium">Comments</label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Please make use of the template below as a guide <br></br>
-                    <a className="underline mt-2" href="https://docs.google.com/document/d/1e6_fZAlKc8bfPibMx2a-M9K3IXgpAc9rmx2koYroQuQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer"> Verification report template</a>
-                </p>
-                <textarea
-                  id="comments"
-                  name="comments"
-                  value={reportData.comments}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md h-28 mt-2"
-                  placeholder="Enter any additional comments or observations..."
-                  required
-                ></textarea>
-              </div>
-              
-              <div>
-                <label htmlFor="reportFiles" className="block mb-1 font-medium">Upload verification evidence</label>
-                <input
-                  type="file"
-                  id="reportFiles"
-                  multiple
-                  onChange={handleFileChange}
-                  className="w-full p-2 border rounded-md"
-                  required
-                />
-                <p className="text-xs text-gray-500 mt-1">Upload images or documents related to the verification</p>
-                
-                {reportData.reportFiles.length > 0 && (
-                  <div className="mt-3">
-                    <p className="font-medium text-sm mb-2">Selected Files:</p>
-                    <ul className="space-y-2">
-                      {reportData.reportFiles.map((file, index) => (
-                        <li key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
-                          <span className="text-sm truncate max-w-xs">{file.name}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveFile(index)}
-                            className="text-red-500 hover:text-red-700 text-sm"
-                          >
-                            Remove
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
+
+                <div>
+                  <p className="font-medium mb-2">Is the property located in a commercial zone?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="locatedInCommercialZone"
+                        value="yes"
+                        checked={reportData.locatedInCommercialZone === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="locatedInCommercialZone"
+                        value="no"
+                        checked={reportData.locatedInCommercialZone === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
                   </div>
-                )}
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Located in Mixed Residential/Commercial Area?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="locatedInMixedArea"
+                        value="yes"
+                        checked={reportData.locatedInMixedArea === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="locatedInMixedArea"
+                        value="no"
+                        checked={reportData.locatedInMixedArea === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Identified in Future Government Expansion Plans?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="identifiedInExpansionPlans"
+                        value="yes"
+                        checked={reportData.identifiedInExpansionPlans === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="identifiedInExpansionPlans"
+                        value="no"
+                        checked={reportData.identifiedInExpansionPlans === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Erosion-Prone or Flood-Risk Area?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="erosionOrFloodRisk"
+                        value="yes"
+                        checked={reportData.erosionOrFloodRisk === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="erosionOrFloodRisk"
+                        value="no"
+                        checked={reportData.erosionOrFloodRisk === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Close to Industrial Facilities or Waste Disposal Sites?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="closeToIndustrialOrWaste"
+                        value="yes"
+                        checked={reportData.closeToIndustrialOrWaste === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="closeToIndustrialOrWaste"
+                        value="no"
+                        checked={reportData.closeToIndustrialOrWaste === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Near or Under High-Voltage Transmission Lines?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="nearHighVoltageLines"
+                        value="yes"
+                        checked={reportData.nearHighVoltageLines === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="nearHighVoltageLines"
+                        value="no"
+                        checked={reportData.nearHighVoltageLines === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Near Likely Road Expansion or Realignment Zone?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="nearRoadExpansionZone"
+                        value="yes"
+                        checked={reportData.nearRoadExpansionZone === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="nearRoadExpansionZone"
+                        value="no"
+                        checked={reportData.nearRoadExpansionZone === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Accessible by Registered/Government Approved Road?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="accessibleByRegisteredRoad"
+                        value="yes"
+                        checked={reportData.accessibleByRegisteredRoad === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="accessibleByRegisteredRoad"
+                        value="no"
+                        checked={reportData.accessibleByRegisteredRoad === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Within Drainage or Wetlands?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="withinDrainageOrWetlands"
+                        value="yes"
+                        checked={reportData.withinDrainageOrWetlands === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="withinDrainageOrWetlands"
+                        value="no"
+                        checked={reportData.withinDrainageOrWetlands === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Legal Access or Right of Way Available?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="legalAccessRightOfWay"
+                        value="yes"
+                        checked={reportData.legalAccessRightOfWay === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="legalAccessRightOfWay"
+                        value="no"
+                        checked={reportData.legalAccessRightOfWay === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Soil Profile for Construction?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableSoilProfile"
+                        value="yes"
+                        checked={reportData.suitableSoilProfile === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableSoilProfile"
+                        value="no"
+                        checked={reportData.suitableSoilProfile === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Topography?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableTopography"
+                        value="yes"
+                        checked={reportData.suitableTopography === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableTopography"
+                        value="no"
+                        checked={reportData.suitableTopography === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Proximity to Utilities (Water, Power, Gas)?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToUtilities"
+                        value="yes"
+                        checked={reportData.suitableProximityToUtilities === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToUtilities"
+                        value="no"
+                        checked={reportData.suitableProximityToUtilities === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Proximity to Basic Services?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToServices"
+                        value="yes"
+                        checked={reportData.suitableProximityToServices === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToServices"
+                        value="no"
+                        checked={reportData.suitableProximityToServices === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Proximity to Transportation?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToTransport"
+                        value="yes"
+                        checked={reportData.suitableProximityToTransport === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToTransport"
+                        value="no"
+                        checked={reportData.suitableProximityToTransport === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Safe Distance from Environmental Hazards?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToHazards"
+                        value="yes"
+                        checked={reportData.suitableProximityToHazards === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToHazards"
+                        value="no"
+                        checked={reportData.suitableProximityToHazards === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Proximity to Market/Commercial Areas?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToMarket"
+                        value="yes"
+                        checked={reportData.suitableProximityToMarket === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToMarket"
+                        value="no"
+                        checked={reportData.suitableProximityToMarket === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Proximity to Educational Institutions?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToEducation"
+                        value="yes"
+                        checked={reportData.suitableProximityToEducation === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToEducation"
+                        value="no"
+                        checked={reportData.suitableProximityToEducation === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Proximity to Healthcare Facilities?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToHealthcare"
+                        value="yes"
+                        checked={reportData.suitableProximityToHealthcare === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToHealthcare"
+                        value="no"
+                        checked={reportData.suitableProximityToHealthcare === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-2">Suitable Proximity to Recreation Facilities?</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToRecreation"
+                        value="yes"
+                        checked={reportData.suitableProximityToRecreation === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="suitableProximityToRecreation"
+                        value="no"
+                        checked={reportData.suitableProximityToRecreation === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Additional Comments/Observations
+                  </label>
+                  <textarea
+                    name="comments"
+                    value={reportData.comments}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={4}
+                    placeholder="Provide any additional observations or comments about the verification..."
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Verification File (Required)
+                  </label>
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    required
+                    name="reportFiles"
+                    id="reportFiles"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    multiple
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  />
+                  {reportData.reportFiles.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-600 mb-2">Selected files:</p>
+                      <div className="space-y-1">
+                        {reportData.reportFiles.map((file, index) => (
+                          <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                            <span className="text-sm">{file.name}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveFile(index)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-              
-              <div className="flex justify-end pt-4">
+
+              <div className="flex justify-end space-x-2 mt-6">
                 <button
                   type="button"
                   onClick={closeReportModal}
-                  className="px-4 py-2 border border-gray-300 rounded-md mr-2 hover:bg-gray-100"
+                  className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50"
                   disabled={submitting}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:opacity-50"
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
                   disabled={submitting}
                 >
-                  {submitting ? 'Submitting...' : 'Submit Report'}
+                  Continue to Review
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-      
+
       {/* Submit Confirmation Modal */}
-      {showSubmitConfirmModal && selectedVerification && (
-        <div className="fixed inset-0 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h1 className="text-xl font-bold text-gray-900 mb-4">Submit Verification Report?</h1>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to submit this verification report? This action cannot be undone.
+      {showSubmitConfirmModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-transparent backdrop-blur-md z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+            <h2 className="text-xl font-bold mb-4">Confirm Report Submission</h2>
+            <p className="mb-4 text-gray-700">
+              Are you sure you want to submit this verification report? Once submitted, you will not be able to edit it.
             </p>
+            
+            <div className="mb-4 p-3 bg-blue-50 rounded border border-blue-200">
+              <p className="text-sm text-blue-800">
+                <strong>Property:</strong> {selectedVerification?.address}, {selectedVerification?.lga}, {selectedVerification?.state}
+              </p>
+              <p className="text-sm text-blue-800">
+                <strong>Verification ID:</strong> {selectedVerification?.id}
+              </p>
+            </div>
+
+            {error && (
+              <div className="mb-4 p-2 bg-red-100 text-red-700 rounded border border-red-300">
+                {error}
+              </div>
+            )}
+
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => {
-                  setShowSubmitConfirmModal(false); // Hide confirmation modal
-                  setIsReportModalOpen(true); // Show the report form modal again
+                  setShowSubmitConfirmModal(false);
+                  setIsReportModalOpen(true);
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={(e) => {
-                  submitReport(e as React.FormEvent);
-                }}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50"
                 disabled={submitting}
               >
-                {submitting ? 'Submitting...' : 'Yes, Submit'}
+                Back to Edit
+              </button>
+              <button
+                onClick={submitReport}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
+                disabled={submitting}
+              >
+                {submitting ? 'Submitting...' : 'Submit Report'}
               </button>
             </div>
           </div>
