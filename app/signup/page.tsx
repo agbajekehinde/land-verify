@@ -1,43 +1,18 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
-import { CheckCircle, X } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 export default function EmailVerification() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [verificationSent, setVerificationSent] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [showBanner, setShowBanner] = useState(true);
-  const [currentImage, setCurrentImage] = useState(0);
+  // const [showBanner, setShowBanner] = useState(true);
+  const [currentImage] = useState(0);
 
   // Image slider logic
   const images = ["/image 17.png", "/image 18.png", "/image 19.png"];
-
-  useEffect(() => {
-    // Check if it's mobile view based on window width
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 1024); // lg breakpoint in Tailwind
-    };
-
-    // Initial check on mount
-    checkIfMobile();
-
-    // Add event listener for window resize
-    window.addEventListener("resize", checkIfMobile);
-
-    // Set up slider interval
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 5000); // Change image every 5 seconds
-
-    // Clean up
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("resize", checkIfMobile);
-    };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,9 +41,9 @@ export default function EmailVerification() {
     }
   };
 
-  const closeBanner = () => {
-    setShowBanner(false);
-  };
+  // const closeBanner = () => {
+  //   setShowBanner(false);
+  // };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">

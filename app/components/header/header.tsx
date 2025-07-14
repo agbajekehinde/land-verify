@@ -2,17 +2,11 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { X } from "lucide-react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-  };
-  
-  const [showBanner, setShowBanner] = useState(true);
-  const closeBanner = () => {
-    setShowBanner(false);
   };
   
   return (
