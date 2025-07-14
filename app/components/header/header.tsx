@@ -17,7 +17,7 @@ export default function Header() {
   
   return (
     <header className="sticky top-0 bg-white shadow-sm z-50">
-      {showBanner && (
+      {/* {showBanner && (
         <div className="relative w-full bg-blue-100 text-blue-800 p-2 flex justify-between items-center px-8">
           <div className="">
             <h2 className="text-sm font-bold text-blue-900">
@@ -35,7 +35,7 @@ export default function Header() {
             <X size={16} />
           </button>
         </div>
-      )}
+      )} */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center">
           <Link href="/">

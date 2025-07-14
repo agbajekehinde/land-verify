@@ -77,7 +77,6 @@ export const generateVerificationPDF = async (
   doc.text(`Verification Date: ${formattedDate}`, 20, 69);
   doc.text(`Report ID: ${Math.random().toString(36).substring(2, 10).toUpperCase()}`, 20, 76);
   
-  // Add verification status - always "COMPLETED" since we only generate PDFs for approved reports
   doc.setFillColor(39, 174, 96);
   doc.setDrawColor(39, 174, 96);
 

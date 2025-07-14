@@ -71,7 +71,7 @@ export default function SignInPage() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
-      {/* Mobile Marketing Banner (Only shown on mobile) */}
+      {/* Mobile Marketing Banner (Only shown on mobile)
       {isMobile && showBanner && (
         <div className="relative w-full bg-blue-100 text-blue-800 p-2 flex justify-between items-center px-8">
           <div className="">
@@ -90,7 +90,7 @@ export default function SignInPage() {
             <X size={16} />
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Section 1: Login Form */}
       <div className="w-full lg:w-1/2 flex flex-col items-center p-4 sm:p-6 lg:p-8">
@@ -164,10 +164,8 @@ export default function SignInPage() {
           </form>
         </div>
       </div>
-
-      {/* Section 2: Marketing Content with Green Background (Hidden on mobile) */}
-      <div className="hidden lg:flex w-full lg:w-1/2 bg-gradient-to-br from-emerald-600 via-green-500 to-teal-600 text-white p-6 sm:p-8 lg:p-12 flex-col">
-
+{/* Section 2: Marketing Content with Image Slider */}
+      <div className="hidden lg:flex w-full lg:w-1/2 bg-gray-200 text-white p-6 sm:p-8 lg:p-12 flex-col">
         {/* Image Slider - Full width */}
         <div className="w-full h-72 relative overflow-hidden rounded-lg mb-8">
           {images.map((img, index) => (
@@ -187,50 +185,50 @@ export default function SignInPage() {
         </div>
 
         {/* Content */}
-        <div className="mt-4">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 drop-shadow-md">
+        <div className="mt-2 lg:mt-4">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-gray-600">
             Protect Your Property From Demolitions
           </h2>
           
-          <div className="bg-white/10 p-4 rounded-lg mb-8 backdrop-blur-sm">
-            <h5 className="text-sm sm:text-base font-medium mb-2 text-white">
+          {/* <div className="bg-white/10 p-4 rounded-lg mb-8 backdrop-blur-sm">
+            {/* <h5 className="text-sm sm:text-base font-medium mb-2 text-white">
               For less than <span className="text-yellow-300 font-bold text-lg">₦10,000</span>, get a comprehensive verification report on a land or property within <span className="text-yellow-300 font-bold">24 hours</span>
-            </h5>
-          </div>
+            </h5> */}
+     
           
           <ul className="space-y-5">
             <li className="flex items-start group transform hover:translate-x-1 transition-all duration-300">
               <div className="mr-3 mt-1 p-1 bg-white/20 rounded-full flex-shrink-0">
-                <CheckCircle className="text-yellow-300 group-hover:scale-110 transition-all" size={22} />
+                <CheckCircle className="text-gray-300 group-hover:scale-110 transition-all" size={22} />
               </div>
-              <span className="text-white/90 group-hover:text-white transition-all">
-                Check with updated public maps from land agencies — we interpret them to give you peace of mind.
+              <span className="text-gray-500 group-hover:text-gray transition-all">
+                Check with updated public maps from land agencies, we interpret them to give you peace of mind.
               </span>
             </li>
             
             <li className="flex items-start group transform hover:translate-x-1 transition-all duration-300">
               <div className="mr-3 mt-1 p-1 bg-white/20 rounded-full flex-shrink-0">
-                <CheckCircle className="text-yellow-300 group-hover:scale-110 transition-all" size={22} />
+                <CheckCircle className="text-gray-300 group-hover:scale-110 transition-all" size={22} />
               </div>
-              <span className="text-white/90 group-hover:text-white transition-all">
+              <span className="text-gray-500 group-hover:text-gray transition-all">
                 Provide a comprehensive report on land characteristics: streams, rivers, power lines or future public infrastructure zones.
               </span>
             </li>
             
             <li className="flex items-start group transform hover:translate-x-1 transition-all duration-300">
               <div className="mr-3 mt-1 p-1 bg-white/20 rounded-full flex-shrink-0">
-                <CheckCircle className="text-yellow-300 group-hover:scale-110 transition-all" size={22} />
+                <CheckCircle className="text-gray-300 group-hover:scale-110 transition-all" size={22} />
               </div>
-              <span className="text-white/90 group-hover:text-white transition-all">
+              <span className="text-gray-500 group-hover:text-gray transition-all">
                 Help you understand appropriate setbacks before you build to avoid costly mistakes.
               </span>
             </li>
             
             <li className="flex items-start group transform hover:translate-x-1 transition-all duration-300">
               <div className="mr-3 mt-1 p-1 bg-white/20 rounded-full flex-shrink-0">
-                <CheckCircle className="text-yellow-300 group-hover:scale-110 transition-all" size={22} />
+                <CheckCircle className="text-gray-300 group-hover:scale-110 transition-all" size={22} />
               </div>
-              <span className="text-white/90 group-hover:text-white transition-all">
+              <span className="text-gray-500 group-hover:text-gray transition-all">
                 Deploy artificial intelligence on seller documents to verify authenticity and ensure everything matches.
               </span>
             </li>
