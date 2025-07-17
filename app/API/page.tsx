@@ -378,6 +378,17 @@ function useFindingsPolling(
             </p>
           </div>
         </section>
+
+               {/* API Key Notice Section */}
+        <section className="mb-12">
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+            <p className="text-yellow-800 text-base">
+              <strong>Need an API Key?</strong> You will need both a <span className="font-semibold">test</span> and <span className="font-semibold">live</span> API key to use the LandVerify API.<br />
+              Please reach out to <a href="mailto:support@landverify.ng" className="underline text-yellow-900">support@landverify.ng </a> or <a> +234 902 962 8530 </a> to request your keys.
+            </p>
+          </div>
+        </section>
+
       </main>
       <Footer />
     </div>
