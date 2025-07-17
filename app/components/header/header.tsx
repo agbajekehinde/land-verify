@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import  { Code } from 'lucide-react';
+
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,6 +49,10 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-4">
           <Link href="/about-us" className="text-gray-800 hover:text-green-500 mx-2">About Us</Link>
           <Link href="/contact-us" className="text-gray-800 hover:text-green-500 mx-2">Contact</Link>
+          <Link href="/API" className="text-gray-800 hover:text-green-500 mx-2 flex items-center gap-1">
+            <Code size={18} />
+            API Docs
+          </Link>
           <Link href="/signin" className="text-gray-800 hover:text-green-500 mx-2">Login</Link>
         </nav>
         
@@ -81,7 +87,17 @@ export default function Header() {
           >
             Contact
           </Link>
+
           <Link
+            href="/API"
+            className="text-gray-800 hover:text-green-500 py-3 px-4 flex items-center gap-1"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <Code size={18} />
+            API Docs    
+          </Link>
+
+                    <Link
             href="/signin"
             className="text-gray-800 hover:text-green-500 py-3 px-4"
             onClick={() => setIsMenuOpen(false)}
