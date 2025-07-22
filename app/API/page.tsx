@@ -288,8 +288,16 @@ function useFindingsPolling(
 
           <h3 className={styles.subTitle}>Success Response (200)</h3>
           <CodeBlock code={`{
-  "findings": null, // or findings object when available
-  "status": "SUBMITTED",
+  "findings": {
+    "comments": "This property at 123 Main Street has been verified, you will have 480 characters here detailing the property findings and expert recommendations.",
+    "isPropertyFreeOfAcquisition": false,
+    "DoesAddressMatchSurvey": false,
+    "erosionOrFloodRisk": false,
+    "locatedInMixedArea": true,
+    "suitableTopography": true,
+    // ...15+ other factors.
+  },
+  "status": "COMPLETED",
   "updatedAt": "2025-06-26T12:00:00.000Z"
 }`} />
 
@@ -384,7 +392,7 @@ function useFindingsPolling(
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
             <p className="text-yellow-800 text-base">
               <strong>Need an API Key?</strong> You will need both a <span className="font-semibold">test</span> and <span className="font-semibold">live</span> API key to use the LandVerify API.<br />
-              Please reach out to <a href="mailto:support@landverify.ng" className="underline text-yellow-900">support@landverify.ng </a> or <a> +234 902 962 8530 </a> to request your keys.
+              Please reach out to <a href="mailto:support@landverify.ng" className="underline text-yellow-900">support@landverify.ng </a> or <a> +234 902 962 8530 </a> to request keys.
             </p>
           </div>
         </section>
