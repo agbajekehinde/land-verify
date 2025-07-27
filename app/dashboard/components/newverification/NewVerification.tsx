@@ -456,7 +456,7 @@ const submitVerification = async () => {
                                 Experts review, provide advice and check it is free from government zones and risks using our 20+ point checklist.
                               </span>
                               <span className="block mt-1 text-green-700 font-medium">
-                                Best for early-stage buyers or low-risk property
+                                Best for ckecking the land/property is free from government zones and risks.
                               </span>
                             </>
                           ) : (
@@ -465,7 +465,7 @@ const submitVerification = async () => {
                                 Everything in Basic + certified experts search official state records to verify the authenticity of the land title documents.
                               </span>
                               <span className="block mt-1 text-green-700 font-medium">
-                                Best for verifying the land/property belongs to the seller.
+                                Best for verifying registered land title is genuine and match official state records
                               </span>
                             </>
                           )}
@@ -658,7 +658,7 @@ const submitVerification = async () => {
                   <ul className="mb-3 text-xs sm:text-sm text-gray-600 pl-5 list-disc">
                     <li>
                       {selectedPaymentPlan?.type === "Full Verification" ? (
-                        "Please upload any of the following registered title - C of O, Governor Consent, Deed of assignment, Land Conveyance or Registered Survey"
+                        "Please upload any of the following registered title - C of O, Governor Consent, Deed of assignment, Land Conveyance, Registered Survey etc."
                       ) : (
                         "Please upload any relevant documents, such as Survey Plan Document"
                       )}
