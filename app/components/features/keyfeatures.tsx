@@ -22,7 +22,7 @@ export default function KeyFeatures() {
           <div className="flex flex-1 flex-col items-center text-center p-6 bg-white rounded-lg shadow-md h-64">
             <ClockIcon className="w-12 h-12 text-[#479101]" />
             <h3 className="mt-4 text-xl font-semibold text-gray-800">Fast & Reliable</h3>
-            <p className="mt-2 text-gray-600">Get results between 5-7 working days or as quick as 24 hours.</p>
+            <p className="mt-2 text-gray-600">Get results within 24 hours or 3 working days for full verificatoin.</p>
           </div>
         </div>
       </div>

@@ -290,6 +290,7 @@ function useFindingsPolling(
           <CodeBlock code={`{
   "findings": {
     "comments": "This property at 123 Main Street has been verified, you will have 480 characters here detailing the property findings and expert recommendations.",
+    "isRegisteredTitledVerified": true,
     "isPropertyFreeOfAcquisition": false,
     "DoesAddressMatchSurvey": false,
     "erosionOrFloodRisk": false,

@@ -18,6 +18,7 @@ interface VerificationRequest {
 }
 
 interface ReportFormData {
+  isRegisteredTitledVerified: string;
   DoesAddressMatchSurvey: string;
   isPropertyFreeOfAcquisition: string;
   locatedInResidentialArea: string;
@@ -55,6 +56,7 @@ const VerificationHistory: React.FC = () => {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [showSubmitConfirmModal, setShowSubmitConfirmModal] = useState(false);
   const [reportData, setReportData] = useState<ReportFormData>({
+    isRegisteredTitledVerified: "",
     DoesAddressMatchSurvey: "",
     isPropertyFreeOfAcquisition: "",
     locatedInResidentialArea: "",
@@ -165,6 +167,7 @@ const VerificationHistory: React.FC = () => {
       setSelectedVerification(null);
     }
     setReportData({
+      isRegisteredTitledVerified: "",
       DoesAddressMatchSurvey: "",
       isPropertyFreeOfAcquisition: "",
       locatedInResidentialArea: "",
@@ -260,6 +263,7 @@ const VerificationHistory: React.FC = () => {
         partnerId: Number(partnerId),
         reportFiles: uploadedFileUrls,
         findings: {
+          isRegisteredTitledVerified: reportData.isRegisteredTitledVerified,
           DoesAddressMatchSurvey: reportData.DoesAddressMatchSurvey === "yes",
           isPropertyFreeOfAcquisition: reportData.isPropertyFreeOfAcquisition === "yes",
           locatedInResidentialArea: reportData.locatedInResidentialArea === "yes",
@@ -517,16 +521,17 @@ const VerificationHistory: React.FC = () => {
                     </label>
                   </div>
                 </div>
+              </div>
 
                 <div>
-                  <p className="font-medium mb-2">Is the property located in a residential area?</p>
+                  <p className="font-medium mb-2">Is the property accessible by a registered road?</p>
                   <div className="flex space-x-4">
                     <label className="flex items-center">
                       <input
                         type="radio"
-                        name="locatedInResidentialArea"
+                        name="accessibleByRegisteredRoad"
                         value="yes"
-                        checked={reportData.locatedInResidentialArea === "yes"}
+                        checked={reportData.accessibleByRegisteredRoad === "yes"}
                         onChange={handleInputChange}
                         className="mr-2"
                         required
@@ -536,9 +541,39 @@ const VerificationHistory: React.FC = () => {
                     <label className="flex items-center">
                       <input
                         type="radio"
-                        name="locatedInResidentialArea"
+                        name="accessibleByRegisteredRoad"
                         value="no"
-                        checked={reportData.locatedInResidentialArea === "no"}
+                        checked={reportData.accessibleByRegisteredRoad === "no"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      No
+                    </label>
+                  </div>
+
+                <div>
+                  <p className="font-medium mb-2">Is the registered land title verified?</p>
+                  <p className="font-sm mb-2">For Full Verification Only - Default to No for basic verification</p>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="isRegisteredTitledVerified"
+                        value="yes"
+                        checked={reportData.isRegisteredTitledVerified === "yes"}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                        required
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="isRegisteredTitledVerified"
+                        value="no"
+                        checked={reportData.isRegisteredTitledVerified === "no"}
                         onChange={handleInputChange}
                         className="mr-2"
                         required
