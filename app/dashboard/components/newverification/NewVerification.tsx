@@ -35,17 +35,27 @@ interface FormErrors {
   lga?: string;
   state?: string;
   landsize?: string;
+  files?: string;
 }
 
 interface PaymentPlan {
-  type: "regular" | "priority";
+  type: "Basic Verification" | "Full Verification";
   amount: number;
   label: string;
 }
+interface ReviewData {
+  paymentPlan: PaymentPlan;
+  verificationDetails: VerificationFormState;
+  contactDetails: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+}
 
 const BASE_PAYMENT_PLANS: PaymentPlan[] = [
-  { type: "regular", amount: 1000000, label: "Regular Service (₦10,000)" },
-  { type: "priority", amount: 1500000, label: "Priority Service (₦15,000)" }
+  { type: "Basic Verification", amount: 1000000, label: "Basic Verification (₦10,000)" },
+  { type: "Full Verification", amount: 1500000, label: "Full Verification (₦15,000)" }
 ];
 
 // LGA pricing multipliers for custom logic
@@ -136,7 +146,6 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
 
   const [step, setStep] = useState<number>(1);
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState<PaymentPlan | null>(null);
-  const [paymentComplete, setPaymentComplete] = useState<boolean>(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -152,6 +161,7 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     files: [],
   });
   const [loading, setLoading] = useState(false);
+  const [reviewData, setReviewData] = useState<ReviewData | null>(null);
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || ""; 
 
   // Update payment plans when landsize, state, or lga changes
@@ -195,18 +205,24 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
     const adjustedPlans = BASE_PAYMENT_PLANS.map(plan => ({
       ...plan,
       amount: plan.amount * effectiveMultiplier,
-      label: `${plan.type === "regular" ? "Regular" : "Priority"} Service (₦${(plan.amount * effectiveMultiplier / 100000).toFixed(0)},000)`
+      label: `${plan.type === "Basic Verification" ? "Basic Verification" : "Full Verification"} Service (₦${(plan.amount * effectiveMultiplier / 100000).toFixed(0)},000)`
     }));
     
     setPaymentPlans(adjustedPlans);
     setSelectedPaymentPlan(null);
   }, [form.landsize, form.state, form.lga]);
 
+  useEffect(() => {
+    if (session?.user) {
+      if (session.user.name) setName(session.user.name);
+      if (session.user.email) setEmail(session.user.email);
+    }
+  }, [session]);
+
   const closeModal = () => {
     setIsOpen(false);
     setStep(1);
     setSelectedPaymentPlan(null);
-    setPaymentComplete(false);
     setErrors({});
   };
 
@@ -273,35 +289,38 @@ export default function NewVerification({ isOpen, setIsOpen }: NewVerificationPr
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
+    
     if (!form.address.trim()) {
       newErrors.address = "This field is required";
     }
-    if (!form.state) {  // Change this line to validate state explicitly
+    if (!form.state) {
       newErrors.state = "This field is required";
     }
     if (!form.lga.trim()) {
       newErrors.lga = "This field is required";
     }
+
+    // Add file validation for Full Verification
+    if (selectedPaymentPlan?.type === "Full Verification" && form.files.length === 0) {
+      newErrors.files = "Please upload one or more documents";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNextStep = () => {
-    if (!validateForm()) {
-      return;
-    }
-    if (session?.user) {
-      if (session.user.email) setEmail(session.user.email);
-      if (session.user.name) setName(session.user.name);
-    }
-    setStep(2);
-  };
-
   const handleSelectPaymentPlan = (plan: PaymentPlan) => {
     setSelectedPaymentPlan(plan);
+    setReviewData({
+      paymentPlan: plan,
+      verificationDetails: form,
+      contactDetails: {
+        name,
+        email,
+        phone
+      }
+    });
   };
-
- // Replace the submitVerification function in your client component with this:
 
 const submitVerification = async () => {
   if (!session?.user?.id) {
@@ -318,7 +337,7 @@ const submitVerification = async () => {
     formData.append("landsize", form.landsize);
     formData.append("paymentStatus", "success"); 
     formData.append("paymentAmount", selectedPaymentPlan?.amount.toString() || "0");
-    formData.append("paymentType", selectedPaymentPlan?.type || "regular");
+    formData.append("paymentType", selectedPaymentPlan?.type || "Basic Verification");
 
     if (form.latitude.trim() !== "") 
       formData.append("latitude", form.latitude);
@@ -351,7 +370,7 @@ const submitVerification = async () => {
             recipientName: name,
             verificationId: data.verificationId, // ✅ FIXED: Use data.verificationId instead of data.verification.id
             address: form.address,
-            paymentType: selectedPaymentPlan?.type || "regular"
+            paymentType: selectedPaymentPlan?.type || "Basic Verification"
           }),
         });
         
@@ -402,7 +421,6 @@ const submitVerification = async () => {
 
   const handlePaymentSuccess = (): void => { 
     toast.success("Payment successful!");
-    setPaymentComplete(true);
     submitVerification();
   };
 
@@ -410,248 +428,13 @@ const submitVerification = async () => {
     toast.error("Payment window closed");
   };
 
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-transparent backdrop-blur-md z-50">
-      <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">
-            {step === 1 ? "New Verification Request" : "Payment Options"}
-          </h2>
-          <button 
-            onClick={closeModal} 
-            className="text-gray-600 hover:text-red-500"
-            type="button"
-          >
-            <IoMdClose size={24} />
-          </button>
-        </div>
-
-        {step === 1 && (
-          <form className="space-y-4">
-            <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                Address <span className="text-gray-500 text-xs">Required</span>
-              </label>
-              <input
-                id="address"
-                type="text"
-                name="address"
-                required
-                value={form.address}
-                onChange={handleChange}
-                className={`w-full p-2 border rounded focus:border-gray-500 ${errors.address ? 'border-red-500' : ''}`}
-              />
-              {errors.address && (
-                <p className="text-red-500 text-xs mt-1">{errors.address}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="relative">
-                <label htmlFor="state" className="block text-sm font-medium text-gray-700">
-                  State <span className="text-gray-500 text-xs">Required</span>
-                </label>
-                <div className="relative">
-                  <select
-                    id="state"
-                    name="state"
-                    required
-                    value={form.state}
-                    onChange={handleChange}
-                    className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.state ? 'border-red-500' : ''}`}
-                  >
-                    <option value="Lagos">Lagos</option>
-                    <option value="Ogun">Ogun</option>
-                    <option value="Oyo">Oyo</option>
-                    <option value="FCT">FCT</option>
-
-                  </select>
-                  <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
-                </div>
-                {errors.state && (
-                  <p className="text-red-500 text-xs mt-1">{errors.state}</p>
-                )}
-              </div>
-
-              <div className="relative">
-                <label htmlFor="lga" className="block text-sm font-medium text-gray-700">
-                  LGA <span className="text-gray-500 text-xs">Required</span>
-                </label>
-                {["Lagos", "Ogun", "Oyo", "FCT"].includes(form.state) ? (
-                  <div className="relative">
-                    <select
-                      id="lga"
-                      name="lga"
-                      required
-                      value={form.lga}
-                      onChange={handleChange}
-                      className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.lga ? 'border-red-500' : ''}`}
-                    >
-                      <option value="" className="text-gray-400">Select an LGA</option>
-                      {form.state === "Lagos" && lagosLgas.map(lga => (
-                        <option key={lga} value={lga}>{lga}</option>
-                      ))}
-                      {form.state === "Ogun" && ogunLgas.map(lga => (
-                        <option key={lga} value={lga}>{lga}</option>
-                      ))}
-                      {form.state === "Oyo" && oyoLgas.map(lga => (
-                        <option key={lga} value={lga}>{lga}</option>
-                      ))}
-                      {form.state === "FCT" && fctLgas.map(lga => (
-                        <option key={lga} value={lga}>{lga}</option>
-                      ))}
-                    </select>
-                    <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
-                  </div>
-                ) : (
-                  <select
-                    id="lga"
-                    name="lga"
-                    disabled
-                    className="w-full p-2 border rounded bg-gray-100 text-gray-500"
-                  >
-                    <option>Select state first</option>
-                  </select>
-                )}
-                {errors.lga && (
-                  <p className="text-red-500 text-xs mt-1">{errors.lga}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="relative">
-              <label htmlFor="landsize" className="block text-sm font-medium text-gray-700">
-                Land Size
-              </label>
-              <div className="relative">
-                <select
-                  id="landsize"
-                  name="landsize"
-                  value={form.landsize}
-                  onChange={handleChange}
-                  className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.landsize ? 'border-red-500' : ''}`}
-                >
-                  <option value="">Select Land Size</option>
-                  <option value="Zero to 2">Zero to 2plots</option>
-                  <option value="3 to 5">3 plots to 5 plots</option>
-                  <option value="6 to 10">6 to 10</option>
-                  <option value="others">Others</option>
-                </select>
-                <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
-              </div>
-              {errors.landsize && (
-                <p className="text-red-500 text-xs mt-1">{errors.landsize}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">Easting</label>
-                <input
-                  id="latitude"
-                  type="text"
-                  name="latitude"
-                  value={form.latitude}
-                  onChange={handleChange}
-                  placeholder="e.g., 224403.212"
-                  className="w-full p-2 border rounded focus:border-gray-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">Northing</label>
-                <input
-                  id="longitude"
-                  type="text"
-                  name="longitude"
-                  value={form.longitude}
-                  onChange={handleChange}
-                  placeholder="e.g., 130500.059"
-                  className="w-full p-2 border rounded focus:border-gray-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload Files <span className="text-gray-500 text-xs">Recommended</span>
-              </label>
-              <div className="bg-gray-50 p-3 rounded border border-dashed border-gray-300">
-                <ul className="mb-3 text-xs text-gray-600 pl-5 list-disc">
-                  <li>Please upload any relevant documents, such as Survey Plan Document</li>
-                </ul>
-                <div className="flex flex-col items-center justify-center">
-                  <input
-                    ref={fileInputRef}
-                    id="files"
-                    type="file"
-                    name="files"
-                    multiple
-                    onChange={handleFileChange}
-                    className="hidden"
-                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                  />
-                  <button
-                    type="button"
-                    onClick={triggerFileInput}
-                    className="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none flex items-center"
-                  >
-                    <FaUpload className="mr-2" /> Choose Files
-                  </button>
-                  <p className="text-xs text-gray-500 mt-2">
-                    {form.files.length === 0 ? "No files selected" : `${form.files.length} file(s) selected`}
-                  </p>
-                </div>
-                {form.files.length > 0 && (
-                  <div className="mt-3">
-                    <p className="text-sm font-medium text-gray-700 mb-1">Selected files:</p>
-                    <ul className="space-y-1 max-h-32 overflow-y-auto pl-2">
-                      {form.files.map((file, index) => (
-                        <li key={index} className="flex items-center justify-between text-sm bg-white p-1 rounded">
-                          <span className="flex items-center">
-                            <span className="mr-2">{getFileIcon(file.name)}</span>
-                            <span className="truncate max-w-xs">{file.name}</span>
-                          </span>
-                          <button 
-                            type="button" 
-                            onClick={() => removeFile(index)}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            <IoMdClose />
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-3 mt-6">
-              <button
-                type="button"
-                onClick={closeModal}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleNextStep}
-                className="px-4 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 flex items-center justify-center"
-              >
-                Next
-              </button>
-            </div>
-          </form>
-        )}
-
-        {step === 2 && (
+  const renderStepContent = () => {
+    switch (step) {
+      case 1:
+        return (
           <div className="space-y-6">
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">Please select a service option:</p>
+              <p className="text-sm text-gray-600">Please select a service option - reports within 24hrs:</p>
               <div className="grid grid-cols-1 gap-4">
                 {paymentPlans.map((plan) => (
                   <div 
@@ -667,12 +450,28 @@ const submitVerification = async () => {
                       <div>
                         <h3 className="font-medium text-lg">{plan.label}</h3>
                         <p className="text-sm text-gray-500">
-                          {plan.type === "regular" 
-                            ? "Standard processing time: within 3 days" 
-                            : "Expedited processing: 24 hours"}
+                          {plan.type === "Basic Verification" ? (
+                            <>
+                              <span className="block mt-1 text-gray-500">
+                                Experts review, provide advice and check it is free from government zones and risks using our 20+ point checklist.
+                              </span>
+                              <span className="block mt-1 text-green-700 font-medium">
+                                Best for early-stage buyers or low-risk property
+                              </span>
+                            </>
+                          ) : (
+                               <>
+                              <span className="block mt-1 text-gray-500">
+                                Everything in Basic + certified experts search official state records to verify the authenticity of the land title documents.
+                              </span>
+                              <span className="block mt-1 text-green-700 font-medium">
+                                Best for verifying the land/property belongs to the seller.
+                              </span>
+                            </>
+                          )}
                         </p>
                       </div>
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      <div className={`min-w-[24px] min-h-[24px] w-6 h-6 shrink-0 rounded-full border-2 flex items-center justify-center ${
                         selectedPaymentPlan?.type === plan.type 
                           ? "border-green-500 bg-green-500" 
                           : "border-gray-300"
@@ -686,110 +485,409 @@ const submitVerification = async () => {
                 ))}
               </div>
             </div>
+            <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-3 sm:gap-4">
+              <button
+                type="button"
+                onClick={closeModal}
+                className="w-full sm:w-[140px] px-4 py-3 text-base text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep(2)}
+                disabled={!selectedPaymentPlan}
+                className={`w-full sm:w-[140px] px-4 py-3 text-base font-semibold rounded-md ${
+                  selectedPaymentPlan 
+                    ? 'bg-green-600 hover:bg-green-700 text-white' 
+                    : 'bg-gray-300 text-gray-500'
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        );
 
-            {selectedPaymentPlan && !paymentComplete && !loading && (
+      case 2:
+        return (
+          <div className="space-y-6">
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                  Address <span className="text-gray-500 text-xs">Required</span>
+                </label>
+                <input
+                  id="address"
+                  type="text"
+                  name="address"
+                  required
+                  value={form.address}
+                  onChange={handleChange}
+                  className={`w-full p-2 border rounded focus:border-gray-500 ${errors.address ? 'border-red-500' : ''}`}
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="relative">
+                  <label htmlFor="state" className="block text-sm font-medium text-gray-700">
+                    State <span className="text-gray-500 text-xs">Required</span>
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="state"
+                      name="state"
+                      required
+                      value={form.state}
+                      onChange={handleChange}
+                      className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.state ? 'border-red-500' : ''}`}
+                    >
+                      <option value="Lagos">Lagos</option>
+                      <option value="Ogun">Ogun</option>
+                      <option value="Oyo">Oyo</option>
+                      <option value="FCT">FCT</option>
+                    </select>
+                    <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+                  </div>
+                  {errors.state && (
+                    <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <label htmlFor="lga" className="block text-sm font-medium text-gray-700">
+                    LGA <span className="text-gray-500 text-xs">Required</span>
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="lga"
+                      name="lga"
+                      required
+                      value={form.lga}
+                      onChange={handleChange}
+                      className={`w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10 ${errors.lga ? 'border-red-500' : ''}`}
+                    >
+                      <option value="">Select an LGA</option>
+                      {form.state === "Lagos" && lagosLgas.map(lga => (
+                        <option key={lga} value={lga}>{lga}</option>
+                      ))}
+                      {form.state === "Ogun" && ogunLgas.map(lga => (
+                        <option key={lga} value={lga}>{lga}</option>
+                      ))}
+                      {form.state === "Oyo" && oyoLgas.map(lga => (
+                        <option key={lga} value={lga}>{lga}</option>
+                      ))}
+                      {form.state === "FCT" && fctLgas.map(lga => (
+                        <option key={lga} value={lga}>{lga}</option>
+                      ))}
+                    </select>
+                    <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+                  </div>
+                  {errors.lga && (
+                    <p className="text-red-500 text-xs mt-1">{errors.lga}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="relative">
+                <label htmlFor="landsize" className="block text-sm font-medium text-gray-700">
+                  Land Size
+                </label>
+                <div className="relative">
+                  <select
+                    id="landsize"
+                    name="landsize"
+                    value={form.landsize}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-white text-gray-700 focus:border-gray-500 appearance-none pr-10"
+                  >
+                    <option value="">Select Land Size</option>
+                    <option value="Zero to 2">Zero to 2plots</option>
+                    <option value="3 to 5">3 plots to 5 plots</option>
+                    <option value="6 to 10">6 to 10</option>
+                    <option value="others">Others</option>
+                  </select>
+                  <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 pointer-events-none" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">Easting</label>
+                  <input
+                    id="latitude"
+                    type="text"
+                    name="latitude"
+                    value={form.latitude}
+                    onChange={handleChange}
+                    placeholder="e.g., 224403.212"
+                    className="w-full p-2 border rounded focus:border-gray-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="longitude" className="block text-sm font-medium text-gray-700">Northing</label>
+                  <input
+                    id="longitude"
+                    type="text"
+                    name="longitude"
+                    value={form.longitude}
+                    onChange={handleChange}
+                    placeholder="e.g., 130500.059"
+                    className="w-full p-2 border rounded focus:border-gray-500"
+                  />
+                </div>
+              </div>
+
+              {/* File upload section */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Upload Files 
+                  {selectedPaymentPlan?.type === "Full Verification" ? (
+                    <span className="text-gray-500 text-xs">   Required</span>
+                  ) : (
+                    <span className="text-gray-500 text-xs">  Recommended</span>
+                  )}
+                </label>
+                <div className={`bg-gray-50 p-3 sm:p-4 rounded-lg border border-dashed ${
+                  errors.files ? 'border-red-500' : 'border-gray-300'
+                }`}>
+                  <ul className="mb-3 text-xs sm:text-sm text-gray-600 pl-5 list-disc">
+                    <li>
+                      {selectedPaymentPlan?.type === "Full Verification" ? (
+                        "Please upload any of the following registered title - C of O, Governor Consent, Deed of assignment, Land Conveyance or Registered Survey"
+                      ) : (
+                        "Please upload any relevant documents, such as Survey Plan Document"
+                      )}
+                    </li>
+                  </ul>
+                  <div className="flex flex-col items-center justify-center py-3 sm:py-4">
+                    <input
+                      ref={fileInputRef}
+                      id="files"
+                      type="file"
+                      name="files"
+                      multiple
+                      onChange={handleFileChange}
+                      className="hidden"
+                      accept=".pdf,.jpg,.jpeg,.png,.gif"
+                    />
+                    <button
+                      type="button"
+                      onClick={triggerFileInput}
+                      className={`py-2.5 px-4 border rounded-md text-sm font-medium focus:outline-none flex items-center shadow-sm ${
+                        errors.files 
+                          ? 'border-red-500 text-red-700 hover:bg-red-50' 
+                          : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <FaUpload className="mr-2" /> Choose Files
+                    </button>
+                    <p className="text-xs text-gray-500 mt-2">
+                      {form.files.length === 0 ? "No files selected" : `${form.files.length} file(s) selected`}
+                    </p>
+                    {errors.files && (
+                      <p className="text-red-500 text-xs mt-2">{errors.files}</p>
+                    )}
+                  </div>
+                  {form.files.length > 0 && (
+                    <div className="mt-4 border-t pt-4">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Selected files:</p>
+                      <ul className="space-y-2 max-h-40 overflow-y-auto">
+                        {form.files.map((file, index) => (
+                          <li key={index} className="flex items-center justify-between bg-white p-2 rounded-md shadow-sm">
+                            <span className="flex items-center space-x-2">
+                              {getFileIcon(file.name)}
+                              <span className="text-sm text-gray-600 truncate max-w-[200px]">
+                                {file.name}
+                              </span>
+                            </span>
+                            <button 
+                              type="button" 
+                              onClick={() => removeFile(index)}
+                              className="text-red-500 hover:text-red-700 p-1"
+                            >
+                              <IoMdClose size={18} />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </form>
+
+            <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-3 sm:gap-4 mt-6">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="w-full sm:w-[140px] px-4 py-3 text-base text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (validateForm()) {
+                    setStep(3);
+                  }
+                }}
+                className="w-full sm:w-[140px] px-4 py-3 text-base font-semibold bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        );
+
+      case 3: // Review & Payment
+        return (
+          <div className="space-y-6">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="font-medium text-lg sm:text-xl mb-4">Review Details</h3>
+              
               <div className="space-y-4">
-                <p className="text-sm text-gray-600">Please provide your payment details:</p>
-                <div className="space-y-3">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    />
+                <div>
+                  <h4 className="text-base sm:text-lg font-medium text-gray-700">Selected Plan</h4>
+                  <p className="text-sm sm:text-base text-gray-600">
+                    {reviewData?.paymentPlan.label || selectedPaymentPlan?.label}
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-base sm:text-lg font-medium text-gray-700">Verification Details</h4>
+                   <p className="text-sm text-gray-600">Verification report delivered within 24 to 48hours</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm sm:text-base">
+                    <p className="text-gray-600">Address: {form.address}</p>
+                    <p className="text-gray-600">State: {form.state}</p>
+                    <p className="text-gray-600">LGA: {form.lga}</p>
+                    <p className="text-gray-600">Land Size: {form.landsize}</p>
                   </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    />
+                </div>
+
+                <div className="space-y-4">
+                  <p className="text-base sm:text-lg text-gray-700 font-medium">Payment Details</p>
+                  <div className="space-y-3">
+                    <div>
+                      <label htmlFor="name" className="block text-sm sm:text-base font-medium text-gray-700">Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full p-3 text-base border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm sm:text-base font-medium text-gray-700">Email</label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full p-3 text-base border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="phone" className="block text-sm sm:text-base font-medium text-gray-700">
+                        Phone (Optional)
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full p-3 text-base border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
 
             {loading && (
               <div className="flex flex-col items-center justify-center py-4">
                 <FaSpinner className="animate-spin text-green-600 text-2xl mb-2" />
-                <p className="text-gray-600">Processing your verification request...</p>
+                <p className="text-gray-600">Processing your verification request, dont close window...</p>
               </div>
             )}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+
+            <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-3 sm:gap-4">
               <button
                 type="button"
-                onClick={() => setStep(1)}
-                className="w-full sm:w-auto px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+                onClick={() => setStep(2)}
+                className="w-full sm:w-[140px] px-4 py-3 text-base text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
                 disabled={loading}
               >
                 Back
               </button>
-              
-              {selectedPaymentPlan && !paymentComplete && !loading ? (
-                <div className="w-full sm:max-w-xs">
-                  {(name && email) ? (
-                    <PaystackButton
-                      text="Make Payment & Submit"
-                      className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center"
-                      email={email}
-                      amount={selectedPaymentPlan.amount}
-                      publicKey={publicKey}
-                      metadata={{
-                        custom_fields: [
-                          {
-                            display_name: "Name",
-                            variable_name: "name",
-                            value: name,
-                          },
-                          {
-                            display_name: "Phone",
-                            variable_name: "phone",
-                            value: phone,
-                          },
-                        ],
-                      }}
-                      onSuccess={handlePaymentSuccess}
-                      onClose={handlePaymentClose}
-                    />
-                  ) : (
-                    <button 
-                      disabled 
-                      className="w-full py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
-                    >
-                      Fill required fields
-                    </button>
-                  )}
-                </div>
-              ) : !loading && (
+              {loading ? (
                 <button 
                   disabled 
-                  className="w-full sm:w-auto px-6 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
+                  className="w-full sm:w-auto min-w-[140px] px-6 py-3 text-base bg-gray-400 text-white font-semibold rounded-md flex items-center justify-center"
                 >
-                  {paymentComplete ? "Processing..." : "Select payment option"}
+                  <FaSpinner className="animate-spin mr-2" /> Processing...
                 </button>
+              ) : (
+                <PaystackButton
+                  text="Make Payment & Submit"
+                  className="w-full sm:w-auto min-w-[140px] px-6 py-3 text-base bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 flex items-center justify-center"
+                  email={email}
+                  amount={selectedPaymentPlan?.amount || reviewData?.paymentPlan.amount || 0}
+                  publicKey={publicKey}
+                  reference={new Date().getTime().toString()}
+                  metadata={{
+                    custom_fields: [
+                      {
+                        display_name: "Name",
+                        variable_name: "name",
+                        value: name,
+                      },
+                      {
+                        display_name: "Phone",
+                        variable_name: "phone",
+                        value: phone || "",
+                      },
+                    ],
+                  }}
+                  onSuccess={handlePaymentSuccess}
+                  onClose={handlePaymentClose}
+                  {...(name && email ? {} : { disabled: true })}
+                />
               )}
             </div>
           </div>
-        )}
+        );
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-transparent backdrop-blur-md z-50 p-4">
+      <div className="bg-white w-full max-w-lg p-4 sm:p-6 rounded-lg shadow-lg overflow-y-auto max-h-[90vh]">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">
+            {step === 1 && "Select Verification Type"}
+            {step === 2 && "Verification Details"}
+            {step === 3 && "Review & Payment"}
+          </h2>
+          <button 
+            onClick={closeModal} 
+            className="text-gray-600 hover:text-red-500"
+            type="button"
+          >
+            <IoMdClose size={24} />
+          </button>
+        </div>
+
+        {renderStepContent()}
         <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
       </div>
     </div>

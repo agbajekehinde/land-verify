@@ -35,11 +35,6 @@ export default async function handler(
 
   const resend = new Resend(process.env.RESEND_API_KEY);
 
-  // Service type details
-  const serviceDetails = paymentType === 'priority'
-    ? 'Priority Service (48 hours)'
-    : 'Regular Service (5-7 working days)';
-
   try {
     console.log('Attempting to send email to:', recipientEmail);
     console.log('Verification ID:', verificationId);
@@ -58,7 +53,8 @@ export default async function handler(
           <h3 style="margin-top: 0; color: #333;">Request Details:</h3>
           <p><strong>Verification ID:</strong> ${verificationId}</p>
           <p><strong>Property Address:</strong> ${address || 'Not specified'}</p>
-          <p><strong>Service Type:</strong> ${serviceDetails}</p>
+          <p><strong>Verification Type:</strong> ${paymentType}</p>
+          <p><strong>Estimated Report Time:</strong> Within 24 to 48 hours</p>
           </div>
           <p>Our team will begin processing your verification request shortly. You can track the status of your request by logging into your account.</p>
           <p>If you have any questions or need further assistance, please contact our support team.</p>
