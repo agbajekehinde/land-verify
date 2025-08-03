@@ -14,7 +14,7 @@ export default function Hero() {
           <h1 className="flex text-4xl text-gray-900 md:text-4xl md:leading-bold">
             <strong>Secure Your Land/Property Investment with Confidence</strong>
           </h1>
-          <p>We verify registered land title ownership, physical planning status, and uncover hidden risks with 20+ data backed insights. Powered by our advanced GIS technology and expert analysis.
+          <p>We verify registered land title ownership, physical planning status, and uncover hidden risks with 20+ data backed insights on a land/property. Powered by our advanced GIS technology and expert analysis.
           </p>
           <div className="flex flex-col gap-4 md:flex-row w-full">
             <Link
