@@ -22,3 +22,6 @@ All endpoints require an API key.
 
 ```http
 x-api-key: YOUR_API_KEY
+
+⚠️ Never expose your API key in public repositories or client-side code.
+Need an API key? Email support@landverify.ng or call +234 902 962 8530.
