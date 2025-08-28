@@ -1,5 +1,24 @@
-## Next.js App Router Course - Starter
+# LandVerify API
 
-This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
+LandVerify helps individuals, institutions, and real estate stakeholders verify land ownership and authenticity across Nigeria.  
+This repository contains the API documentation and frontend integration examples for developers who want to integrate LandVerify into their applications.
 
-For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
+🌍 Live site: [www.landverify.ng](https://www.landverify.ng)  
+📘 API Docs (UI): [www.landverify.ng/API](https://www.landverify.ng/API)
+
+---
+
+## 🚀 Features
+- Submit land verification requests securely via API.
+- Track verification status and expert findings in real time.
+- Access detailed property risk analysis (e.g., title validity, acquisition status, flood risk, topography).
+- Rate-limited endpoints for reliable integrations.
+- Developer-friendly React/TypeScript hooks for polling results.
+
+---
+
+## 🔑 Authentication
+All endpoints require an API key.
+
+```http
+x-api-key: YOUR_API_KEY
