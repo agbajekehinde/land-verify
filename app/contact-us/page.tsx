@@ -27,7 +27,7 @@ const Contact: React.FC = () => {
             <div className="flex space-x-4 mt-2">
               <a href="https://www.facebook.com/landverify" className="text-gray-700 hover:underline">Facebook</a>
               <a href="https://x.com/LandVrfyNg" className="text-gray-700 hover:underline">Twitter/X</a>
-              <a href="https://www.instagram.com/landverify/" className="text-gray-700 hover:underline">Instagram</a>
+              <a href="https://www.instagram.com/landverifynigeria/" className="text-gray-700 hover:underline">Instagram</a>
             </div>
           </Section>
         </div>
