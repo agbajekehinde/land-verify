@@ -16,7 +16,14 @@ const testimonials = [
     location: 'Ogun',
     quote: 'A must-have service for anyone buying property in Nigeria. Highly recommended!',
     image: '/testimonial - Z.png' // Corrected path
+  },
+  {
+    name: 'Esanju T.',
+    location: 'Oyo',
+    quote: 'This service gave me peace of mind when buying property in Nigeria. Truly reliable and worth every naira!',
+    image: '/testimonial - Emeka.png' // Corrected path
   }
+
 ];
 
 const Testimonials: React.FC = () => {
